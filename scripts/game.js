@@ -6,6 +6,6 @@ function init() {
     canvas = document.getElementById('backgroundCanvas');
     ctx = canvas.getContext('2d');
 
-    console.log('Ma character is', world.chcharacter);
+    console.log('My character is', world.character);
     
 }

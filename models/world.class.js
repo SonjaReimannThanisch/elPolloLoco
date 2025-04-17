@@ -6,7 +6,9 @@ class world {
         new chicken(),
     ];
 
-
+    constructor() {
+s
+    }
 
     draw() {
 

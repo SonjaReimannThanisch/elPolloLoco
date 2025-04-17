@@ -1,11 +1,11 @@
-let canvas = [];
+let canvas;
 let ctx;
-let world = new world();
+let gameWorld;
 
 function init() {
     canvas = document.getElementById('backgroundCanvas');
     ctx = canvas.getContext('2d');
+    gameWorld = new World();
 
-    console.log('My character is', world.character);
-    
+    console.log('My character is', gameWorld.character);
 }

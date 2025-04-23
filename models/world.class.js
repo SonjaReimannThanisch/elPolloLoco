@@ -7,7 +7,7 @@ class world {
     ];
 
     constructor() {
-s
+
     }
 
     draw() {

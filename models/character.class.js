@@ -1,7 +1,8 @@
 class character extends movableObject {
 
     constructor() {
-        super().loadImage()
+        super().loadImage();
+        
     }
 
     jump() {

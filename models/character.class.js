@@ -1,7 +1,7 @@
 class character extends movableObject {
 
     constructor() {
-        super().loadImage();
+        super().loadImage('./img/1.Sharkie/1.IDLE/1.png');
         
     }
 

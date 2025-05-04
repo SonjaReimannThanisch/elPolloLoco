@@ -5,7 +5,8 @@ let gameWorld;
 function init() {
     canvas = document.getElementById('backgroundCanvas');
     ctx = canvas.getContext('2d');
-    gameWorld = new world();
+    gameWorld = new world(ctx);
 
-    console.log('My character is', gameWorld.character);
+    console.log('My character is', gameWorld.mainCharacter);
+
 }

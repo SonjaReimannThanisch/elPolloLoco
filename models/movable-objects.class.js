@@ -17,7 +17,7 @@ class movableObject {
     }
 
     moveRight() {
-        console.log('Move to the Right');
+        console.log('Move to the 1 Right');
         
     }
 }

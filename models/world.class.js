@@ -20,8 +20,6 @@ class world {
 
     constructor(canvas, keyboard) {
         this.canvas = canvas;
-        this.draw();
-        this.checkCollisions();
         this.ctx = canvas.getContext('2d');
         this.level = createLevel1();
         this.keyboard = keyboard;
@@ -37,9 +35,10 @@ class world {
 
         this.setWorld();
         this.mainCharacter.animate();
+        this.bindUi();
         this.draw();
         this.checkCollisions();
-        this.bindUi();
+        
     }
 
     setWorld() {

@@ -145,6 +145,98 @@ Light {
   opacity: 1;
 }
 
+/* Overlay ist ok, aber wir zentrieren sauber */
+#startscreen.overlay{
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.65);
+  z-index: 9999;
+}
+
+.overlay-start {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  margin: auto;
+  background-color: aqua;
+  /* border: 5px solid #2b5cff;
+  border-top-color: #6fa8ff;
+  border-left-color: #6fa8ff;
+  border-bottom-color: #163a8f;
+  border-right-color: #163a8f; */
+
+  box-shadow: 0 10px 18px rgba(0,0,0,0.35);
+}
+
+/* Das ist dein "Canvas-Kartenformat" */
+#startscreen .start-wrap{
+  width: 720px;
+  height: 480px;
+  max-width: 92vw;
+  max-height: 72vh;
+
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 18px;
+  border-radius: 22px;
+  overflow: hidden;
+
+  /* optional: falls du Hintergrund willst */
+  /* background: rgba(20, 35, 90, 0.55); */
+}
+
+/* Instruction-Board darf nicht eskalieren */
+#startscreen .start-instructions{
+  width: 100%;
+  height: auto;
+  max-height: 70%;
+  object-fit: contain;
+  display: block;
+}
+
+#startscreen .img-btn img{
+  display: block;
+  height: auto;
+  width: 320px;
+  max-width: 80%;
+}
+
+#startscreen .img-btn.small img{
+  width: 260px;
+  max-width: 60%;
+}
+
+#startscreen .start-footer{
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+#startscreen .impressum-link{
+  color: white;
+  opacity: 0.85;
+  text-decoration: none;
+  font-weight: 600;
+}
+#startscreen .impressum-link:hover{ opacity: 1; text-decoration: underline; }
+
+.hidden{ display:none; }
+
+#startscreen .start-wrap{
+  background: url("img/3.Background/behind-canvas/blick-auf-welliges-meer-oder-meerwasser.jpg") center/cover no-repeat;
+}
 
 @media only screen and (max-width: 720px) {
     canvas {

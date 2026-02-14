@@ -4,7 +4,9 @@ let keyboard = new Keyboard();
 
 function init() {
     injectStartScreen();
+
     canvas = document.getElementById('backgroundCanvas');
+    // console.log('canvas?', canvas);
     keyboard = new Keyboard(canvas.width, canvas.height);
     gameWorld = new world(canvas, keyboard);
 

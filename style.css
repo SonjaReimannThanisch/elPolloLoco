@@ -49,12 +49,13 @@ header h1 {
 }
 
 canvas {
-  width: min(90vw, 75vh);
-  aspect-ratio: 4 / 3;
+  width: 90vw;
+  max-width: 900px;
   height: auto;
-  background-color: #544ce1ab;
+  aspect-ratio: 4 / 3;
   display: block;
-  box-shadow: 0 0 20px rgba(0,0,0,0.2);
+  box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+  background-color: rgba(84, 76, 225, 0.15);
 }
 
 .overlay.hidden { display: none; }
@@ -141,7 +142,7 @@ canvas {
 
 .overlay-start,
 #startscreen.overlay{
-  /* position: absolute; */
+  position: absolute;
   inset: 0;
   display: flex;
   align-items: center;

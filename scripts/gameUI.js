@@ -30,7 +30,7 @@ function bindStartUi(worldInstance) {
   });
 
   document.getElementById('btn-fullscreen')?.addEventListener('click', async () => {
-    const el = document.querySelector('.game');
+    let el = document.querySelector('.game');
     if (!document.fullscreenElement) await el.requestFullscreen();
     else await document.exitFullscreen();
   });

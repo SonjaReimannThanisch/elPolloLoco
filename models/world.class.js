@@ -14,7 +14,7 @@ class world {
     isGameOver = false;
     TILE_WIDTH = 720;
     enemyCollisionInterval = null;
-
+    hasStarted = false;
 
 
 
@@ -27,18 +27,19 @@ class world {
         this.statusLife = new statusBar('life');
         this.statusCoins = new statusBar('coins');
         this.statusPoison = new statusBar('poison');
-
         this.statusLife.y = 45;
         this.statusCoins.y = 80;
         this.statusPoison.y = 10;
-
-
         this.setWorld();
+        this.bindUi();  
+    }
+
+    startGame() {
+        if(this.hasStarted) return;
+        this.hasStarted = true;
         this.mainCharacter.animate();
-        this.bindUi();
         this.draw();
         this.checkCollisions();
-        
     }
 
     setWorld() {
@@ -121,9 +122,13 @@ class world {
     }
 
     bindUi() {
-        const restartBtn = document.getElementById('btn-restart');
+        let restartBtn = document.getElementById('btn-restart');
         if (restartBtn) {
             restartBtn.onclick = () => this.restartGame();
+        }
+        let homeBtn  = document.getElementById('btn-home');
+        if (homeBtn ) {
+            homeBtn .onclick = () => this.goHome();
         }
     }
 
@@ -217,7 +222,6 @@ class world {
         this.addObjectsToMap(this.attacks);
         this.addObjectsToMap(this.level.enemies);
         this.addToMap(this.mainCharacter); 
-        this.addToMap(this.keyboardSprite);
         this.ctx.translate(-this.camera_x, 0);
     }
 
@@ -273,6 +277,54 @@ class world {
     flipImageBack(mo) {
         mo.x = mo.x * -1;
         this.ctx.restore();
+    }
+
+    stopGame() {
+        if ( this.enemyCollisionInterval) {
+            clearInterval(this.enemyCollisionInterval);
+            this.enemyCollisionInterval = null;
+        }
+        this.isGameOver = true;
+        this.hasStarted = false;
+    }
+
+    // goHome() {
+    //     this.stopGame();
+    //     this.hideGameOver();
+    //     this.camera_x = 0;
+    //     this.attacks = [];
+    //     this.level = createLevel1();
+    //     this.setWorld();
+    //     this.statusLife.setPercentage(this.mainCharacter.energy);
+    //     this.statusCoins.setPercentage(0);
+    //     this.statusPoison.setPercentage(0);
+    // }
+
+    goHome() {
+        // 1) Stoppe Damage-Interval
+        if (this.enemyCollisionInterval) {
+            clearInterval(this.enemyCollisionInterval);
+            this.enemyCollisionInterval = null;
+        }
+
+        // 2) Stoppe Render-Loop (draw() prüft isGameOver)
+        this.isGameOver = true;
+        this.hasStarted = false;
+
+        // 3) Overlays umschalten
+        this.hideGameOver();
+        document.getElementById('startscreen')?.classList.remove('hidden');
+
+        // 4) Reset Game-State (aber NICHT starten)
+        this.camera_x = 0;
+        this.attacks = [];
+        this.level = createLevel1();
+        this.mainCharacter = new character();
+        this.setWorld();
+
+        this.statusLife.setPercentage(this.mainCharacter.energy);
+        this.statusCoins.setPercentage(0);
+        this.statusPoison.setPercentage(0);
     }
 
 }

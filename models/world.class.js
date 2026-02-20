@@ -210,7 +210,7 @@ class world {
         this.addObjectsToMap(this.level.poison);
         this.addObjectsToMap(this.attacks);
         this.addObjectsToMap(this.level.enemies);
-        this.addToMap(this.mainCharacter);
+        this.addToMap(this.mainCharacter); 
         this.addToMap(this.keyboardSprite);
         this.ctx.translate(-this.camera_x, 0);
     }

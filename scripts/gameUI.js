@@ -26,7 +26,7 @@ function injectStartScreen() {
 function bindStartUi(worldInstance) {
   document.getElementById('btn-start')?.addEventListener('click', () => {
     document.getElementById('startscreen')?.classList.add('hidden');
-    worldInstance.startGame(); // oder worldInstance.draw() + checkCollisions()
+    worldInstance.startGame();
   });
 
   document.getElementById('btn-fullscreen')?.addEventListener('click', async () => {

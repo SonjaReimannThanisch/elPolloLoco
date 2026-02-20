@@ -21,13 +21,6 @@ class movableObject extends drawableObject {
         }
     }
 
-    // isColliding(mo) {
-    //     return this.x + this.width > mo.x &&
-    //             this.y + this.height > mo.y &&
-    //             this.x < mo.x + mo.width &&
-    //             this.y < mo.y + mo.height;
-    // }
-
     isColliding(mo) {
         const a = this.offset || { top: 0, left: 0, right: 0, bottom: 0 };
         const b = mo.offset || { top: 0, left: 0, right: 0, bottom: 0 };

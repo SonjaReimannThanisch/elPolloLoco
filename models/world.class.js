@@ -93,11 +93,17 @@ class world {
     rememberPlayerPosition() {
         this.lastX = this.mainCharacter.x;
         this.lastY = this.mainCharacter.y;
-    } 
+    }
+
+    getEndboss() {
+        return this.level.enemies.find(e => e instanceof Endboss)
+    }
 
     checkBarrierCollision() {
-        let hit = this.isCollidingWithAnyBarrier();
-        if (!hit) {
+        let hitBarrier = this.isCollidingWithAnyBarrier();
+        let boss = this.getEndboss();
+        let hitBoss = boss && this.mainCharacter.isColliding(boss);
+        if (!hitBarrier && !hitBoss) {
             this.rememberPlayerPosition();
             return;}
         this.resetPlayerToLastPosition();

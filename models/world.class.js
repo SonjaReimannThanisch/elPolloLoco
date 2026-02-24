@@ -31,7 +31,8 @@ class world {
         this.statusCoins.y = 80;
         this.statusPoison.y = 10;
         this.setWorld();
-        this.bindUi();  
+        this.bindUi();
+        this.draw();
     }
 
     startGame() {
@@ -189,7 +190,7 @@ class world {
     }
 
     draw() {
-        if (this.isGameOver) return;
+        this.beginFrame();
         this.beginFrame();
         this.updateWorldState();
         this.drawWorldLayer();
@@ -301,27 +302,19 @@ class world {
     // }
 
     goHome() {
-        // 1) Stoppe Damage-Interval
         if (this.enemyCollisionInterval) {
             clearInterval(this.enemyCollisionInterval);
             this.enemyCollisionInterval = null;
         }
-
-        // 2) Stoppe Render-Loop (draw() prüft isGameOver)
         this.isGameOver = true;
         this.hasStarted = false;
-
-        // 3) Overlays umschalten
         this.hideGameOver();
         document.getElementById('startscreen')?.classList.remove('hidden');
-
-        // 4) Reset Game-State (aber NICHT starten)
         this.camera_x = 0;
         this.attacks = [];
         this.level = createLevel1();
         this.mainCharacter = new character();
         this.setWorld();
-
         this.statusLife.setPercentage(this.mainCharacter.energy);
         this.statusCoins.setPercentage(0);
         this.statusPoison.setPercentage(0);

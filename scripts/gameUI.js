@@ -1,5 +1,5 @@
 function injectStartScreen() {
-  const markup = `
+  let markup = `
     <div id="startscreen" class="overlay-start">
       <div class="start-wrap">
         <img class="start-instructions" src="img/6.Botones/Instructions 2.png" alt="Instructions">

@@ -191,7 +191,6 @@ class world {
 
     draw() {
         this.beginFrame();
-        this.beginFrame();
         this.updateWorldState();
         this.drawWorldLayer();
         this.drawHudLayer();
@@ -289,24 +288,12 @@ class world {
         this.hasStarted = false;
     }
 
-    // goHome() {
-    //     this.stopGame();
-    //     this.hideGameOver();
-    //     this.camera_x = 0;
-    //     this.attacks = [];
-    //     this.level = createLevel1();
-    //     this.setWorld();
-    //     this.statusLife.setPercentage(this.mainCharacter.energy);
-    //     this.statusCoins.setPercentage(0);
-    //     this.statusPoison.setPercentage(0);
-    // }
-
     goHome() {
         if (this.enemyCollisionInterval) {
             clearInterval(this.enemyCollisionInterval);
             this.enemyCollisionInterval = null;
         }
-        this.isGameOver = true;
+        this.isGameOver = false;
         this.hasStarted = false;
         this.hideGameOver();
         document.getElementById('startscreen')?.classList.remove('hidden');

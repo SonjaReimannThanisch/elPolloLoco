@@ -30,8 +30,34 @@ function bindStartUi(worldInstance) {
   });
 
   document.getElementById('btn-fullscreen')?.addEventListener('click', async () => {
-    let el = document.querySelector('.game');
-    if (!document.fullscreenElement) await el.requestFullscreen();
-    else await document.exitFullscreen();
+    const el = document.querySelector('.game');
+
+    if (!document.fullscreenElement) {
+      await el.requestFullscreen();
+    } else {
+      await document.exitFullscreen();
+    }
+
+    resizeCanvas();
   });
+
+  document.addEventListener('fullscreenchange', resizeCanvas);
+  window.addEventListener('resize', resizeCanvas);
 }
+
+function resizeCanvas() {
+  const canvas = document.getElementById('backgroundCanvas');
+  const wrapper = document.getElementById('fullscreen');
+
+  if (!canvas || !wrapper) return;
+
+  const rect = wrapper.getBoundingClientRect();
+  const dpr = window.devicePixelRatio || 1;
+
+  canvas.width  = rect.width * dpr;
+  canvas.height = rect.height * dpr;
+
+  const ctx = canvas.getContext('2d');
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+

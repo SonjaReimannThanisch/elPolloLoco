@@ -1,4 +1,5 @@
 function injectStartScreen() {
+  if (document.getElementById('startscreen')) return;
   let markup = `
     <div id="startscreen" class="overlay-start">
       <div class="start-wrap">
@@ -19,7 +20,7 @@ function injectStartScreen() {
     </div>
   `;
 
-  document.querySelector('.game').insertAdjacentHTML('beforeend', markup);
+  document.getElementById('fullscreen').insertAdjacentHTML('beforeend', markup);
 }
 
 
@@ -30,34 +31,30 @@ function bindStartUi(worldInstance) {
   });
 
   document.getElementById('btn-fullscreen')?.addEventListener('click', async () => {
-    const el = document.querySelector('.game');
+    const el = document.getElementById('fullscreen');
+    if (!el) return;
 
-    if (!document.fullscreenElement) {
-      await el.requestFullscreen();
-    } else {
-      await document.exitFullscreen();
-    }
-
-    resizeCanvas();
+    if (!document.fullscreenElement) enterFullscreen(el);
+    else exitFullscreen();
   });
-
-  document.addEventListener('fullscreenchange', resizeCanvas);
-  window.addEventListener('resize', resizeCanvas);
 }
 
-function resizeCanvas() {
-  const canvas = document.getElementById('backgroundCanvas');
-  const wrapper = document.getElementById('fullscreen');
 
-  if (!canvas || !wrapper) return;
+function enterFullscreen(element) {
+  if(element.requestFullscreen) {
+    element.requestFullscreen();
+  } else if(element.webkitRequestFullscreen) {
+    element.webkitRequestFullscreen();
+  } else if(element.msRequestFullscreen) {       // for IE11 (remove June 15, 2022)
+    element.msRequestFullscreen();
+  }
+}
 
-  const rect = wrapper.getBoundingClientRect();
-  const dpr = window.devicePixelRatio || 1;
-
-  canvas.width  = rect.width * dpr;
-  canvas.height = rect.height * dpr;
-
-  const ctx = canvas.getContext('2d');
-  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+function exitFullscreen() { console.log('exit');
+  if(document.exitFullscreen) {
+    document.exitFullscreen();
+  } else if(document.webkitExitFullscreen) {
+    document.webkitExitFullscreen();
+  }
 }
 

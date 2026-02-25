@@ -39,7 +39,7 @@ class world {
         if(this.hasStarted) return;
         this.hasStarted = true;
         this.mainCharacter.animate();
-        this.draw();
+        // this.draw();
         this.checkCollisions();
     }
 
@@ -50,7 +50,15 @@ class world {
     triggerGameOverIfDead() {
         if (this.mainCharacter.energy <= 0 && !this.isGameOver) {
             this.isGameOver = true;
+            this.gameOverCollisionIntervall();
             this.showGameOver();
+        }
+    }
+
+    gameOverCollisionIntervall() {
+        if (this.enemyCollisionInterval) {
+            clearInterval(this.enemyCollisionInterval);
+            this.enemyCollisionInterval = null;
         }
     }
 
@@ -189,9 +197,15 @@ class world {
         });
     }
 
+    updateWorldSatatus() {
+        if (this.hasStarted && !this.isGameOver) {
+        this.updateWorldState();
+        }   
+    }
+
     draw() {
         this.beginFrame();
-        this.updateWorldState();
+        this.updateWorldSatatus();
         this.drawWorldLayer();
         this.drawHudLayer();
         this.endFrame();
@@ -209,6 +223,7 @@ class world {
         this.checkAttackCollisions();
         this.checkCoinCollision();
         this.checkPoisonCollision();
+        this.checkMenuInput();
         this.attacks = this.attacks.filter(a => !a.isExpired());
     }
 
@@ -305,6 +320,13 @@ class world {
         this.statusLife.setPercentage(this.mainCharacter.energy);
         this.statusCoins.setPercentage(0);
         this.statusPoison.setPercentage(0);
+    }
+
+    checkMenuInput() {
+        if (this.keyboard.ESC && !document.fullscreenElement) {
+            this.goHome();
+            this.keyboard.ESC = false;
+        }
     }
 
 }

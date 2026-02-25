@@ -23,7 +23,6 @@ function injectStartScreen() {
   document.getElementById('fullscreen').insertAdjacentHTML('beforeend', markup);
 }
 
-
 function bindStartUi(worldInstance) {
   document.getElementById('btn-start')?.addEventListener('click', () => {
     document.getElementById('startscreen')?.classList.add('hidden');
@@ -31,21 +30,19 @@ function bindStartUi(worldInstance) {
   });
 
   document.getElementById('btn-fullscreen')?.addEventListener('click', async () => {
-    const el = document.getElementById('fullscreen');
-    if (!el) return;
-
-    if (!document.fullscreenElement) enterFullscreen(el);
+    let screen = document.getElementById('fullscreen');
+    if (!screen) return;
+    if (!document.fullscreenElement) enterFullscreen(screen);
     else exitFullscreen();
   });
 }
-
 
 function enterFullscreen(element) {
   if(element.requestFullscreen) {
     element.requestFullscreen();
   } else if(element.webkitRequestFullscreen) {
     element.webkitRequestFullscreen();
-  } else if(element.msRequestFullscreen) {       // for IE11 (remove June 15, 2022)
+  } else if(element.msRequestFullscreen) {
     element.msRequestFullscreen();
   }
 }

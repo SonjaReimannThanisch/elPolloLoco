@@ -9,6 +9,7 @@ function init() {
   keyboard = new Keyboard(canvas.width, canvas.height);
   gameWorld = new world(canvas, keyboard);
   bindStartUi(gameWorld);
+
 }
 
 window.addEventListener("keydown", (event) => {
@@ -21,6 +22,7 @@ window.addEventListener("keydown", (event) => {
   if (event.code === "KeyA") keyboard.ATTACK  = true;
 
   if (event.code === "Space") keyboard.SPACE = true;
+  if (event.code === "Escape") keyboard.ESC = true;
 
 });
 
@@ -34,6 +36,7 @@ window.addEventListener("keyup", (event) => {
   if (event.code === "KeyA") keyboard.ATTACK  = false;
 
   if (event.code === "Space") keyboard.SPACE = false;
+  if (event.code === "Escape") keyboard.ESC = false;
 
 });
 

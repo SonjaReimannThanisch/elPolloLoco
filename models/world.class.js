@@ -15,6 +15,7 @@ class world {
     TILE_WIDTH = 720;
     enemyCollisionInterval = null;
     hasStarted = false;
+    bubbles = [];
 
 
 
@@ -50,16 +51,16 @@ class world {
     triggerGameOverIfDead() {
         if (this.mainCharacter.energy <= 0 && !this.isGameOver) {
             this.isGameOver = true;
-            this.gameOverCollisionIntervall();
+
             this.showGameOver();
         }
     }
 
     gameOverCollisionIntervall() {
         if (this.enemyCollisionInterval) {
-            clearInterval(this.enemyCollisionInterval);
-            this.enemyCollisionInterval = null;
-        }
+        clearInterval(this.enemyCollisionInterval);
+        this.enemyCollisionInterval = null;
+    }
     }
 
     applyDamage() {
@@ -93,6 +94,11 @@ class world {
 
     isCollidingWithAnyBarrier() {
         return this.level.barriers.some(b => this.mainCharacter.isColliding(b));
+    }
+
+    spawnBubbles() {
+        if (!this.hasStarted) return;
+        if (!this.keyboard.LEFT)
     }
 
     resetPlayerToLastPosition() {
@@ -224,7 +230,8 @@ class world {
         this.checkCoinCollision();
         this.checkPoisonCollision();
         this.checkMenuInput();
-        this.attacks = this.attacks.filter(a => !a.isExpired());
+        this.spawnBubbles();
+        this.UpdateBubble();
     }
 
     drawWorldLayer() {

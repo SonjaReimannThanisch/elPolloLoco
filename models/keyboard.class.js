@@ -6,7 +6,6 @@ class Keyboard extends movableObject {
     SPACE = false;
     D = false;
     A = false;
-    ATTACK = false;
     ESC = false;
     
     height = 100;

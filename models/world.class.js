@@ -8,7 +8,13 @@ class world {
     statusLife;
     statusCoins;
     statusPoison;
+
     attacks = [];
+    lastFinSlapAt = 0;
+    lastBubbleAt = 0;
+    finSlapCoolsdowns = 400;
+    bubbleCooldowns = 900;
+
     lastX = 0;
     lastY = 0;
     isGameOver = false;
@@ -101,7 +107,7 @@ class world {
 
     spawnBubbles() {
         if (!this.hasStarted) return;
-        if (!this.keyboard.LEFT)
+        if (!this.keyboard.LEFT) return;
     }
 
     resetPlayerToLastPosition() {
@@ -234,6 +240,8 @@ class world {
         this.checkMenuInput();
         this.spawnBubbles();
         this.UpdateBubble();
+        this.handleAttackInput();
+        this.updateAttacks();
     }
 
     drawWorldLayer() {
@@ -275,6 +283,23 @@ class world {
         this.statusPoison.setPercentage(0);
         this.checkCollisions();
         this.draw();
+    }
+
+    handleAttackInput() {
+        if (!this.hasStarted || this.isGameOver) return;
+        let now = Date.now();
+        if (this.keyboard.SPACE) this.tryFinSlap(now);
+        if (this.keyboard.A) this.tryBubble(now);
+
+    }
+
+    tryFinSlap(now) {
+        if (now - this.lastFinSlapAt < this.finSlapCoolsdowns) return;
+        let attack = new FinSlapAttack();
+        attack.y = this.mainCharacter.y;
+        attack.height = this.mainCharacter.height;
+        attack.width = 80;
+        if (this.mainCharacter.x -attack.width;)
     }
 
     addObjectsToMap(objects) {

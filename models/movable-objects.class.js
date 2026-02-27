@@ -6,7 +6,7 @@ class movableObject extends drawableObject {
 
     
     drawFrame(ctx) {
-        if(this instanceof character || this instanceof pufferfisch || this instanceof jellyfisch || this instanceof Endboss || this instanceof barriers) {
+        if(this instanceof character || this instanceof pufferfisch || this instanceof jellyfisch || this instanceof Endboss || this instanceof barriers || this instanceof Attack) {
             ctx.beginPath();
             ctx.lineWidth = '2';
             ctx.strokeStyle = 'blue';

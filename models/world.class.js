@@ -71,15 +71,18 @@ class world {
 
     checkCollisions() {
         if (this.enemyCollisionInterval) return;
-        this.enemyCollisionInterval = setInterval(() => {
-            this.level.enemies.forEach(enemy => {
-            if (this.mainCharacter.isColliding(enemy)) {
-                this.applyDamage();
-            }
-            });
-        }, 1000);
+        this.enemyCollisionInterval = setInterval(this.runEnemyCollisionCheck.bind(this), 1000);
     }
 
+    runEnemyCollisionCheck() {
+        this.level.enemies.forEach(this.checkEnemyCollision.bind(this));
+    }
+
+    checkEnemyCollision(enemy) {
+        if (this.mainCharacter.isColliding(enemy)) {
+            this.applyDamage();
+        }
+    }
 
     checkAttackCollisions() {
         this.attacks.forEach((attack) => {
@@ -203,19 +206,18 @@ class world {
         });
     }
 
-    updateWorldSatatus() {
-        if (this.hasStarted && !this.isGameOver) {
-        this.updateWorldState();
-        }   
+    isRunningGame() {
+        return this.hasStarted && !this.isGameOver;
     }
 
     draw() {
         this.beginFrame();
-        this.updateWorldSatatus();
+        if (this.isRunningGame()) this.updateWorldState();
         this.drawWorldLayer();
         this.drawHudLayer();
         this.endFrame();
     }
+
 
     beginFrame() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -254,7 +256,7 @@ class world {
     }
 
     endFrame() {
-        requestAnimationFrame(() => this.draw());
+        requestAnimationFrame(this.draw.bind(this));
     }
 
     restartGame() {
@@ -330,10 +332,10 @@ class world {
     }
 
     checkMenuInput() {
-        if (this.keyboard.ESC && !document.fullscreenElement) {
-            this.goHome();
-            this.keyboard.ESC = false;
-        }
+        if (this.keyboard.ESC) return;
+        if (document.fullscreenElement) return;
+        this.goHome();
+        this.keyboard.ESC = false;
     }
 
 }

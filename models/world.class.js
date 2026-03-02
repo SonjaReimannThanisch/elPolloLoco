@@ -46,7 +46,7 @@ class world {
         if(this.hasStarted) return;
         this.hasStarted = true;
         this.mainCharacter.animate();
-        // this.draw();
+        this.draw();
         this.checkCollisions();
     }
 
@@ -90,15 +90,33 @@ class world {
         }
     }
 
+    // checkAttackCollisions() {
+    //     this.attacks.forEach((attack) => {
+    //         this.level.enemies.forEach((enemy) => {
+    //             if (!attack.hasHit && attack.isColliding(enemy)) {
+    //                 enemy.hit();
+    //                 attack.hasHit = true;
+    //             }
+    //         });
+    //     });
+    // }
+    
+
     checkAttackCollisions() {
-        this.attacks.forEach((attack) => {
-            this.level.enemies.forEach((enemy) => {
-                if (!attack.hasHit && attack.isColliding(enemy)) {
-                    enemy.hit();
-                    attack.hasHit = true;
-                }
-            });
-        });
+        for (let i = 0; i < this.attacks.length; i++) {
+            const attack = this.attacks[i];
+            if (attack.hasHit) continue;
+
+            for (let j = 0; j < this.level.enemies.length; j++) {
+            const enemy = this.level.enemies[j];
+
+            if (attack.isColliding(enemy)) {
+                enemy.hit();
+                attack.hasHit = true;
+                break;
+            }
+            }
+        }
     }
 
     isCollidingWithAnyBarrier() {
@@ -224,7 +242,6 @@ class world {
         this.endFrame();
     }
 
-
     beginFrame() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.camera_x = Math.min(0, -this.mainCharacter.x);
@@ -239,9 +256,9 @@ class world {
         this.checkPoisonCollision();
         this.checkMenuInput();
         this.spawnBubbles();
-        this.UpdateBubble();
+        // this.UpdateBubble();
         this.handleAttackInput();
-        this.updateAttacks();
+        // this.updateAttacks();
     }
 
     drawWorldLayer() {
@@ -287,19 +304,20 @@ class world {
 
     handleAttackInput() {
         if (!this.hasStarted || this.isGameOver) return;
-        let now = Date.now();
-        if (this.keyboard.SPACE) this.tryFinSlap(now);
-        if (this.keyboard.A) this.tryBubble(now);
 
+        let now =Date.now();
+        if (this.keyboard.SPACE) this.tryFinSlap(now);
+        if (this.keyboard.A) this.tryFinSlap(now);
     }
 
     tryFinSlap(now) {
         if (now - this.lastFinSlapAt < this.finSlapCoolsdowns) return;
         let attack = new FinSlapAttack();
+        a.
         attack.y = this.mainCharacter.y;
         attack.height = this.mainCharacter.height;
         attack.width = 80;
-        if (this.mainCharacter.x -attack.width;)
+        if (this.mainCharacter.x -attack.width);
     }
 
     addObjectsToMap(objects) {
@@ -357,7 +375,7 @@ class world {
     }
 
     checkMenuInput() {
-        if (this.keyboard.ESC) return;
+        if (!this.keyboard.ESC) return;
         if (document.fullscreenElement) return;
         this.goHome();
         this.keyboard.ESC = false;

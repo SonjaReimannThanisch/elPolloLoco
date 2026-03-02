@@ -1,8 +1,7 @@
 class FinSlapAttack extends Attack {
 
-    width = 120;
-    height = 120;
-    damage = 20;
+    width = 40;
+    height = 100;
     lifetime = 180;
 
     IMAGES_SlapAttack = [

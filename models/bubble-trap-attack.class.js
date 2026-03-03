@@ -1,7 +1,7 @@
 class BubbleTrapAttack extends Attack {
-    width = 40;
-    height = 100;
-    lifeline = 120;
+    width = 140;
+    height = 140;
+    lifetime = 500;
 
 
     IMAGES_BubbleAttack = [
@@ -15,18 +15,23 @@ class BubbleTrapAttack extends Attack {
         'img/1.Sharkie/4.Attack/Bubble trap/op1 (with bubble formation)/8.png',
     ]
 
-    constructor() {
+    constructor(character) {
         super();
-        this.mainCharacter = mainCharacter;
+        this.loadImages(this.IMAGES_BubbleAttack);
+        this.character = character;
         this.img = this.imageCache[this.IMAGES_BubbleAttack[0]];
         this.updatePosition();
         this.animate();
     }
 
     updatePosition() {
-        let offsetX = this.mainCharacter.otherDirection ? -40 : this.mainCharacter.width - 40;
-        this.x = this.mainCharacter.x + offsetX;
-        this.y = this.mainCharacter.y + (this.mainCharacter.height / 2) - (this.height / 2);
+        this.otherDirection = this.character.otherDirection 
+        let cx = this.character.x + this.character.width / 2;
+        let cy = this.character.y + this.character.height / 2;
+        this.x = cx - this.width / 2;
+        this.y = cy - this.height / 2;
+        let push = this.otherDirection ? -40 :40;
+        this.x += push;
     }
 
     animate() {

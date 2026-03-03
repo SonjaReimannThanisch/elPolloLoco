@@ -46,7 +46,7 @@ class world {
         if(this.hasStarted) return;
         this.hasStarted = true;
         this.mainCharacter.animate();
-        this.draw();
+        // this.draw();
         this.checkCollisions();
     }
 
@@ -256,9 +256,8 @@ class world {
         this.checkPoisonCollision();
         this.checkMenuInput();
         this.spawnBubbles();
-        // this.UpdateBubble();
         this.handleAttackInput();
-        // this.updateAttacks();
+        this.cleanupAttacks();
     }
 
     drawWorldLayer() {
@@ -302,22 +301,34 @@ class world {
         this.draw();
     }
 
+
+
     handleAttackInput() {
         if (!this.hasStarted || this.isGameOver) return;
 
         let now =Date.now();
         if (this.keyboard.SPACE) this.tryFinSlap(now);
-        if (this.keyboard.A) this.tryFinSlap(now);
+        if (this.keyboard.A) this.tryBubble(now);
     }
 
     tryFinSlap(now) {
         if (now - this.lastFinSlapAt < this.finSlapCoolsdowns) return;
-        let attack = new FinSlapAttack();
-        a.
-        attack.y = this.mainCharacter.y;
-        attack.height = this.mainCharacter.height;
-        attack.width = 80;
-        if (this.mainCharacter.x -attack.width);
+        let attack = new FinSlapAttack(this.mainCharacter);
+        this.attacks.push(attack);
+        this.lastFinSlapAt = now;
+        this.keyboard.SPACE = false;
+    }
+
+    tryBubble(now) {
+        if (now - this.lastBubbleAt < this.bubbleCooldowns) return;
+        let attack = new BubbleTrapAttack(this.mainCharacter);
+        this.attacks.push(attack);
+        this.lastBubbleAt = now;
+        this.keyboard.A = false;
+    }
+
+    cleanupAttacks() {
+        this.attacks = this.attacks.filter(a => !a.isExpired());
     }
 
     addObjectsToMap(objects) {

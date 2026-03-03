@@ -25,6 +25,42 @@ class pufferfisch extends movableObject {
         'img/2.Enemy/1.Puffer fish (3 color options)/1.Swim/1.swim5.png'
     ];
 
+    IMAGES_TRANSITION_PINK = [
+        
+    ];
+
+    IMAGES_TRANSITION_ROSE = [
+        
+    ];
+
+    IMAGES_TRANSITION_GREEN = [
+        
+    ];
+
+    IMAGES_BUBBLESWIM_PINK = [
+        
+    ];
+
+    IMAGES_BUBBLESWIM_ROSE = [
+        
+    ];
+
+    IMAGES_BUBBLESWIM_GREEN = [
+        
+    ];
+
+    IMAGES_DIE_PINK = [
+        
+    ];
+
+    IMAGES_DIE_ROSE = [
+        
+    ];
+
+    IMAGES_DIE_GREEN = [
+        
+    ];
+
     offset = {
         top: 0,
         left: 0,

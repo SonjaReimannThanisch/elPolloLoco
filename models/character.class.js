@@ -98,29 +98,12 @@ class character extends movableObject {
             if (this.world.keyboard.DOWN && this.y < this.maxY) {
                 this.y = Math.min(this.maxY, this.y + this.speed);
             }
-            if (this.world.keyboard.ATTACK) {
-                this.world.attacks.push(new FinSlapAttack(this));
-                this.world.keyboard.ATTACK = false;
-            }
             this.world.camera_x = -this.x;
         }, 1000 / 60);
 
         setInterval(() => {
 
             let now = Date.now();
-
-            if (this.world.keyboard.D && now - this.lastAttack > this.attackCooldown) {
-                this.world.attacks.push(new FinSlapAttack(this));
-                this.lastAttack = now;
-                return;
-            }
-
-
-            if (this.world.keyboard.A && now - this.lastAttack > this.attackCooldown) {
-                this.world.attacks.push(new BubbleTrapAttack(this));
-                this.lastAttack = now;
-                return;
-            }
 
             if(this.isDead()) {
                 this.playAnimation(this.IMAGES_POISENED);

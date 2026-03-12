@@ -119,6 +119,32 @@ class world {
         }
     }
 
+    // updateAttacks() {
+    //     const now = Date.now();
+
+    //     for (let i = 0; i < this.attacks.length; i++) {
+    //         const a = this.attacks[i];
+
+    //         // Attack folgt dem Character + spielt Frames, falls vorhanden
+    //         if (typeof a.tick === 'function') a.tick(now);
+
+    //         // Projectile Bewegung (Bubble), falls vx gesetzt ist
+    //         if (a.vx) a.x += a.vx;
+    // }
+    // }
+
+    updateAttacks(now) {
+        for (let i=0; i < this.attacks.length; i++) {
+            let attack = this.attacks[i];
+            if (typeof attack.tick === `function`) {
+                attack.tick(now);
+            }
+            if ( attack.vx) {
+                attack.x += attack.vx;
+            }
+        }
+    }
+
     isCollidingWithAnyBarrier() {
         return this.level.barriers.some(b => this.mainCharacter.isColliding(b));
     }
@@ -243,14 +269,15 @@ class world {
     }
 
     updateWorldState() {
+        let now = Date.now();
         this.updateBackground();
         this.updateLights();
         this.checkBarrierCollision();
         this.checkCoinCollision();
         this.checkPoisonCollision();
         this.checkMenuInput();
-        this.handleAttackInput();
-        this.updateAttack();
+        this.handleAttackInput(now);
+        this.updateAttacks(now);
         this.checkAttackCollisions();
         this.cleanupAttacks();
     }
@@ -265,7 +292,7 @@ class world {
        
         this.addObjectsToMap(this.level.enemies);
         this.addToMap(this.mainCharacter);
-         this.addObjectsToMap(this.attacks);
+        this.addObjectsToMap(this.attacks);
         this.ctx.translate(-this.camera_x, 0);
     }
 
@@ -307,14 +334,11 @@ class world {
         if (this.keyboard.A) this.tryBubble(now);
     }
 
-    updateAttack() {
-        let now = Date.now();
-        for (let i =0; i < this.attacks.length; i++) {
-            let a = this.attacks[i];
-            if ( typeof a.tick === 'function') a.tick(now);
-            if (a.vx) a.x += a.vx;
-        }
-    }
+    // updateAttack() {
+    //     if (!this.hasStarted || this.isGameOver) return;
+    //     if (this.keyboard.SPACE) this.tryFinSlap(now);
+    //     if (this.keyboard.A) this.tryBubble(now);
+    // }
 
     tryFinSlap(now) {
         if (now - this.lastFinSlapAt < this.finSlapCoolsdowns) return;

@@ -2,7 +2,7 @@ class FinSlapAttack extends Attack {
 
     width = 140;
     height = 140;
-    lifetime = 350;
+    lifetime = 250;
 
     IMAGES_SlapAttack = [
         'img/1.Sharkie/4.Attack/Fin slap/1.png',
@@ -19,17 +19,15 @@ class FinSlapAttack extends Attack {
         this.loadImages(this.IMAGES_SlapAttack);
         this.img = this.imageCache[this.IMAGES_SlapAttack[0]];
         this.updatePosition();
-        this.animate();
+        // this.animate();
     }
 
     updatePosition() {
         this.otherDirection = this.character.otherDirection;
-        let cx = this.character.x + this.character.width / 2;
-        let cy = this.character.y + this.character.height / 2;
-        this.x = cx - this.width / 2;
-        this.y = cy - this.height / 2;
-        let push = this.otherDirection ? -30 :30;
-        this.x += push;
+        this.x = this.character.otherDirection
+            ? this.character.x -20
+            : this.character.x +70;
+        this.y = this.character.y +55;
     }
 
     tick(now) {

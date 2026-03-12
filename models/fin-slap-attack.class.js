@@ -32,12 +32,21 @@ class FinSlapAttack extends Attack {
         this.x += push;
     }
 
-    animate() {
-        const interval = setInterval(() => {
-            this.updatePosition();
+    tick(now) {
+        this.updatePosition();
+        if (!this.lastFrameAt) this.lastFrameAt = now;
+        if (now - this.lastFrameAt > 50) {
             this.playAnimation(this.IMAGES_SlapAttack);
-
-            if (this.isExpired()) clearInterval(interval);
-        }, 1000 / 20);
+            this.lastFrameAt = now;
+        }
     }
+
+    // animate() {
+    //     const interval = setInterval(() => {
+    //         this.updatePosition();
+    //         this.playAnimation(this.IMAGES_SlapAttack);
+
+    //         if (this.isExpired()) clearInterval(interval);
+    //     }, 1000 / 20);
+    // }
 }

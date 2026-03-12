@@ -123,11 +123,6 @@ class world {
         return this.level.barriers.some(b => this.mainCharacter.isColliding(b));
     }
 
-    spawnBubbles() {
-        if (!this.hasStarted) return;
-        if (!this.keyboard.LEFT) return;
-    }
-
     resetPlayerToLastPosition() {
         this.mainCharacter.x = this.lastX;
         this.mainCharacter.y = this.lastY;
@@ -251,12 +246,12 @@ class world {
         this.updateBackground();
         this.updateLights();
         this.checkBarrierCollision();
-        this.checkAttackCollisions();
         this.checkCoinCollision();
         this.checkPoisonCollision();
         this.checkMenuInput();
-        this.spawnBubbles();
         this.handleAttackInput();
+        this.updateAttack();
+        this.checkAttackCollisions();
         this.cleanupAttacks();
     }
 
@@ -267,9 +262,10 @@ class world {
         this.addObjectsToMap(this.level.lights);
         this.addObjectsToMap(this.level.coins);
         this.addObjectsToMap(this.level.poison);
-        this.addObjectsToMap(this.attacks);
+       
         this.addObjectsToMap(this.level.enemies);
-        this.addToMap(this.mainCharacter); 
+        this.addToMap(this.mainCharacter);
+         this.addObjectsToMap(this.attacks);
         this.ctx.translate(-this.camera_x, 0);
     }
 
@@ -309,6 +305,15 @@ class world {
         let now =Date.now();
         if (this.keyboard.SPACE) this.tryFinSlap(now);
         if (this.keyboard.A) this.tryBubble(now);
+    }
+
+    updateAttack() {
+        let now = Date.now();
+        for (let i =0; i < this.attacks.length; i++) {
+            let a = this.attacks[i];
+            if ( typeof a.tick === 'function') a.tick(now);
+            if (a.vx) a.x += a.vx;
+        }
     }
 
     tryFinSlap(now) {

@@ -1,7 +1,14 @@
 class Endboss extends movableObject {
-
     height = 600;
     width = 600;
+    energy = 100;
+    finalX = 4400;
+    finalY = -100;
+    introSpeedY = 6;
+
+    isAwakened = false;
+    isIntroducing = false;
+    isActive = false;
 
     IMAGES_INTRO = [
         'img/2.Enemy/3 Final Enemy/1.Introduce/1.png',
@@ -54,7 +61,7 @@ class Endboss extends movableObject {
         'img/2.Enemy/3 Final Enemy/Hurt/2.png',
         'img/2.Enemy/3 Final Enemy/Hurt/3.png',
         'img/2.Enemy/3 Final Enemy/Hurt/4.png'
-    ]
+    ];
 
     offset = {
         top: 220,
@@ -64,16 +71,61 @@ class Endboss extends movableObject {
     }
 
     constructor(x, y) {
-        super().loadImage(this.IMAGES_MOVE[0]);
+        super().loadImage(this.IMAGES_INTRO[0]);
+        this.loadImages(this.IMAGES_INTRO);
         this.loadImages(this.IMAGES_MOVE);
-        this.x = 4400;
-        this.y = -120;
-        this.animate();
+        this.loadImages(this.IMAGES_ATTACK);
+        this.loadImages(this.IMAGES_DEAD);
+        this.loadImages(this.IMAGES_HURT);
+        this.x = this.finalX;
+        // this.y = this.finalY;
+        this.y = -520;
+        this.startAnimationLoop();
     }
 
-    animate(){
+    startIntro() {
+        if (this.isAwakened) return;
+        this.isAwakened = true;
+        this.isIntroducing = true;
+    }
+
+    update() {
+        if (this.isIntroducing) {
+            this.y += this.introSpeedY;
+            if (this.y >= this.finalY) {
+                this.y = this.finalY;
+                this.isIntroducing = false;
+                this.isActive = true;
+            }
+        }
+    }
+
+    startAnimationLoop(){
         setInterval(() => {
-            this.playAnimation(this.IMAGES_MOVE);
-        }, 200);
+            if ( this.isIntroducing) {
+                this.playAnimation(this.IMAGES_INTRO);
+            } else if (this.isActive) {
+                this.playAnimation(this.IMAGES_MOVE);
+            }
+        }, 250);
+    }
+
+        startAnimationLoop(){
+        setInterval(() => {
+            if (this.isActive) {
+                this.playAnimation(this.IMAGES_MOVE);
+            }
+        }, 400);
+
+        setInterval(() => {
+            if ( this.isIntroducing) {
+                this.playAnimation(this.IMAGES_INTRO);
+            }
+        }, 140);
+
+    }
+
+    isCollidable() {
+        return this.isActive;
     }
 }

@@ -21,9 +21,10 @@ class world {
     TILE_WIDTH = 720;
     enemyCollisionInterval = null;
     hasStarted = false;
+
+    bossTriggerX = 3600;
+    bossFightStarted = false;
     bubbles = [];
-
-
 
     constructor(canvas, keyboard) {
         this.canvas = canvas;
@@ -166,7 +167,7 @@ class world {
     checkBarrierCollision() {
         let hitBarrier = this.isCollidingWithAnyBarrier();
         let boss = this.getEndboss();
-        let hitBoss = boss && this.mainCharacter.isColliding(boss);
+        let hitBoss = boss && boss.isCollidable() && this.mainCharacter.isColliding(boss);
         if (!hitBarrier && !hitBoss) {
             this.rememberPlayerPosition();
             return;}
@@ -276,6 +277,10 @@ class world {
         this.checkCoinCollision();
         this.checkPoisonCollision();
         this.checkMenuInput();
+        this.checkEndbossTrigger();
+
+        let boss = this.getEndboss();
+        if (boss) boss.update();
         this.handleAttackInput(now);
         this.updateAttacks(now);
         this.checkAttackCollisions();
@@ -313,6 +318,7 @@ class world {
         this.isGameOver = false;
         this.camera_x = 0;
         this.attacks = [];
+        this.bossFightStarted = false;
         this.mainCharacter = new character();
         this.setWorld();
         this.mainCharacter.animate();
@@ -406,6 +412,7 @@ class world {
         document.getElementById('startscreen')?.classList.remove('hidden');
         this.camera_x = 0;
         this.attacks = [];
+        this.bossFightStarted = false;
         this.level = createLevel1();
         this.mainCharacter = new character();
         this.setWorld();
@@ -420,5 +427,17 @@ class world {
         this.goHome();
         this.keyboard.ESC = false;
     }
+
+    checkEndbossTrigger() {
+        if ( this.bossFightStarted) return;
+        let boss = this.getEndboss();
+        if (!boss) return;
+        if (this.mainCharacter.x >=this.bossTriggerX) {
+            this.bossFightStarted = true;
+            boss.startIntro();
+        }
+    }
+
+
 
 }

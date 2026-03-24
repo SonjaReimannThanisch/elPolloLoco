@@ -2,6 +2,9 @@ class jellyfisch extends movableObject {
 
     height = 80;
     width = 80;
+    isDead = false;
+    markedForDeletion = false;
+    energy = 100;
 
     IMAGES_MOVE_LILA = [
         'img/2.Enemy/2 Jelly fish/Regular damage/Lila2.png',
@@ -82,19 +85,57 @@ class jellyfisch extends movableObject {
 
     constructor(color = 'lila') {
         super()
+        this.type = color;
         this.images = (color === 'yellow') ? this.IMAGES_MOVE_YELLOW : this.IMAGES_MOVE_LILA;
         this.loadImage(this.images[0]);
         this.loadImages(this.images);
+        this.loadImages(this.IMAGES_DEAD_LILA);
+        this.loadImages(this.IMAGES_DEAD_GREEN);
+        this.loadImages(this.IMAGES_DEAD_PINK);
+        this.loadImages(this.IMAGES_DEAD_YELLOW);
+        this.loadImages(this.IMAGES_REGULAR_DEATHL);
+        this.loadImages(this.IMAGES_REGULAR_DEATHY);
+        this.loadImages(this.IMAGES_SUPER_DEATHG);
+        this.loadImages(this.IMAGES_SUPER_DEATHP);
         this.x = 890 + Math.random() * 500;
         this.y = 100 + Math.random() * 200;
-        this.speed = 0.15 + Math.random() * 0.5;
+        this.speed = 0.3 + Math.random() * 0.5;
         this.animate();
     }
 
+    hit() {
+        if ( this.isDead) return;
+        this.energy -= 100;
+        if ( this.energy <= 0) {
+            this.isDead = true;
+            this.speed = 0;
+            setTimeout(() => {
+                this.markedForDeletion = true;
+            }, 500);
+        }
+    }
+
     animate(){
-        this.moveLeft();
         setInterval(() => {
-            this.playAnimation(this.images);
+            if (!this.isDead) {
+                this.x -= this.speed;
+            }
+        }, 1000 / 60);
+
+        setInterval(() => {
+            if (this.isDead) {
+                this.playAnimation(this.getDieImages());
+            } else {
+                this.playAnimation(this.images);
+            }
         }, 200);
     }
+
+        getDieImages() {
+        if (this.type === 'pink') return this.IMAGES_DEAD_PINK;
+        if (this.type === 'lila') return this.IMAGES_DEAD_LILA;
+        if (this.type === 'green') return this.IMAGES_DEAD_GREEN;
+        if (this.type === 'yellow') return this.IMAGES_DEAD_YELLOW;
+    }
+
 }

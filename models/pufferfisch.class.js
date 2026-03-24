@@ -121,7 +121,7 @@ class pufferfisch extends movableObject {
 
         this.x = 1440 + Math.random() * 500;
         this.y = 140 + Math.random() * 200;
-        this.speed = 0.05 + Math.random() * 0.1;
+        this.speed = 0.6 + Math.random() * 0.7;
         this.animate();
     }
 
@@ -135,21 +135,19 @@ class pufferfisch extends movableObject {
                 this.markedForDeletion = true;
             }, 500);
         }
-
     }
 
     animate(){
         setInterval(() => {
-            if ( this.isDead) {
+            if (!this.isDead) {
                 this.x -= this.speed;
             }
         }, 1000 / 60);
 
         setInterval(() => {
-            if ( this.isDead) {
+            if (this.isDead) {
                 this.playAnimation(this.getDieImages());
             } else {
-                this.moveLeft();
                 this.playAnimation(this.images);
             }
         }, 200);

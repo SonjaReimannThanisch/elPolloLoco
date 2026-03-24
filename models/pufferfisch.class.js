@@ -2,6 +2,9 @@ class pufferfisch extends movableObject {
 
     height = 80;
     width = 80;
+    isDead = false;
+    markedForDeletion = false;
+    energy = 100;
 
     IMAGES_MOVE_PINK = [
         'img/2.Enemy/1.Puffer fish (3 color options)/1.Swim/3.swim1.png',
@@ -102,24 +105,66 @@ class pufferfisch extends movableObject {
 
     constructor(color = 'pink') {
         super()
+        // console.log('PUFFER SPAWNED', color);
+        
+        this.type = color;
         this.images = 
-        color === 'rose' ? this.IMAGES_MOVE_ROSE :
-        color === 'green' ?  this.IMAGES_MOVE_GREEN :
-        this.IMAGES_MOVE_PINK;
+            color === 'rose' ? this.IMAGES_MOVE_ROSE :
+            color === 'green' ?  this.IMAGES_MOVE_GREEN :
+            this.IMAGES_MOVE_PINK;
 
         this.loadImage(this.images[0]);
         this.loadImages(this.images);
+        this.loadImages(this.IMAGES_DIE_GREEN);
+        this.loadImages(this.IMAGES_DIE_ROSE);
+        this.loadImages(this.IMAGES_DIE_PINK);
 
         this.x = 1440 + Math.random() * 500;
         this.y = 140 + Math.random() * 200;
-        this.speed = 0.15 + Math.random() * 0.5;
+        this.speed = 0.05 + Math.random() * 0.1;
         this.animate();
     }
 
+    hit() {
+        if ( this.isDead) return;
+        this.energy -= 100;
+        if ( this.energy <= 0) {
+            this.isDead = true;
+            this.speed = 0;
+            setTimeout(() => {
+                this.markedForDeletion = true;
+            }, 500);
+        }
+
+    }
+
     animate(){
-        this.moveLeft();
         setInterval(() => {
-            this.playAnimation(this.images);
+            if ( this.isDead) {
+                this.x -= this.speed;
+            }
+        }, 1000 / 60);
+
+        setInterval(() => {
+            if ( this.isDead) {
+                this.playAnimation(this.getDieImages());
+            } else {
+                this.moveLeft();
+                this.playAnimation(this.images);
+            }
         }, 200);
     }
+
+    getDieImages() {
+        if (this.type === 'pink') return this.IMAGES_DIE_PINK;
+        if (this.type === 'rose') return this.IMAGES_DIE_ROSE;
+        if (this.type === 'green') return this.IMAGES_DIE_GREEN;
+    }
+
+    // animate(){
+    //     this.moveLeft();
+    //     setInterval(() => {
+    //         this.playAnimation(this.images);
+    //     }, 200);
+    // }
 }

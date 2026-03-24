@@ -86,22 +86,11 @@ class world {
     }
 
     checkEnemyCollision(enemy) {
-        if (this.mainCharacter.isColliding(enemy)) {
+        if (enemy.isDead) return;
+        if (this.mainCharacter.isColliding(enemy) && !this.mainCharacter.isHurt()) {
             this.applyDamage();
         }
     }
-
-    // checkAttackCollisions() {
-    //     this.attacks.forEach((attack) => {
-    //         this.level.enemies.forEach((enemy) => {
-    //             if (!attack.hasHit && attack.isColliding(enemy)) {
-    //                 enemy.hit();
-    //                 attack.hasHit = true;
-    //             }
-    //         });
-    //     });
-    // }
-    
 
     checkAttackCollisions() {
         for (let i = 0; i < this.attacks.length; i++) {
@@ -277,6 +266,7 @@ class world {
         this.checkCoinCollision();
         this.checkPoisonCollision();
         this.checkMenuInput();
+        this.level.enemies = this.level.enemies.filter(e => !e.markedForDeletion);
         this.checkEndbossTrigger();
 
         let boss = this.getEndboss();

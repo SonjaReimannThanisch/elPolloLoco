@@ -1,0 +1,40 @@
+{
+  "highlight.regexes": {
+    "// BLUE": {
+      "decorations": [
+        {
+          "backgroundColor": "#64B5F6",
+          "color": "#000000",
+          "fontWeight": "bold"
+        }
+      ]
+    },
+    "// RED": {
+      "decorations": [
+        {
+          "backgroundColor": "#E57373",
+          "color": "#000000",
+          "fontWeight": "bold"
+        }
+      ]
+    },
+    "// PURPLE": {
+      "decorations": [
+        {
+          "backgroundColor": "#BA68C8",
+          "color": "#000000",
+          "fontWeight": "bold"
+        }
+      ]
+    },
+    "// GREEN": {
+      "decorations": [
+        {
+          "backgroundColor": "#81C784",
+          "color": "#000000",
+          "fontWeight": "bold"
+        }
+      ]
+    }
+  }
+}

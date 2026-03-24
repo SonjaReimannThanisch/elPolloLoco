@@ -72,7 +72,7 @@ class pufferfisch extends movableObject {
         'img/2.Enemy/1.Puffer fish (3 color options)/3.Bubbleeswim/1.bubbleswim4.png',
         'img/2.Enemy/1.Puffer fish (3 color options)/3.Bubbleeswim/1.bubbleswim5.png',
     ];
-    // GREEN
+
      IMAGES_DIE_PINK = [
          'img/2.Enemy/1.Puffer fish (3 color options)/4.DIE/3.2.png',
          'img/2.Enemy/1.Puffer fish (3 color options)/4.DIE/3.3.png',

@@ -106,7 +106,8 @@ class pufferfisch extends movableObject {
     constructor(color = 'pink') {
         super()
         // console.log('PUFFER SPAWNED', color);
-        
+        // this.isDead = true;
+        // console.log('JELLY TYPE', this.type);
         this.type = color;
         this.images = 
             color === 'rose' ? this.IMAGES_MOVE_ROSE :
@@ -159,10 +160,4 @@ class pufferfisch extends movableObject {
         if (this.type === 'green') return this.IMAGES_DIE_GREEN;
     }
 
-    // animate(){
-    //     this.moveLeft();
-    //     setInterval(() => {
-    //         this.playAnimation(this.images);
-    //     }, 200);
-    // }
 }

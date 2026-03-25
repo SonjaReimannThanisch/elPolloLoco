@@ -62,10 +62,4 @@ class movableObject extends drawableObject {
         return this.energy === 0;
     }
 
-
-    moveLeft() {
-        setInterval(() => {
-            this.x -= this.speed;
-        }, 1000 / 60);
-    }
 }

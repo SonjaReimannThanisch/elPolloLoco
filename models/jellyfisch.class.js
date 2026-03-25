@@ -34,12 +34,12 @@ class jellyfisch extends movableObject {
         'img/2.Enemy/2 Jelly fish/Dead/Lila/L4.png',
     ];
 
-    IMAGES_DEAD_PINK = [
-        'img/2.Enemy/2 Jelly fish/Dead/Pink/P1.png',
-        'img/2.Enemy/2 Jelly fish/Dead/Pink/P2.png',
-        'img/2.Enemy/2 Jelly fish/Dead/Pink/P3.png',
-        'img/2.Enemy/2 Jelly fish/Dead/Pink/P4.png',
-    ];
+    // IMAGES_DEAD_PINK = [
+    //     'img/2.Enemy/2 Jelly fish/Dead/Pink/P1.png',
+    //     'img/2.Enemy/2 Jelly fish/Dead/Pink/P2.png',
+    //     'img/2.Enemy/2 Jelly fish/Dead/Pink/P3.png',
+    //     'img/2.Enemy/2 Jelly fish/Dead/Pink/P4.png',
+    // ];
 
     IMAGES_DEAD_YELLOW = [
         'img/2.Enemy/2 Jelly fish/Dead/Yellow/y1.png',
@@ -86,12 +86,14 @@ class jellyfisch extends movableObject {
     constructor(color = 'lila') {
         super()
         this.type = color;
+        this.isDead = true;
+        // console.log('JELLY TYPE', this.type);
         this.images = (color === 'yellow') ? this.IMAGES_MOVE_YELLOW : this.IMAGES_MOVE_LILA;
         this.loadImage(this.images[0]);
         this.loadImages(this.images);
         this.loadImages(this.IMAGES_DEAD_LILA);
         this.loadImages(this.IMAGES_DEAD_GREEN);
-        this.loadImages(this.IMAGES_DEAD_PINK);
+        // this.loadImages(this.IMAGES_DEAD_PINK);
         this.loadImages(this.IMAGES_DEAD_YELLOW);
         this.loadImages(this.IMAGES_REGULAR_DEATHL);
         this.loadImages(this.IMAGES_REGULAR_DEATHY);
@@ -101,6 +103,9 @@ class jellyfisch extends movableObject {
         this.y = 100 + Math.random() * 200;
         this.speed = 0.3 + Math.random() * 0.5;
         this.animate();
+        setTimeout(() => {
+            this.hit();
+        }, 1000);
     }
 
     hit() {
@@ -134,8 +139,12 @@ class jellyfisch extends movableObject {
         getDieImages() {
         if (this.type === 'pink') return this.IMAGES_DEAD_PINK;
         if (this.type === 'lila') return this.IMAGES_DEAD_LILA;
-        if (this.type === 'green') return this.IMAGES_DEAD_GREEN;
-        if (this.type === 'yellow') return this.IMAGES_DEAD_YELLOW;
+        // if (this.type === 'green') return this.IMAGES_DEAD_GREEN;
+        // if (this.type === 'yellow') return this.IMAGES_DEAD_YELLOW;
+        // if (this.type === 'green') return this.IMAGES_REGULAR_DEATHL;
+        // if (this.type === 'yellow') return this.IMAGES_REGULAR_DEATHY;
+        if (this.type === 'green') return this.IMAGES_SUPER_DEATHG;
+        if (this.type === 'yellow') return this.IMAGES_SUPER_DEATHP;
     }
 
 }

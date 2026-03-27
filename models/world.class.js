@@ -47,7 +47,7 @@ class world {
         if(this.hasStarted) return;
         this.hasStarted = true;
         this.mainCharacter.animate();
-        // this.draw();
+        this.draw();
         this.checkCollisions();
     }
 
@@ -58,7 +58,6 @@ class world {
     triggerGameOverIfDead() {
         if (this.mainCharacter.energy <= 0 && !this.isGameOver) {
             this.isGameOver = true;
-
             this.showGameOver();
         }
     }
@@ -67,7 +66,7 @@ class world {
         if (this.enemyCollisionInterval) {
         clearInterval(this.enemyCollisionInterval);
         this.enemyCollisionInterval = null;
-    }
+        }
     }
 
     applyDamage() {
@@ -96,42 +95,24 @@ class world {
         for (let i = 0; i < this.attacks.length; i++) {
             const attack = this.attacks[i];
             if (attack.hasHit) continue;
-
             for (let j = 0; j < this.level.enemies.length; j++) {
             const enemy = this.level.enemies[j];
-
             if (attack.isColliding(enemy)) {
                 enemy.hit();
                 attack.hasHit = true;
                 break;
-            }
+                }
             }
         }
     }
-
-    // updateAttacks() {
-    //     const now = Date.now();
-
-    //     for (let i = 0; i < this.attacks.length; i++) {
-    //         const a = this.attacks[i];
-
-    //         // Attack folgt dem Character + spielt Frames, falls vorhanden
-    //         if (typeof a.tick === 'function') a.tick(now);
-
-    //         // Projectile Bewegung (Bubble), falls vx gesetzt ist
-    //         if (a.vx) a.x += a.vx;
-    // }
-    // }
 
     updateAttacks(now) {
         for (let i=0; i < this.attacks.length; i++) {
             let attack = this.attacks[i];
             if (typeof attack.tick === `function`) {
-                attack.tick(now);
-            }
+                attack.tick(now);}
             if ( attack.vx) {
-                attack.x += attack.vx;
-            }
+                attack.x += attack.vx;}
         }
     }
 
@@ -164,7 +145,7 @@ class world {
         if (this.isPressingIntoBarrier() && !this.mainCharacter.isHurt()) {
             this.applyDamage();
         }
-    }   
+    } 
 
     showGameOver() {
         document.getElementById('gameover')?.classList.remove('hidden');
@@ -324,7 +305,6 @@ class world {
 
     handleAttackInput() {
         if (!this.hasStarted || this.isGameOver) return;
-
         let now =Date.now();
         if (this.keyboard.SPACE) this.tryFinSlap(now);
         if (this.keyboard.A) this.tryBubble(now);

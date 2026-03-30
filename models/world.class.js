@@ -174,7 +174,7 @@ class world {
         if (this.isPressingIntoBarrier() && !this.mainCharacter.isHurt()) {
             this.applyDamage();
         }
-    }   
+    }
 
     showGameOver() {
         document.getElementById('gameover')?.classList.remove('hidden');

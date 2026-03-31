@@ -70,11 +70,18 @@ class jellyfisch extends movableObject {
     }
 
     constructor(color = 'lila') {
-        super()
+        super();
         this.type = color;
-        // this.isDead = true;
-        console.log('JELLY TYPE', this.type);
-        this.images = (color === 'yellow') ? this.IMAGES_MOVE_YELLOW | this.IMAGES_MOVE_LILA | this.IMAGES_DEAD_PINK | this.IMAGES_DEAD_GREEN;
+
+        let moveSets = {
+            lila: this.IMAGES_MOVE_LILA,
+            yellow: this.IMAGES_MOVE_YELLOW,
+            green: this.IMAGES_MOVE_LILA,
+            pink: this.IMAGES_MOVE_YELLOW,
+        };
+
+        this.images = moveSets[color] || this.IMAGES_MOVE_LILA;
+
         this.loadImage(this.images[0]);
         this.loadImages(this.images);
         this.loadImages(this.IMAGES_DEAD_LILA);
@@ -83,16 +90,16 @@ class jellyfisch extends movableObject {
         this.loadImages(this.IMAGES_DEAD_YELLOW);
         this.loadImages(this.IMAGES_SUPER_DEATHG);
         this.loadImages(this.IMAGES_SUPER_DEATHP);
+
         this.x = 890 + Math.random() * 500;
         this.y = 100 + Math.random() * 200;
         this.speed = 0.3 + Math.random() * 0.5;
         this.animate();
-        // setTimeout(() => {
-        //     this.hit();
-        // }, 1000);
     }
 
     hit() {
+        console.log('Jelly HIT');
+        
         if ( this.isDead) return;
         this.energy -= 100;
         if ( this.energy <= 0) {
@@ -113,20 +120,32 @@ class jellyfisch extends movableObject {
 
         setInterval(() => {
             if (this.isDead) {
-                this.playAnimation(this.getDieImages());
+                this.playAnimation(this.getSuperDieImages());
             } else {
                 this.playAnimation(this.images);
             }
         }, 200);
     }
 
-        getDieImages() {
-        if (this.type === 'green') return this.IMAGES_DEAD_GREEN;
-        if (this.type === 'yellow') return this.IMAGES_DEAD_YELLOW;
-        if (this.type === 'lila') return this.IMAGES_DEAD_LILA;
-        if (this.type === 'pink') return this.IMAGES_DEAD_PINK;
-        // if (this.type === 'green') return this.IMAGES_SUPER_DEATHG;
-        // if (this.type === 'pink') return this.IMAGES_SUPER_DEATHP;
+    getDieImages() {
+        let deathSets = {
+            lila: this.IMAGES_DEAD_LILA,
+            yellow: this.IMAGES_DEAD_YELLOW,
+            green: this.IMAGES_DEAD_GREEN,
+            pink: this.IMAGES_DEAD_PINK,
+        };
+        return deathSets[this.type] || this.IMAGES_DEAD_LILA;
+
     }
+
+    getSuperDieImages() {
+        let superdeathSets = {
+            green: this.IMAGES_SUPER_DEATHG,
+            pink: this.IMAGES_SUPER_DEATHP,
+        };
+        return superdeathSets[this.type] || this.IMAGES_DEAD_LILA;
+
+    }
+
 
 }

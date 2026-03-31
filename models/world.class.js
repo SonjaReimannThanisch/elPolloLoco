@@ -47,7 +47,7 @@ class world {
         if(this.hasStarted) return;
         this.hasStarted = true;
         this.mainCharacter.animate();
-        this.draw();
+        // this.draw();
         this.checkCollisions();
     }
 
@@ -95,13 +95,15 @@ class world {
         for (let i = 0; i < this.attacks.length; i++) {
             const attack = this.attacks[i];
             if (attack.hasHit) continue;
+
             for (let j = 0; j < this.level.enemies.length; j++) {
             const enemy = this.level.enemies[j];
+
             if (attack.isColliding(enemy)) {
                 enemy.hit();
                 attack.hasHit = true;
                 break;
-                }
+            }
             }
         }
     }
@@ -110,9 +112,11 @@ class world {
         for (let i=0; i < this.attacks.length; i++) {
             let attack = this.attacks[i];
             if (typeof attack.tick === `function`) {
-                attack.tick(now);}
+                attack.tick(now);
+            }
             if ( attack.vx) {
-                attack.x += attack.vx;}
+                attack.x += attack.vx;
+            }
         }
     }
 
@@ -145,7 +149,7 @@ class world {
         if (this.isPressingIntoBarrier() && !this.mainCharacter.isHurt()) {
             this.applyDamage();
         }
-    } 
+    }   
 
     showGameOver() {
         document.getElementById('gameover')?.classList.remove('hidden');
@@ -256,6 +260,32 @@ class world {
         this.updateAttacks(now);
         this.checkAttackCollisions();
         this.cleanupAttacks();
+        if (this.keyboard.T) {
+            console.log('T gedrückt');
+
+            let jelly = this.level.enemies.find(e => e instanceof jellyfisch && !e.isDead);
+            if (jelly) {
+                console.log('Jelly gefunden', jelly.type);
+                jelly.hit();
+            } else {
+                console.log('Kein Jelly gefunden');
+            }
+
+            this.keyboard.T = false;
+        }
+
+        if (this.keyboard.Y) {
+            console.log('Y gedrückt');
+            let puffer = this.level.enemies.find(e => e instanceof pufferfisch && !e.isDead);
+
+            if (puffer) {
+                console.log('puffer gefunden', puffer.type);
+                puffer.hit();
+            } else {
+                console.log('Kein puffer gefunden');
+            }
+            this.keyboard.Y = false;
+        }
     }
 
     drawWorldLayer() {

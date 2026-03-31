@@ -19,6 +19,16 @@ function createLevel1() {
         new jellyfisch('yellow'),
         new jellyfisch('yellow'),
 
+        new jellyfisch('green'),
+        new jellyfisch('green'),
+        new jellyfisch('green'),
+        new jellyfisch('green'),
+        
+        new jellyfisch('pink'),
+        new jellyfisch('pink'),
+        new jellyfisch('pink'),
+        new jellyfisch('pink'),
+
         new Endboss(),
     ],
 

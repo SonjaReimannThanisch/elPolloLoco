@@ -20,25 +20,11 @@ class jellyfisch extends movableObject {
         'img/2.Enemy/2 Jelly fish/Regular damage/Yellow_4.png',
     ];
 
-    IMAGES_DEAD_GREEN = [
-        'img/2.Enemy/2 Jelly fish/Dead/green/g1.png',
-        'img/2.Enemy/2 Jelly fish/Dead/green/g2.png',
-        'img/2.Enemy/2 Jelly fish/Dead/green/g3.png',
-        'img/2.Enemy/2 Jelly fish/Dead/green/g4.png',
-    ];
-
     IMAGES_DEAD_LILA = [
         'img/2.Enemy/2 Jelly fish/Dead/Lila/L1.png',
         'img/2.Enemy/2 Jelly fish/Dead/Lila/L2.png',
         'img/2.Enemy/2 Jelly fish/Dead/Lila/L3.png',
         'img/2.Enemy/2 Jelly fish/Dead/Lila/L4.png',
-    ];
-
-    IMAGES_DEAD_PINK = [
-        'img/2.Enemy/2 Jelly fish/Dead/Pink/P1.png',
-        'img/2.Enemy/2 Jelly fish/Dead/Pink/P2.png',
-        'img/2.Enemy/2 Jelly fish/Dead/Pink/P3.png',
-        'img/2.Enemy/2 Jelly fish/Dead/Pink/P4.png',
     ];
 
     IMAGES_DEAD_YELLOW = [
@@ -48,18 +34,34 @@ class jellyfisch extends movableObject {
         'img/2.Enemy/2 Jelly fish/Dead/Yellow/y4.png',
     ]
 
-    IMAGES_SUPER_DEATHG = [
+
+
+    IMAGES_SUPER_GREEN = [
         'img/2.Enemy/2 Jelly fish/Súper dangerous/Green 1.png',
         'img/2.Enemy/2 Jelly fish/Súper dangerous/Green 2.png',
         'img/2.Enemy/2 Jelly fish/Súper dangerous/Green 3.png',
         'img/2.Enemy/2 Jelly fish/Súper dangerous/Green 4.png',
     ];
 
-    IMAGES_SUPER_DEATHP = [
+    IMAGES_SUPER_PINK = [
         'img/2.Enemy/2 Jelly fish/Súper dangerous/Pink 1.png',
         'img/2.Enemy/2 Jelly fish/Súper dangerous/Pink 2.png',
         'img/2.Enemy/2 Jelly fish/Súper dangerous/Pink 3.png',
         'img/2.Enemy/2 Jelly fish/Súper dangerous/Pink 4.png',
+    ];
+
+    IMAGES_DEAD_GREEN = [
+        'img/2.Enemy/2 Jelly fish/Dead/green/g1.png',
+        'img/2.Enemy/2 Jelly fish/Dead/green/g2.png',
+        'img/2.Enemy/2 Jelly fish/Dead/green/g3.png',
+        'img/2.Enemy/2 Jelly fish/Dead/green/g4.png',
+    ];
+
+    IMAGES_DEAD_PINK = [
+        'img/2.Enemy/2 Jelly fish/Dead/Pink/P1.png',
+        'img/2.Enemy/2 Jelly fish/Dead/Pink/P2.png',
+        'img/2.Enemy/2 Jelly fish/Dead/Pink/P3.png',
+        'img/2.Enemy/2 Jelly fish/Dead/Pink/P4.png',
     ];
 
     offset = {
@@ -72,12 +74,13 @@ class jellyfisch extends movableObject {
     constructor(color = 'lila') {
         super();
         this.type = color;
+        this.damage = (color === `green` || color === `pink`) ? 20:5;
 
         let moveSets = {
             lila: this.IMAGES_MOVE_LILA,
             yellow: this.IMAGES_MOVE_YELLOW,
-            green: this.IMAGES_MOVE_LILA,
-            pink: this.IMAGES_MOVE_YELLOW,
+            green: this.IMAGES_SUPER_GREEN,
+            pink: this.IMAGES_SUPER_PINK,
         };
 
         this.images = moveSets[color] || this.IMAGES_MOVE_LILA;
@@ -88,8 +91,8 @@ class jellyfisch extends movableObject {
         this.loadImages(this.IMAGES_DEAD_GREEN);
         this.loadImages(this.IMAGES_DEAD_PINK);
         this.loadImages(this.IMAGES_DEAD_YELLOW);
-        this.loadImages(this.IMAGES_SUPER_DEATHG);
-        this.loadImages(this.IMAGES_SUPER_DEATHP);
+        this.loadImages(this.IMAGES_SUPER_GREEN);
+        this.loadImages(this.IMAGES_SUPER_PINK);
 
         this.x = 890 + Math.random() * 500;
         this.y = 100 + Math.random() * 200;
@@ -98,7 +101,7 @@ class jellyfisch extends movableObject {
     }
 
     hit() {
-        console.log('Jelly HIT');
+        console.log('Jelly HIT', this.type);
         
         if ( this.isDead) return;
         this.energy -= 100;
@@ -131,8 +134,6 @@ class jellyfisch extends movableObject {
         let deathSets = {
             lila: this.IMAGES_DEAD_LILA,
             yellow: this.IMAGES_DEAD_YELLOW,
-            green: this.IMAGES_DEAD_GREEN,
-            pink: this.IMAGES_DEAD_PINK,
         };
         return deathSets[this.type] || this.IMAGES_DEAD_LILA;
 
@@ -140,10 +141,11 @@ class jellyfisch extends movableObject {
 
     getSuperDieImages() {
         let superdeathSets = {
-            green: this.IMAGES_SUPER_DEATHG,
-            pink: this.IMAGES_SUPER_DEATHP,
+  
+            green: this.IMAGES_DEAD_GREEN,
+            pink: this.IMAGES_DEAD_PINK,
         };
-        return superdeathSets[this.type] || this.IMAGES_DEAD_LILA;
+        return superdeathSets[this.type] || this.IMAGES_DEAD_GREEN;
 
     }
 

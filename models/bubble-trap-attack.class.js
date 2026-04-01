@@ -21,7 +21,6 @@ class BubbleTrapAttack extends Attack {
         this.character = character;
         this.img = this.imageCache[this.IMAGES_BubbleAttack[0]];
         this.updatePosition();
-        this.animate();
     }
 
     updatePosition() {
@@ -30,7 +29,7 @@ class BubbleTrapAttack extends Attack {
         let cy = this.character.y + this.character.height / 2;
         this.x = cx - this.width / 2;
         this.y = cy - this.height / 2;
-        let push = this.otherDirection ? -40 :40;
+        let push = this.otherDirection ? -120 : 120;
         this.x += push;
     }
 
@@ -42,16 +41,5 @@ class BubbleTrapAttack extends Attack {
             this.lastFrameAt = now;
         }
     }
-
-    // animate() {
-    //     const interval = setInterval(() => {
-    //         this.updatePosition();
-    //         this.playAnimation(this.IMAGES_BubbleAttack);
-
-    //         if (this.isExpired()) {
-    //             clearInterval(interval);
-    //         }
-    //     }, 1000 / 20);
-    // }
 
 }

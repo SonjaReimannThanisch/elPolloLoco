@@ -24,10 +24,9 @@ class FinSlapAttack extends Attack {
 
     updatePosition() {
         this.otherDirection = this.character.otherDirection;
-        this.x = this.character.otherDirection
-            ? this.character.x -20
-            : this.character.x +70;
-        this.y = this.character.y +55;
+        let offsetX = this.character.otherDirection ? -100 : 100;
+        this.x = this.character.x + offsetX;
+        this.y = this.character.y + 60;
     }
 
     tick(now) {

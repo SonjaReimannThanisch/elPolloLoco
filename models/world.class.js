@@ -69,8 +69,16 @@ class world {
         }
     }
 
-    applyDamage() {
-        this.mainCharacter.hit();
+    applyDamage(amount = 5) {
+        this.mainCharacter.energy -= amount;
+        
+        if ( this.mainCharacter.energy < 0) {
+            this.mainCharacter.energy = 0;
+        } else {
+            this.mainCharacter.lastHit = new Date().getTime();
+        }
+        
+        // this.mainCharacter.hit();
         this.statusLife.setPercentage(this.mainCharacter.energy);
         this.triggerGameOverIfDead();
     }
@@ -87,7 +95,7 @@ class world {
     checkEnemyCollision(enemy) {
         if (enemy.isDead) return;
         if (this.mainCharacter.isColliding(enemy) && !this.mainCharacter.isHurt()) {
-            this.applyDamage();
+            this.applyDamage(enemy.damage || 5);
         }
     }
 
@@ -169,7 +177,6 @@ class world {
             homeBtn .onclick = () => this.goHome();
         }
     }
-
 
     isPressingIntoBarrier() {
         return this.keyboard.LEFT || this.keyboard.RIGHT || this.keyboard.UP || this.keyboard.DOWN;
@@ -260,32 +267,32 @@ class world {
         this.updateAttacks(now);
         this.checkAttackCollisions();
         this.cleanupAttacks();
-        if (this.keyboard.T) {
-            console.log('T gedrückt');
+        // if (this.keyboard.T) {
+        //     console.log('T gedrückt');
 
-            let jelly = this.level.enemies.find(e => e instanceof jellyfisch && !e.isDead);
-            if (jelly) {
-                console.log('Jelly gefunden', jelly.type);
-                jelly.hit();
-            } else {
-                console.log('Kein Jelly gefunden');
-            }
+        //     let jelly = this.level.enemies.find(e => e instanceof jellyfisch && !e.isDead);
+        //     if (jelly) {
+        //         console.log('Jelly gefunden', jelly.type);
+        //         jelly.hit();
+        //     } else {
+        //         console.log('Kein Jelly gefunden');
+        //     }
 
-            this.keyboard.T = false;
-        }
+        //     this.keyboard.T = false;
+        // }
 
-        if (this.keyboard.Y) {
-            console.log('Y gedrückt');
-            let puffer = this.level.enemies.find(e => e instanceof pufferfisch && !e.isDead);
+        // if (this.keyboard.Y) {
+        //     console.log('Y gedrückt');
+        //     let puffer = this.level.enemies.find(e => e instanceof pufferfisch && !e.isDead);
 
-            if (puffer) {
-                console.log('puffer gefunden', puffer.type);
-                puffer.hit();
-            } else {
-                console.log('Kein puffer gefunden');
-            }
-            this.keyboard.Y = false;
-        }
+        //     if (puffer) {
+        //         console.log('puffer gefunden', puffer.type);
+        //         puffer.hit();
+        //     } else {
+        //         console.log('Kein puffer gefunden');
+        //     }
+        //     this.keyboard.Y = false;
+        // }
     }
 
     drawWorldLayer() {
@@ -331,20 +338,12 @@ class world {
         this.draw();
     }
 
-
-
     handleAttackInput() {
         if (!this.hasStarted || this.isGameOver) return;
         let now =Date.now();
         if (this.keyboard.SPACE) this.tryFinSlap(now);
         if (this.keyboard.A) this.tryBubble(now);
     }
-
-    // updateAttack() {
-    //     if (!this.hasStarted || this.isGameOver) return;
-    //     if (this.keyboard.SPACE) this.tryFinSlap(now);
-    //     if (this.keyboard.A) this.tryBubble(now);
-    // }
 
     tryFinSlap(now) {
         if (now - this.lastFinSlapAt < this.finSlapCoolsdowns) return;
@@ -437,7 +436,4 @@ class world {
             boss.startIntro();
         }
     }
-
-
-
 }

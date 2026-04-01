@@ -101,17 +101,21 @@ class world {
 
     checkAttackCollisions() {
         for (let i = 0; i < this.attacks.length; i++) {
-            const attack = this.attacks[i];
+            let attack = this.attacks[i];
             if (attack.hasHit) continue;
 
             for (let j = 0; j < this.level.enemies.length; j++) {
-            const enemy = this.level.enemies[j];
+            let enemy = this.level.enemies[j];
 
-            if (attack.isColliding(enemy)) {
-                enemy.hit();
-                attack.hasHit = true;
-                break;
-            }
+                if ( attack instanceof BubbleTrapAttack && !(enemy instanceof jellyfisch)) {
+                    continue;
+                }
+
+                if (attack.isColliding(enemy)) {
+                    enemy.hit();
+                    attack.hasHit = true;
+                    break;
+                }
             }
         }
     }
@@ -126,6 +130,10 @@ class world {
                 attack.x += attack.vx;
             }
         }
+    }
+
+    cleanupAttack() {
+        this.attacks = this.attacks.filter(a => !a.isExpired() && !a.markedForDeletion);
     }
 
     isCollidingWithAnyBarrier() {
@@ -355,11 +363,14 @@ class world {
 
     tryBubble(now) {
         if (now - this.lastBubbleAt < this.bubbleCooldowns) return;
-        let attack = new BubbleTrapAttack(this.mainCharacter);
-        this.attacks.push(attack);
+        this.mainCharacter.startBubbleAttackAnimation();
+        setTimeout(() => {
+            let attack = new BubbleTrapAttack(this.mainCharacter);
+            this.attacks.push(attack);
+        }, 150);
         this.lastBubbleAt = now;
-        this.keyboard.A = false;
     }
+
 
     cleanupAttacks() {
         this.attacks = this.attacks.filter(a => !a.isExpired());

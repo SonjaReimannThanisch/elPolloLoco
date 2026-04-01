@@ -123,9 +123,11 @@ class jellyfisch extends movableObject {
 
         setInterval(() => {
             if (this.isDead) {
-                this.playAnimation(this.getSuperDieImages());
-            } else {
-                this.playAnimation(this.images);
+                if (this.type === 'green' || this.type === 'pink') {
+                    this.playAnimation(this.getSuperDieImages());
+                } else {
+                    this.playAnimation(this.getDieImages());
+                }
             }
         }, 200);
     }
@@ -141,7 +143,6 @@ class jellyfisch extends movableObject {
 
     getSuperDieImages() {
         let superdeathSets = {
-  
             green: this.IMAGES_DEAD_GREEN,
             pink: this.IMAGES_DEAD_PINK,
         };

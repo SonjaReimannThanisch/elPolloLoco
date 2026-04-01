@@ -1,26 +1,23 @@
 class BubbleTrapAttack extends Attack {
-    width = 140;
-    height = 140;
-    lifetime = 500;
+    width = 70;
+    height = 70;
+    lifetime = 1000;
+    hasHit = false;
+    isImpacting = false;
+    markedForDeletion = false;
 
-
-    IMAGES_BubbleAttack = [
-        'img/1.Sharkie/4.Attack/Bubble trap/op1 (with bubble formation)/1.png',
-        'img/1.Sharkie/4.Attack/Bubble trap/op1 (with bubble formation)/2.png',
-        'img/1.Sharkie/4.Attack/Bubble trap/op1 (with bubble formation)/3.png',
-        'img/1.Sharkie/4.Attack/Bubble trap/op1 (with bubble formation)/4.png',
-        'img/1.Sharkie/4.Attack/Bubble trap/op1 (with bubble formation)/5.png',
-        'img/1.Sharkie/4.Attack/Bubble trap/op1 (with bubble formation)/6.png',
-        'img/1.Sharkie/4.Attack/Bubble trap/op1 (with bubble formation)/7.png',
-        'img/1.Sharkie/4.Attack/Bubble trap/op1 (with bubble formation)/8.png',
+    IMAGES_BUBBLE= [
+        'img/1.Sharkie/4.Attack/Bubble trap/Bubble.png',
     ]
 
     constructor(character) {
         super();
-        this.loadImages(this.IMAGES_BubbleAttack);
         this.character = character;
-        this.img = this.imageCache[this.IMAGES_BubbleAttack[0]];
-        this.updatePosition();
+        this.otherDirection = this.character.otherDirection;
+        this.loadImages(this.IMAGES_BUBBLE);
+        this.img = this.imageCache[this.IMAGES_BUBBLE[0]];
+        this.setStartPosition();
+        this.vx = this.otherDirection ? -8 : 8;
     }
 
     updatePosition() {
@@ -33,13 +30,32 @@ class BubbleTrapAttack extends Attack {
         this.x += push;
     }
 
+    setStartPosition() {
+        this.otherDirection = this.character.otherDirection;
+
+        this.x = this.character.x + this.character.width - 10;
+        this.y = this.character.y + this.character.height / 2;
+
+        if (this.otherDirection) {
+            this.x = this.character.x - this.width + 10;
+        }
+    }
+
     tick(now) {
-        this.updatePosition();
         if (!this.lastFrameAt) this.lastFrameAt = now;
         if (now - this.lastFrameAt > 50) {
-            this.playAnimation(this.IMAGES_BubbleAttack);
+
+            this.playAnimation(this.IMAGES_BUBBLE);
             this.lastFrameAt = now;
         }
     }
 
+    hitTarget() {
+        this.hasHit = true;
+        this.isImpacting = true;
+        this.vx = 0;
+        setTimeout(() => {
+            this.markedForDeletion = true;
+        }, 200);
+    }
 }

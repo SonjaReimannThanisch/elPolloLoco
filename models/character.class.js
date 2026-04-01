@@ -10,6 +10,9 @@ class character extends movableObject {
     attackCooldown = 400;
     coins = 0;
     bottle = 0;
+    isBubbleAttacking = false;
+    bubbleAttackStartedAt = 0;
+    bubbleAttackDuration = 400;
 
     IMAGES_IDLE = [
         'img/1.Sharkie/1.IDLE/1.png',
@@ -61,12 +64,23 @@ class character extends movableObject {
         'img/1.Sharkie/5.Hurt/1.Poisoned/4.png',
     ]
 
+    IMAGES_BUBBLEATTACK = [
+        'img/1.Sharkie/4.Attack/Bubble trap/op1 (with bubble formation)/1.png',
+        'img/1.Sharkie/4.Attack/Bubble trap/op1 (with bubble formation)/2.png',
+        'img/1.Sharkie/4.Attack/Bubble trap/op1 (with bubble formation)/3.png',
+        'img/1.Sharkie/4.Attack/Bubble trap/op1 (with bubble formation)/4.png',
+        'img/1.Sharkie/4.Attack/Bubble trap/op1 (with bubble formation)/5.png',
+        'img/1.Sharkie/4.Attack/Bubble trap/op1 (with bubble formation)/6.png',
+        'img/1.Sharkie/4.Attack/Bubble trap/op1 (with bubble formation)/7.png',
+        'img/1.Sharkie/4.Attack/Bubble trap/op1 (with bubble formation)/8.png',
+    ]
+
     world;
 
     offset = {
         top: 130,
         left: 35,
-        right: 40,
+        right: 10,
         bottom: 60,
     }
 
@@ -76,6 +90,7 @@ class character extends movableObject {
         this.loadImages(this.IMAGES_SWIN);
         this.loadImages(this.IMAGES_POISENED);
         this.loadImages(this.IMAGES_POIHURT);
+        this.loadImages(this.IMAGES_BUBBLEATTACK);
     }
 
     animate() {
@@ -102,17 +117,22 @@ class character extends movableObject {
         }, 1000 / 60);
 
         setInterval(() => {
-
             let now = Date.now();
 
-            if(this.isDead()) {
+            if (this.isBubbleAttacking) {
+                this.playAnimation(this.IMAGES_BUBBLEATTACK);
+
+                if (now - this.bubbleAttackStartedAt > this.bubbleAttackDuration) {
+                    this.isBubbleAttacking = false;
+                }
+            } else if (this.isDead()) {
                 this.playAnimation(this.IMAGES_POISENED);
-            } else if(this.isHurt()) {
+            } else if (this.isHurt()) {
                 this.playAnimation(this.IMAGES_POIHURT);
             } else if (
                 this.world.keyboard.RIGHT ||
-                this.world.keyboard.LEFT  ||
-                this.world.keyboard.UP    ||
+                this.world.keyboard.LEFT ||
+                this.world.keyboard.UP ||
                 this.world.keyboard.DOWN
             ) {
                 this.playAnimation(this.IMAGES_SWIN);
@@ -121,6 +141,11 @@ class character extends movableObject {
             }
         }, 200);
 
+    }
 
+    startBubbleAttackAnimation() {
+        this.isBubbleAttacking = true;
+        this.bubbleAttackStartedAt = Date.now();
+        this.currentImage = 0;
     }
 }

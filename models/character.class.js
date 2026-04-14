@@ -60,11 +60,37 @@ class character extends movableObject {
         'img/1.Sharkie/6.dead/1.Poisoned/12.png',
     ];
 
+    IMAGES_POISENEDHURT = [
+        'img/1.Sharkie/5.Hurt/2.Electric shock/1.png',
+        'img/1.Sharkie/5.Hurt/2.Electric shock/2.png',
+        'img/1.Sharkie/5.Hurt/2.Electric shock/3.png',
+    ]
+
     IMAGES_POIHURT = [
         'img/1.Sharkie/5.Hurt/1.Poisoned/1.png',
         'img/1.Sharkie/5.Hurt/1.Poisoned/2.png',
         'img/1.Sharkie/5.Hurt/1.Poisoned/3.png',
         'img/1.Sharkie/5.Hurt/1.Poisoned/4.png',
+    ]
+
+    IMAGES_ELECTROHURT = [
+        'img/1.Sharkie/5.Hurt/2.Electric shock/1.png',
+        'img/1.Sharkie/5.Hurt/2.Electric shock/2.png',
+        'img/1.Sharkie/5.Hurt/2.Electric shock/3.png',
+    ]
+
+    IMAGES_ELECTRODEAD = [
+        'img/1.Sharkie/6.dead/2.Electro_shock/1.png',
+        'img/1.Sharkie/6.dead/2.Electro_shock/2.png',
+        'img/1.Sharkie/6.dead/2.Electro_shock/3.png',
+        'img/1.Sharkie/6.dead/2.Electro_shock/4.png',
+        'img/1.Sharkie/6.dead/2.Electro_shock/5.png',
+        'img/1.Sharkie/6.dead/2.Electro_shock/6.png',
+        'img/1.Sharkie/6.dead/2.Electro_shock/7.png',
+        'img/1.Sharkie/6.dead/2.Electro_shock/8.png',
+        'img/1.Sharkie/6.dead/2.Electro_shock/9.png',
+        'img/1.Sharkie/6.dead/2.Electro_shock/10.png',
+        
     ]
 
     IMAGES_BUBBLEATTACK = [

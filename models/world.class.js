@@ -113,7 +113,7 @@ class world {
 
                 if (attack.isColliding(enemy)) {
                     enemy.hit();
-                    attack.hasHit = true;
+                    attack.hitTarget();
                     break;
                 }
             }
@@ -369,11 +369,12 @@ class world {
             this.attacks.push(attack);
         }, 150);
         this.lastBubbleAt = now;
+        // this.keyboard.A = false;
     }
 
 
     cleanupAttacks() {
-        this.attacks = this.attacks.filter(a => !a.isExpired());
+        this.attacks = this.attacks.filter(a => !a.markedForDeletion);
     }
 
     addObjectsToMap(objects) {

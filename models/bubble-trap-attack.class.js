@@ -1,6 +1,6 @@
 class BubbleTrapAttack extends Attack {
-    width = 70;
-    height = 70;
+    width = 60;
+    height = 60;
     lifetime = 1000;
     hasHit = false;
     isImpacting = false;
@@ -52,7 +52,7 @@ class BubbleTrapAttack extends Attack {
 
     hitTarget() {
         this.hasHit = true;
-        this.isImpacting = true;
+        //  
         this.vx = 0;
         setTimeout(() => {
             this.markedForDeletion = true;

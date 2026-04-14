@@ -108,6 +108,7 @@ class jellyfisch extends movableObject {
         if ( this.energy <= 0) {
             this.isDead = true;
             this.speed = 0;
+            this.currentImage = 0;
             setTimeout(() => {
                 this.markedForDeletion = true;
             }, 500);
@@ -128,7 +129,9 @@ class jellyfisch extends movableObject {
                 } else {
                     this.playAnimation(this.getDieImages());
                 }
-            }
+            } else {
+                this.playAnimation(this.images);
+            } 
         }, 200);
     }
 

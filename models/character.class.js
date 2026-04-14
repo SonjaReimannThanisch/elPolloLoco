@@ -13,6 +13,9 @@ class character extends movableObject {
     isBubbleAttacking = false;
     bubbleAttackStartedAt = 0;
     bubbleAttackDuration = 400;
+    isFinSlapAttacking = false;
+    finSlapAttackStartedAt = 0;
+    finSlapAttackDuration = 250;
 
     IMAGES_IDLE = [
         'img/1.Sharkie/1.IDLE/1.png',
@@ -75,6 +78,15 @@ class character extends movableObject {
         'img/1.Sharkie/4.Attack/Bubble trap/op1 (with bubble formation)/8.png',
     ]
 
+    IMAGES_FINSLAP = [
+        'img/1.Sharkie/4.Attack/Fin slap/1.png',
+        'img/1.Sharkie/4.Attack/Fin slap/2.png',
+        'img/1.Sharkie/4.Attack/Fin slap/3.png',
+        'img/1.Sharkie/4.Attack/Fin slap/6.png',
+        'img/1.Sharkie/4.Attack/Fin slap/7.png',
+        'img/1.Sharkie/4.Attack/Fin slap/8.png',
+    ];
+
     world;
 
     offset = {
@@ -91,6 +103,11 @@ class character extends movableObject {
         this.loadImages(this.IMAGES_POISENED);
         this.loadImages(this.IMAGES_POIHURT);
         this.loadImages(this.IMAGES_BUBBLEATTACK);
+        this.loadImages(this.IMAGES_FINSLAP);
+        // console.log('FIN SLAP IMAGES', this.IMAGES_FINSLAP);
+        // console.log('CACHE CHECK', this.imageCache);
+        
+        
     }
 
     animate() {
@@ -119,7 +136,15 @@ class character extends movableObject {
         setInterval(() => {
             let now = Date.now();
 
-            if (this.isBubbleAttacking) {
+            if (this.isFinSlapAttacking) {
+                console.log('PLAYING FIN SLAP', this.currentImage);
+                
+                this.playAnimation(this.IMAGES_FINSLAP);
+
+                if (now - this.finSlapAttackStartedAt > this.finSlapAttackDuration) {
+                    this.isFinSlapAttacking = false;
+                }
+            } else if (this.isBubbleAttacking) {
                 this.playAnimation(this.IMAGES_BUBBLEATTACK);
 
                 if (now - this.bubbleAttackStartedAt > this.bubbleAttackDuration) {
@@ -146,6 +171,13 @@ class character extends movableObject {
     startBubbleAttackAnimation() {
         this.isBubbleAttacking = true;
         this.bubbleAttackStartedAt = Date.now();
+        this.currentImage = 0;
+    }
+
+    startFinSlapAttackAnimation() {
+        if (this.isFinSlapAttacking) return;
+        this.isFinSlapAttacking = true;
+        this.finSlapAttackStartedAt = Date.now();
         this.currentImage = 0;
     }
 }

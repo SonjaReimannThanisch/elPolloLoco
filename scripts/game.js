@@ -17,7 +17,7 @@ window.addEventListener("keydown", (event) => {
   if (event.code === "ArrowLeft") keyboard.LEFT = true;
   if (event.code === "ArrowUp") keyboard.UP = true;
   if (event.code === "ArrowDown") keyboard.DOWN = true;
-
+  if (event.repeat) return;
   if (event.code === "Space") keyboard.SPACE = true;
   if (event.code === "KeyA")  keyboard.A     = true;
 

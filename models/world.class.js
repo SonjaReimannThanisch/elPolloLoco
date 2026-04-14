@@ -78,7 +78,6 @@ class world {
             this.mainCharacter.lastHit = new Date().getTime();
         }
         
-        // this.mainCharacter.hit();
         this.statusLife.setPercentage(this.mainCharacter.energy);
         this.triggerGameOverIfDead();
     }
@@ -209,9 +208,7 @@ class world {
             if (this.mainCharacter.isColliding(poison)) {
             this.level.poison.splice(i, 1);
             this.mainCharacter.bottle = Math.min(100, (this.mainCharacter.bottle || 0) + 10);
-            // console.log('bottle value', this.mainCharacter.bottle);
             this.statusPoison.setPercentage(this.mainCharacter.bottle);
-            // console.log('poison list', this.level.poison.length);
             }
         });
     }
@@ -361,6 +358,7 @@ class world {
         if (now - this.lastFinSlapAt < this.finSlapCoolsdowns) return;
         let activeFinSlap = this.attacks.some(a => a instanceof FinSlapAttack);
         if (activeFinSlap) return;
+        this.mainCharacter.startFinSlapAttackAnimation();
         let attack = new FinSlapAttack(this.mainCharacter);
         this.attacks.push(attack);
         this.lastFinSlapAt = now;
@@ -375,7 +373,6 @@ class world {
             this.attacks.push(attack);
         }, 150);
         this.lastBubbleAt = now;
-        // this.keyboard.A = false;
     }
 
     addObjectsToMap(objects) {

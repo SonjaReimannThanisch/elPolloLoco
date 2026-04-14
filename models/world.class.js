@@ -132,7 +132,7 @@ class world {
         }
     }
 
-    cleanupAttack() {
+    cleanupAttacks() {
         this.attacks = this.attacks.filter(a => !a.isExpired() && !a.markedForDeletion);
     }
 
@@ -205,9 +205,9 @@ class world {
             if (this.mainCharacter.isColliding(poison)) {
             this.level.poison.splice(i, 1);
             this.mainCharacter.bottle = Math.min(100, (this.mainCharacter.bottle || 0) + 10);
-            console.log('bottle value', this.mainCharacter.bottle);
+            // console.log('bottle value', this.mainCharacter.bottle);
             this.statusPoison.setPercentage(this.mainCharacter.bottle);
-            console.log('poison list', this.level.poison.length);
+            // console.log('poison list', this.level.poison.length);
             }
         });
     }
@@ -355,6 +355,8 @@ class world {
 
     tryFinSlap(now) {
         if (now - this.lastFinSlapAt < this.finSlapCoolsdowns) return;
+        let activeFinSlap = this.attacks.some(a => a instanceof FinSlapAttack);
+        if (activeFinSlap) return;
         let attack = new FinSlapAttack(this.mainCharacter);
         this.attacks.push(attack);
         this.lastFinSlapAt = now;
@@ -370,11 +372,6 @@ class world {
         }, 150);
         this.lastBubbleAt = now;
         // this.keyboard.A = false;
-    }
-
-
-    cleanupAttacks() {
-        this.attacks = this.attacks.filter(a => !a.markedForDeletion);
     }
 
     addObjectsToMap(objects) {

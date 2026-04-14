@@ -32,10 +32,8 @@ class BubbleTrapAttack extends Attack {
 
     setStartPosition() {
         this.otherDirection = this.character.otherDirection;
-
         this.x = this.character.x + this.character.width - 10;
         this.y = this.character.y + this.character.height / 2;
-
         if (this.otherDirection) {
             this.x = this.character.x - this.width + 10;
         }
@@ -44,7 +42,6 @@ class BubbleTrapAttack extends Attack {
     tick(now) {
         if (!this.lastFrameAt) this.lastFrameAt = now;
         if (now - this.lastFrameAt > 50) {
-
             this.playAnimation(this.IMAGES_BUBBLE);
             this.lastFrameAt = now;
         }

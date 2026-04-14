@@ -111,6 +111,10 @@ class world {
                     continue;
                 }
 
+                if ( attack instanceof FinSlapAttack && !(enemy instanceof pufferfisch)) {
+                    continue;
+                }
+
                 if (attack.isColliding(enemy)) {
                     enemy.hit();
                     attack.hitTarget();

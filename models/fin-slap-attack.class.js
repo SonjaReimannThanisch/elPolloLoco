@@ -1,6 +1,6 @@
 class FinSlapAttack extends Attack {
 
-    width = 120;
+    width = 180;
     height = 120;
     lifetime = 250;
     hasHit = false;

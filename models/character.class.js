@@ -12,10 +12,10 @@ class character extends movableObject {
     bottle = 0;
     isBubbleAttacking = false;
     bubbleAttackStartedAt = 0;
-    bubbleAttackDuration = 400;
+    bubbleAttackDuration = 500;
     isFinSlapAttacking = false;
     finSlapAttackStartedAt = 0;
-    finSlapAttackDuration = 250;
+    finSlapAttackDuration = 500;
 
     IMAGES_IDLE = [
         'img/1.Sharkie/1.IDLE/1.png',
@@ -80,8 +80,8 @@ class character extends movableObject {
 
     IMAGES_FINSLAP = [
         'img/1.Sharkie/4.Attack/Fin slap/1.png',
-        'img/1.Sharkie/4.Attack/Fin slap/2.png',
-        'img/1.Sharkie/4.Attack/Fin slap/3.png',
+        'img/1.Sharkie/4.Attack/Fin slap/4.png',
+        'img/1.Sharkie/4.Attack/Fin slap/5.png',
         'img/1.Sharkie/4.Attack/Fin slap/6.png',
         'img/1.Sharkie/4.Attack/Fin slap/7.png',
         'img/1.Sharkie/4.Attack/Fin slap/8.png',
@@ -137,7 +137,7 @@ class character extends movableObject {
             let now = Date.now();
 
             if (this.isFinSlapAttacking) {
-                console.log('PLAYING FIN SLAP', this.currentImage);
+                // console.log('PLAYING FIN SLAP', this.currentImage);
                 
                 this.playAnimation(this.IMAGES_FINSLAP);
 
@@ -164,7 +164,7 @@ class character extends movableObject {
             } else {
                 this.playAnimation(this.IMAGES_IDLE);
             }
-        }, 200);
+        }, 80);
 
     }
 

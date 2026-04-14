@@ -5,6 +5,9 @@ class BubbleTrapAttack extends Attack {
     hasHit = false;
     isImpacting = false;
     markedForDeletion = false;
+    isImpacting = false;
+    impactSpeed = 0;
+    impactEndAt = 0;
 
     IMAGES_BUBBLE= [
         'img/1.Sharkie/4.Attack/Bubble trap/Bubble.png',
@@ -17,7 +20,8 @@ class BubbleTrapAttack extends Attack {
         this.loadImages(this.IMAGES_BUBBLE);
         this.img = this.imageCache[this.IMAGES_BUBBLE[0]];
         this.setStartPosition();
-        this.vx = this.otherDirection ? -8 : 8;
+        // this.vx = this.otherDirection ? -12 : 12;
+        this.vx = this.otherDirection ? -(8 + Math.random() * 4) : (8 + Math.random() * 4);
     }
 
     updatePosition() {
@@ -41,18 +45,32 @@ class BubbleTrapAttack extends Attack {
 
     tick(now) {
         if (!this.lastFrameAt) this.lastFrameAt = now;
+
         if (now - this.lastFrameAt > 50) {
             this.playAnimation(this.IMAGES_BUBBLE);
             this.lastFrameAt = now;
+        }
+
+        if (this.isImpacting) {
+            this.x += this.impactSpeed;
+
+            if (now >= this.impactEndAt) {
+                this.impactSpeed = 0;
+            }
+
+            this.width += 0.2;
+            this.height += 0.2;
         }
     }
 
     hitTarget() {
         this.hasHit = true;
-        //  
-        this.vx = 0;
+        this.isImpacting = true;
+        this.impactSpeed = this.otherDirection ? -2 : 2;
+        this.impactEndAt = Date.now() + 10;
         setTimeout(() => {
+            this.vx = 0;
             this.markedForDeletion = true;
-        }, 200);
+        }, 180);
     }
 }

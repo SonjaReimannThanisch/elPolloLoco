@@ -129,7 +129,7 @@ class world {
             if (typeof attack.tick === `function`) {
                 attack.tick(now);
             }
-            if ( attack.vx) {
+            if (attack.vx) {
                 attack.x += attack.vx;
             }
         }

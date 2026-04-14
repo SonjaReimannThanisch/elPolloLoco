@@ -101,8 +101,6 @@ class jellyfisch extends movableObject {
     }
 
     hit() {
-        console.log('Jelly HIT', this.type);
-        
         if ( this.isDead) return;
         this.energy -= 100;
         if ( this.energy <= 0) {
@@ -112,6 +110,9 @@ class jellyfisch extends movableObject {
             setTimeout(() => {
                 this.markedForDeletion = true;
             }, 500);
+            setTimeout(() => {
+                this.isDead = true;
+            }, 80);
         }
     }
 

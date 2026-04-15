@@ -1,7 +1,8 @@
 class soundManager {
 
     constructor() {
-        rhis.sounds = {
+        this.isMuted = false;
+        this.sounds = {
             bubbleAttack: new Audio('assets/bubbleAttack.mp3'),
             finSlapAttack: new Audio('assets/slap attack.mp3'),
             hit: new Audio('assets/hit.mp3'),
@@ -15,6 +16,7 @@ class soundManager {
     }
 
     play(game) {
+        if ( this.isMuted) return;
         let sound = this.sounds[name];
         if (!sound) return;
         sound.currentTime = 0;
@@ -23,6 +25,15 @@ class soundManager {
 
     playMusic() {
         this.music.play();
+    }
+
+    toggleMusic() {
+        this.isMuted = !this.isMuted;
+        if (this.isMuted) {
+            this.music.pause();
+        } else {
+            this.music.play();
+        }
     }
 
     stopMusic() {

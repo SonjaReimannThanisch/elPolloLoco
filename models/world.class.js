@@ -3,6 +3,7 @@ class world {
     level;
     canvas;
     ctx;
+    sound;
     keyboard;
     camera_x = 0;
     statusLife;
@@ -31,6 +32,7 @@ class world {
         this.canvas = canvas;
         this.ctx = canvas.getContext('2d');
         this.level = createLevel1();
+        this.sound = new soundManager();
         this.keyboard = keyboard;
         this.keyboardSprite = new Keyboard(canvas.width, canvas.height);
         this.statusLife = new statusBar('life');

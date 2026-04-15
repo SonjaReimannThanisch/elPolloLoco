@@ -454,6 +454,19 @@ canvas {
   50%     { transform: scale(1.05); filter: brightness(1.1); }
 }
 
+.hud-btn {
+  position: absolute;
+  background-color: #e6ce71e5;
+  top: 20px;
+  right: 20px;
+  z-index: 20;
+  border: none;
+  border-radius: 12px;
+  padding: 10px 12px;
+  cursor: pointer;
+  font-size: 20px;
+}
+
 .start-footer{
   width: 100%;
   display: flex;
@@ -473,6 +486,10 @@ canvas {
 
 .start-wrap{
   background: url("img/3.Background/behind-canvas/blick-auf-welliges-meer-oder-meerwasser.jpg") center/cover no-repeat;
+}
+
+#fullscreen {
+  position: relative;
 }
 
 #fullscreen:fullscreen {

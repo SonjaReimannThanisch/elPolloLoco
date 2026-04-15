@@ -23,6 +23,17 @@ function injectStartScreen() {
   document.getElementById('fullscreen').insertAdjacentHTML('beforeend', markup);
 }
 
+function injectGameHud() {
+  if (document.getElementById('btn-mute')) return;
+
+  let markup = `
+    <button id="btn-mute" class="hud-btn" aria-label="Mute music">
+      🔊
+    </button>
+  `;
+  document.getElementById('fullscreen')?.insertAdjacentHTML('beforeend', markup);
+}
+
 function startFromStartscreen(worldInstance) {
   document.getElementById('startscreen')?.classList.add('hidden');
   worldInstance.startGame();
@@ -51,7 +62,7 @@ function enterFullscreen(element) {
   }
 }
 
-function exitFullscreen() { console.log('exit');
+function exitFullscreen() {
   if(document.exitFullscreen) {
     document.exitFullscreen();
   } else if(document.webkitExitFullscreen) {
@@ -59,3 +70,15 @@ function exitFullscreen() { console.log('exit');
   }
 }
 
+function bindGameHudUi(worldInstance) {
+  document.getElementById('btn-mute')?.addEventListener('click', () => {
+    worldInstance.sound.toggleMusic();
+    updateMuteButton(worldInstance);
+  });
+}
+
+function updateMuteButton(worldInstance) {
+  let btn = document.getElementById('btn-mute');
+  if (!btn) return;
+  btn.textContent = worldInstance.sound.isMuted ? '🔇' : '🔊';
+}

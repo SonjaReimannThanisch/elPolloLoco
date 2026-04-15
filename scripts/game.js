@@ -9,7 +9,9 @@ function init() {
   keyboard = new Keyboard(canvas.width, canvas.height);
   gameWorld = new world(canvas, keyboard);
   bindStartUi(gameWorld);
-
+  injectGameHud();
+  bindGameHudUi(gameWorld);
+  updateMuteButton(gameWorld);
 }
 
 window.addEventListener("keydown", (event) => {

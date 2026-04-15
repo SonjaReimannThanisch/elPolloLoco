@@ -276,32 +276,6 @@ class world {
         this.updateAttacks(now);
         this.checkAttackCollisions();
         this.cleanupAttacks();
-        // if (this.keyboard.T) {
-        //     console.log('T gedrückt');
-
-        //     let jelly = this.level.enemies.find(e => e instanceof jellyfisch && !e.isDead);
-        //     if (jelly) {
-        //         console.log('Jelly gefunden', jelly.type);
-        //         jelly.hit();
-        //     } else {
-        //         console.log('Kein Jelly gefunden');
-        //     }
-
-        //     this.keyboard.T = false;
-        // }
-
-        // if (this.keyboard.Y) {
-        //     console.log('Y gedrückt');
-        //     let puffer = this.level.enemies.find(e => e instanceof pufferfisch && !e.isDead);
-
-        //     if (puffer) {
-        //         console.log('puffer gefunden', puffer.type);
-        //         puffer.hit();
-        //     } else {
-        //         console.log('Kein puffer gefunden');
-        //     }
-        //     this.keyboard.Y = false;
-        // }
     }
 
     drawWorldLayer() {
@@ -329,22 +303,33 @@ class world {
     }
 
     restartGame() {
-        clearInterval(this.enemyCollisionInterval);
-        this.enemyCollisionInterval = null;
         this.hideGameOver();
-        this.isGameOver = false;
-        this.camera_x = 0;
-        this.attacks = [];
-        this.bossFightStarted = false;
-        this.mainCharacter = new character();
-        this.setWorld();
+        this.resetWorldState();
+        this.hasStarted = true;
         this.mainCharacter.animate();
-        this.level = createLevel1();
-        this.statusLife.setPercentage(this.mainCharacter.energy);
-        this.statusCoins.setPercentage(0);
-        this.statusPoison.setPercentage(0);
         this.checkCollisions();
         this.draw();
+    }
+
+    resetWorldState() {
+        clearInterval(this.enemyCollisionInterval);
+        this.enemyCollisionInterval = null;
+        this.camera_x = 0;
+        this.attacks = [];
+        this.bubbles = [];
+        this.bossFightStarted = false;
+        this.isGameOver = false;
+        this.hasStarted = false;
+        this.lastFinSlapAt = 0;
+        this.lastBubbleAt = 0;
+        this.lastX = 0;
+        this.lastY = 0;
+        this.level = createLevel1();
+        this.mainCharacter = new character();
+        this.setWorld();   
+        this.statusLife.setPercentage(this.mainCharacter.energy);
+        this.statusCoins.setPercentage(0);
+        this.statusPoison.setPercentage(0);     
     }
 
     handleAttackInput() {
@@ -411,23 +396,9 @@ class world {
     }
 
     goHome() {
-        if (this.enemyCollisionInterval) {
-            clearInterval(this.enemyCollisionInterval);
-            this.enemyCollisionInterval = null;
-        }
-        this.isGameOver = false;
-        this.hasStarted = false;
         this.hideGameOver();
+        this.resetWorldState();
         document.getElementById('startscreen')?.classList.remove('hidden');
-        this.camera_x = 0;
-        this.attacks = [];
-        this.bossFightStarted = false;
-        this.level = createLevel1();
-        this.mainCharacter = new character();
-        this.setWorld();
-        this.statusLife.setPercentage(this.mainCharacter.energy);
-        this.statusCoins.setPercentage(0);
-        this.statusPoison.setPercentage(0);
     }
 
     checkMenuInput() {

@@ -13,7 +13,7 @@ function injectStartScreen() {
           <button id="btn-fullscreen" class="img-btn small" aria-label="Fullscreen">
             <img src="img/6.Botones/Full Screen/Mesa de trabajo 9.png" alt="Full screen">
           </button>
-          <button id="btn-mute-start" class="img-btn small" aria-label="Mute music">
+          <button id="btn-mute-start" class="hud-btn small" aria-label="Mute music">
             🔊
           </button>
 

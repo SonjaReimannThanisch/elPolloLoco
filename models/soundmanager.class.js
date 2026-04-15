@@ -16,6 +16,7 @@ class SoundManager {
         this.menuMusic.loop = true;
         this.music.volume = 0.2;
         this.menuMusic.volume = 0.2;
+        this.menuMusic.playbackRate = 1.4;
     }
 
 
@@ -26,15 +27,13 @@ class SoundManager {
         this.music.pause();
         this.menuMusic.currentTime = 0;
         this.menuMusic.play();
+        this.menuMusic.addEventListener('timeupdate', () => {
+            if (this.menuMusic.currentTime > this.menuMusic.duration - 0.3) {
+                this.menuMusic.currentTime = 0;
+                this.menuMusic.play();
+            }
+        });
     }
-
-    // play(name) {
-    //     if ( this.isMuted) return;
-    //     let sound = this.sounds[name];
-    //     if (!sound) return;
-    //     sound.currentTime = 0;
-    //     sound.play();
-    // }
 
     playMusic() {
         if (this.isMuted) return;

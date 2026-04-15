@@ -13,6 +13,8 @@ function init() {
 }
 
 window.addEventListener("keydown", (event) => {
+  if (event.repeat) return;
+  if (event.code === "Enter") {startFromStartscreen(gameWorld);}
   if (event.code === "ArrowRight") keyboard.RIGHT = true;
   if (event.code === "ArrowLeft") keyboard.LEFT = true;
   if (event.code === "ArrowUp") keyboard.UP = true;

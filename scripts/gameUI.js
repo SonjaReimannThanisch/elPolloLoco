@@ -23,10 +23,14 @@ function injectStartScreen() {
   document.getElementById('fullscreen').insertAdjacentHTML('beforeend', markup);
 }
 
+function startFromStartscreen(worldInstance) {
+  document.getElementById('startscreen')?.classList.add('hidden');
+  worldInstance.startGame();
+}
+
 function bindStartUi(worldInstance) {
   document.getElementById('btn-start')?.addEventListener('click', () => {
-    document.getElementById('startscreen')?.classList.add('hidden');
-    worldInstance.startGame();
+    startFromStartscreen(worldInstance);
   });
 
   document.getElementById('btn-fullscreen')?.addEventListener('click', async () => {

@@ -138,6 +138,7 @@ class pufferfisch extends movableObject {
 
     animate(){
         setInterval(() => {
+            if (!this.world?.hasStarted || !this.world?.hasPlayerMoved) return;
             if (!this.isDead) {
                 this.x -= this.speed;
             }

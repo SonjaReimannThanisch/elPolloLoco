@@ -137,16 +137,20 @@ class character extends movableObject {
             if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
                 this.x += this.speed;
                 this.otherDirection = false;
+                this.world.hasPlayerMoved = true;
             }
             if (this.world.keyboard.LEFT && this.x > 0) {
                 this.x -= this.speed;
                 this.otherDirection = true;
+                this.world.hasPlayerMoved = true;
             }
             if (this.world.keyboard.UP && this.y > this.minY) {
                  this.y = Math.max(this.minY, this.y - this.speed);
+                 this.world.hasPlayerMoved = true;
             }
             if (this.world.keyboard.DOWN && this.y < this.maxY) {
                 this.y = Math.min(this.maxY, this.y + this.speed);
+                this.world.hasPlayerMoved = true;
             }
             this.world.camera_x = -this.x;
         }, 1000 / 60);

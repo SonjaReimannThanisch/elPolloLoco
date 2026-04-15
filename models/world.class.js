@@ -8,6 +8,7 @@ class world {
     statusLife;
     statusCoins;
     statusPoison;
+    hasPlayerMoved = false;
 
     attacks = [];
     lastFinSlapAt = 0;
@@ -39,6 +40,7 @@ class world {
         this.statusCoins.y = 80;
         this.statusPoison.y = 10;
         this.setWorld();
+        this.setWorldForLevelObjects();
         this.bindUi();
         this.draw();
     }
@@ -71,7 +73,6 @@ class world {
 
     applyDamage(amount = 5) {
         this.mainCharacter.energy -= amount;
-        
         if ( this.mainCharacter.energy < 0) {
             this.mainCharacter.energy = 0;
         } else {
@@ -246,6 +247,10 @@ class world {
         return this.hasStarted && !this.isGameOver;
     }
 
+    setWorldForLevelObjects() {
+        this.level.enemies.forEach(enemy => enemy.world = this);
+    }
+
     draw() {
         this.beginFrame();
         if (this.isRunningGame()) this.updateWorldState();
@@ -313,6 +318,7 @@ class world {
 
     resetWorldState() {
         clearInterval(this.enemyCollisionInterval);
+        this.hasPlayerMoved = false;
         this.enemyCollisionInterval = null;
         this.camera_x = 0;
         this.attacks = [];
@@ -326,7 +332,8 @@ class world {
         this.lastY = 0;
         this.level = createLevel1();
         this.mainCharacter = new character();
-        this.setWorld();   
+        this.setWorld();
+        this.setWorldForLevelObjects();
         this.statusLife.setPercentage(this.mainCharacter.energy);
         this.statusCoins.setPercentage(0);
         this.statusPoison.setPercentage(0);     

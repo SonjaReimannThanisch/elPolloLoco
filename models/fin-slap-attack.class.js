@@ -5,6 +5,7 @@ class FinSlapAttack extends Attack {
     lifetime = 250;
     hasHit = false;
     isImpacting = false;
+    markedForDeletion  = false;
 
 
     constructor(character) {
@@ -26,6 +27,6 @@ class FinSlapAttack extends Attack {
 
     hitTarget() {
         this.hasHit = true;
-        this.vx = 0;
+        this.markedForDeletion = true;
     }
 }

@@ -5,7 +5,6 @@ class BubbleTrapAttack extends Attack {
     hasHit = false;
     isImpacting = false;
     markedForDeletion = false;
-    isImpacting = false;
     impactSpeed = 0;
     impactEndAt = 0;
 
@@ -20,7 +19,6 @@ class BubbleTrapAttack extends Attack {
         this.loadImages(this.IMAGES_BUBBLE);
         this.img = this.imageCache[this.IMAGES_BUBBLE[0]];
         this.setStartPosition();
-        // this.vx = this.otherDirection ? -12 : 12;
         this.vx = this.otherDirection ? -(8 + Math.random() * 4) : (8 + Math.random() * 4);
     }
 
@@ -67,7 +65,7 @@ class BubbleTrapAttack extends Attack {
         this.hasHit = true;
         this.isImpacting = true;
         this.impactSpeed = this.otherDirection ? -2 : 2;
-        this.impactEndAt = Date.now() + 10;
+        this.impactEndAt = Date.now() + 120;
         setTimeout(() => {
             this.vx = 0;
             this.markedForDeletion = true;

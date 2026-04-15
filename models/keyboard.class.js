@@ -15,7 +15,6 @@ class Keyboard extends movableObject {
 
         constructor(canvasWidth, canvasHeight) {
         super();
-        // this.loadImage('img/6.Botones/Key/arrow keys.png');
         this.x = canvasWidth - this.width - 20;
         this.y = canvasHeight - this.height - 15;
 

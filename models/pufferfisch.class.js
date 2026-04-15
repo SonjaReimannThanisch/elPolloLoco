@@ -5,8 +5,7 @@ class pufferfisch extends movableObject {
     isDead = false;
     markedForDeletion = false;
     energy = 100;
-    hasHit = false;
-    markedForDeletion = false;
+    hasHit = false;;
 
     IMAGES_MOVE_PINK = [
         'img/2.Enemy/1.Puffer fish (3 color options)/1.Swim/3.swim1.png',
@@ -107,9 +106,6 @@ class pufferfisch extends movableObject {
 
     constructor(color = 'pink') {
         super()
-        // console.log('PUFFER SPAWNED', color);
-        // this.isDead = true;
-        // console.log('JELLY TYPE', this.type);
         this.type = color;
         this.images = 
             color === 'rose' ? this.IMAGES_MOVE_ROSE :

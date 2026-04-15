@@ -60,12 +60,6 @@ class character extends movableObject {
         'img/1.Sharkie/6.dead/1.Poisoned/12.png',
     ];
 
-    IMAGES_POISENEDHURT = [
-        'img/1.Sharkie/5.Hurt/2.Electric shock/1.png',
-        'img/1.Sharkie/5.Hurt/2.Electric shock/2.png',
-        'img/1.Sharkie/5.Hurt/2.Electric shock/3.png',
-    ]
-
     IMAGES_POIHURT = [
         'img/1.Sharkie/5.Hurt/1.Poisoned/1.png',
         'img/1.Sharkie/5.Hurt/1.Poisoned/2.png',
@@ -106,6 +100,8 @@ class character extends movableObject {
 
     IMAGES_FINSLAP = [
         'img/1.Sharkie/4.Attack/Fin slap/1.png',
+        'img/1.Sharkie/4.Attack/Fin slap/2.png',
+        'img/1.Sharkie/4.Attack/Fin slap/3.png',
         'img/1.Sharkie/4.Attack/Fin slap/4.png',
         'img/1.Sharkie/4.Attack/Fin slap/5.png',
         'img/1.Sharkie/4.Attack/Fin slap/6.png',
@@ -130,10 +126,6 @@ class character extends movableObject {
         this.loadImages(this.IMAGES_POIHURT);
         this.loadImages(this.IMAGES_BUBBLEATTACK);
         this.loadImages(this.IMAGES_FINSLAP);
-        // console.log('FIN SLAP IMAGES', this.IMAGES_FINSLAP);
-        // console.log('CACHE CHECK', this.imageCache);
-        
-        
     }
 
     animate() {
@@ -163,8 +155,6 @@ class character extends movableObject {
             let now = Date.now();
 
             if (this.isFinSlapAttacking) {
-                // console.log('PLAYING FIN SLAP', this.currentImage);
-                
                 this.playAnimation(this.IMAGES_FINSLAP);
 
                 if (now - this.finSlapAttackStartedAt > this.finSlapAttackDuration) {

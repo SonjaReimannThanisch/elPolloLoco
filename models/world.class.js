@@ -48,8 +48,8 @@ class world {
     startGame() {
         if(this.hasStarted) return;
         this.hasStarted = true;
+        this.sound.playMusic();
         this.mainCharacter.animate();
-        // this.draw();
         this.checkCollisions();
     }
 
@@ -172,6 +172,7 @@ class world {
     }   
 
     showGameOver() {
+        this.sound.stopMusic();
         document.getElementById('gameover')?.classList.remove('hidden');
     }
     
@@ -403,6 +404,7 @@ class world {
     }
 
     goHome() {
+        this.sound.stopMusic();
         this.hideGameOver();
         this.resetWorldState();
         document.getElementById('startscreen')?.classList.remove('hidden');

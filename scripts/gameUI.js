@@ -13,6 +13,9 @@ function injectStartScreen() {
           <button id="btn-fullscreen" class="img-btn small" aria-label="Fullscreen">
             <img src="img/6.Botones/Full Screen/Mesa de trabajo 9.png" alt="Full screen">
           </button>
+          <button id="btn-mute-start" class="img-btn small" aria-label="Mute music">
+            🔊
+          </button>
 
           <a class="impressum-link" href="impressum.html">Impressum</a>
         </div>
@@ -50,6 +53,17 @@ function bindStartUi(worldInstance) {
     if (!document.fullscreenElement) enterFullscreen(screen);
     else exitFullscreen();
   });
+
+  document.getElementById('btn-mute-start')?.addEventListener('click', () => {
+    worldInstance.sound.toggleMusic();
+    updateStartMuteButton(worldInstance);
+  });
+}
+
+function updateStartMuteButton(worldInstance) {
+  let btn = document.getElementById('btn-mute-start');
+  if (!btn) return;
+  btn.textContent = worldInstance.sound.isMuted ? '🔇' : '🔊';
 }
 
 function enterFullscreen(element) {

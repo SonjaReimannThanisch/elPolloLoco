@@ -14,7 +14,7 @@ class world {
     attacks = [];
     lastFinSlapAt = 0;
     lastBubbleAt = 0;
-    finSlapCoolsdowns = 400;
+    finSlapCooldowns  = 400;
     bubbleCooldowns = 900;
 
     lastX = 0;
@@ -32,7 +32,7 @@ class world {
         this.canvas = canvas;
         this.ctx = canvas.getContext('2d');
         this.level = createLevel1();
-        this.sound = new soundManager();
+        this.sound = new SoundManager();
         this.keyboard = keyboard;
         this.keyboardSprite = new Keyboard(canvas.width, canvas.height);
         this.statusLife = new statusBar('life');
@@ -50,6 +50,7 @@ class world {
     startGame() {
         if(this.hasStarted) return;
         this.hasStarted = true;
+        this.sound.menuMusic.pause();
         this.sound.playMusic();
         this.mainCharacter.animate();
         this.checkCollisions();
@@ -63,13 +64,6 @@ class world {
         if (this.mainCharacter.energy <= 0 && !this.isGameOver) {
             this.isGameOver = true;
             this.showGameOver();
-        }
-    }
-
-    gameOverCollisionIntervall() {
-        if (this.enemyCollisionInterval) {
-        clearInterval(this.enemyCollisionInterval);
-        this.enemyCollisionInterval = null;
         }
     }
 
@@ -277,13 +271,12 @@ class world {
         this.checkMenuInput();
         this.level.enemies = this.level.enemies.filter(e => !e.markedForDeletion);
         this.checkEndbossTrigger();
-
         let boss = this.getEndboss();
         if (boss) boss.update();
-        this.handleAttackInput(now);
-        this.updateAttacks(now);
         this.checkAttackCollisions();
         this.cleanupAttacks();
+        this.handleAttackInput(now);
+        this.updateAttacks(now);
     }
 
     drawWorldLayer() {
@@ -316,7 +309,6 @@ class world {
         this.hasStarted = true;
         this.mainCharacter.animate();
         this.checkCollisions();
-        this.draw();
     }
 
     resetWorldState() {
@@ -350,7 +342,7 @@ class world {
     }
 
     tryFinSlap(now) {
-        if (now - this.lastFinSlapAt < this.finSlapCoolsdowns) return;
+        if (now - this.lastFinSlapAt < this.finSlapCooldowns ) return;
         let activeFinSlap = this.attacks.some(a => a instanceof FinSlapAttack);
         if (activeFinSlap) return;
         this.mainCharacter.startFinSlapAttackAnimation();
@@ -396,17 +388,9 @@ class world {
         this.ctx.restore();
     }
 
-    stopGame() {
-        if ( this.enemyCollisionInterval) {
-            clearInterval(this.enemyCollisionInterval);
-            this.enemyCollisionInterval = null;
-        }
-        this.isGameOver = true;
-        this.hasStarted = false;
-    }
-
     goHome() {
         this.sound.stopMusic();
+        this.sound.playMenu();
         this.hideGameOver();
         this.resetWorldState();
         document.getElementById('startscreen')?.classList.remove('hidden');

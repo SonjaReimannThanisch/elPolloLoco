@@ -113,7 +113,11 @@ class world {
                 }
 
                 if (attack.isColliding(enemy)) {
-                    enemy.hit();
+                    if (attack instanceof FinSlapAttack) {
+                        enemy.hit('finSlap');
+                    } else {
+                        enemy.hit('normal');
+                    }
                     attack.hitTarget();
                     break;
                 }

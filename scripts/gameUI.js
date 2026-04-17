@@ -19,6 +19,9 @@ function injectStartScreen() {
 
           <a class="impressum-link" href="impressum.html">Impressum</a>
         </div>
+        <footer>
+          <p>WASD – Move | Space – Attack</p>
+        </footer>
       </div>
     </div>
   `;

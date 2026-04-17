@@ -6,6 +6,10 @@ class pufferfisch extends movableObject {
     markedForDeletion = false;
     energy = 100;
     hasHit = false;
+    deathType = 'normal';
+    deathSpeedX = 0;
+    deathSpeedY = 0;
+    deathGravity = 0.08;
 
     IMAGES_MOVE_PINK = [
         'img/2.Enemy/1.Puffer fish (3 color options)/1.Swim/3.swim1.png',
@@ -126,15 +130,20 @@ class pufferfisch extends movableObject {
         this.damageType = 'poison';
     }
 
-    hit() {
-        if ( this.isDead) return;
+    hit(type = 'normal') {
+        if (this.isDead) return;
         this.energy -= 100;
-        if ( this.energy <= 0) {
+        this.deathType = type;
+        if (this.energy <= 0) {
             this.isDead = true;
             this.speed = 0;
+            if (this.deathType === 'finSlap') {
+                this.deathSpeedX = 5;
+                this.deathSpeedY = Math.random() < 0.5 ? -3 : 3;
+            }
             setTimeout(() => {
                 this.markedForDeletion = true;
-            }, 500);
+            }, 700);
         }
     }
 
@@ -143,12 +152,20 @@ class pufferfisch extends movableObject {
             if (!this.world?.hasStarted || !this.world?.hasPlayerMoved) return;
             if (!this.isDead) {
                 this.x -= this.speed;
+            } else if (this.deathType === `finSlap`) {
+                this.x += this.deathSpeedX;
+                this.y += this.deathSpeedY;
+                this.deathSpeedX += this.deathGravity;
             }
         }, 1000 / 60);
 
         setInterval(() => {
             if (this.isDead) {
-                this.playAnimation(this.getDieImages());
+                if (this.deathType === 'finSlap') {
+                    this.playAnimation(this.getDieImages());
+                } else {
+                    this.playAnimation(this.getDieImages());
+                }
             } else {
                 this.playAnimation(this.images);
             }

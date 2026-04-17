@@ -144,6 +144,8 @@ class character extends movableObject {
         this.loadImages(this.IMAGES_SWIN);
         this.loadImages(this.IMAGES_POISENED);
         this.loadImages(this.IMAGES_POIHURT);
+        this.loadImages(this.IMAGES_ELECTROHURT);
+        this.loadImages(this.IMAGES_ELECTRODEAD);
         this.loadImages(this.IMAGES_BUBBLEATTACK);
         this.loadImages(this.IMAGES_FINSLAP);
     }

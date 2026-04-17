@@ -139,7 +139,7 @@ class pufferfisch extends movableObject {
             this.speed = 0;
             if (this.deathType === 'finSlap') {
                 this.deathSpeedX = 5;
-                this.deathSpeedY = Math.random() < 0.5 ? -3 : 3;
+                this.deathSpeedY = Math.random() < 0.5 ? -5 : 5;
             }
             setTimeout(() => {
                 this.markedForDeletion = true;

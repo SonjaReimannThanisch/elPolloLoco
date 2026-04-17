@@ -16,6 +16,7 @@ class character extends movableObject {
     isFinSlapAttacking = false;
     finSlapAttackStartedAt = 0;
     finSlapAttackDuration = 500;
+    lastActionTime = Date.now();
 
     IMAGES_IDLE = [
         'img/1.Sharkie/1.IDLE/1.png',
@@ -36,6 +37,23 @@ class character extends movableObject {
         'img/1.Sharkie/1.IDLE/16.png',
         'img/1.Sharkie/1.IDLE/17.png',
         'img/1.Sharkie/1.IDLE/18.png'
+    ];
+
+    IMAGES_LONG_IDLE = [
+        'img/1.Sharkie/2.Long_IDLE/i1.png',
+        'img/1.Sharkie/2.Long_IDLE/I2.png',
+        'img/1.Sharkie/2.Long_IDLE/I3.png',
+        'img/1.Sharkie/2.Long_IDLE/I4.png',
+        'img/1.Sharkie/2.Long_IDLE/I5.png',
+        'img/1.Sharkie/2.Long_IDLE/I6.png',
+        'img/1.Sharkie/2.Long_IDLE/I7.png',
+        'img/1.Sharkie/2.Long_IDLE/I8.png',
+        'img/1.Sharkie/2.Long_IDLE/I9.png',
+        'img/1.Sharkie/2.Long_IDLE/I10.png',
+        'img/1.Sharkie/2.Long_IDLE/I11.png',
+        'img/1.Sharkie/2.Long_IDLE/I12.png',
+        'img/1.Sharkie/2.Long_IDLE/I13.png',
+        'img/1.Sharkie/2.Long_IDLE/I14.png',
     ];
 
     IMAGES_SWIN = [
@@ -121,6 +139,7 @@ class character extends movableObject {
     constructor() {
         super().loadImage('img/1.Sharkie/1.IDLE/1.png');
         this.loadImages(this.IMAGES_IDLE);
+        this.loadImages(this.IMAGES_LONG_IDLE);
         this.loadImages(this.IMAGES_SWIN);
         this.loadImages(this.IMAGES_POISENED);
         this.loadImages(this.IMAGES_POIHURT);
@@ -138,19 +157,23 @@ class character extends movableObject {
                 this.x += this.speed;
                 this.otherDirection = false;
                 this.world.hasPlayerMoved = true;
+                this.lastActionTime = Date.now();
             }
             if (this.world.keyboard.LEFT && this.x > 0) {
                 this.x -= this.speed;
                 this.otherDirection = true;
                 this.world.hasPlayerMoved = true;
+                this.lastActionTime = Date.now();
             }
             if (this.world.keyboard.UP && this.y > this.minY) {
                  this.y = Math.max(this.minY, this.y - this.speed);
                  this.world.hasPlayerMoved = true;
+                 this.lastActionTime = Date.now();
             }
             if (this.world.keyboard.DOWN && this.y < this.maxY) {
                 this.y = Math.min(this.maxY, this.y + this.speed);
                 this.world.hasPlayerMoved = true;
+                this.lastActionTime = Date.now();
             }
             this.world.camera_x = -this.x;
         }, 1000 / 60);
@@ -182,19 +205,27 @@ class character extends movableObject {
             ) {
                 this.playAnimation(this.IMAGES_SWIN);
             } else {
-                this.playAnimation(this.IMAGES_IDLE);
+                let idleTime = Date.now() - this.lastActionTime;
+
+                if (idleTime > 10000 && idleTime < 20000) {
+                    this.playAnimation(this.IMAGES_LONG_IDLE);
+                } else {
+                    this.playAnimation(this.IMAGES_IDLE);
+                }
             }
         }, 80);
 
     }
 
     startBubbleAttackAnimation() {
+        this.lastActionTime = Date.now();
         this.isBubbleAttacking = true;
         this.bubbleAttackStartedAt = Date.now();
         this.currentImage = 0;
     }
 
     startFinSlapAttackAnimation() {
+        this.lastActionTime = Date.now();
         if (this.isFinSlapAttacking) return;
         this.isFinSlapAttacking = true;
         this.finSlapAttackStartedAt = Date.now();

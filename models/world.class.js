@@ -32,7 +32,7 @@ class world {
         this.canvas = canvas;
         this.ctx = canvas.getContext('2d');
         this.level = createLevel1();
-        this.sound = new SoundManager();
+        // this.sound = new SoundManager();
         this.keyboard = keyboard;
         this.keyboardSprite = new Keyboard(canvas.width, canvas.height);
         this.statusLife = new statusBar('life');
@@ -50,8 +50,8 @@ class world {
     startGame() {
         if(this.hasStarted) return;
         this.hasStarted = true;
-        this.sound.menuMusic.pause();
-        this.sound.playMusic();
+        // this.sound.menuMusic.pause();
+        // this.sound.playMusic();
         this.mainCharacter.animate();
         this.checkCollisions();
     }

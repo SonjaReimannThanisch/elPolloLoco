@@ -60,11 +60,11 @@ function bindStartUi(worldInstance) {
   });
 }
 
-function updateStartMuteButton(worldInstance) {
-  let btn = document.getElementById('btn-mute-start');
-  if (!btn) return;
-  btn.textContent = worldInstance.sound.isMuted ? '🔇' : '🔊';
-}
+// function updateStartMuteButton(worldInstance) {
+//   let btn = document.getElementById('btn-mute-start');
+//   if (!btn) return;
+//   btn.textContent = worldInstance.sound.isMuted ? '🔇' : '🔊';
+// }
 
 function enterFullscreen(element) {
   if(element.requestFullscreen) {
@@ -91,8 +91,8 @@ function bindGameHudUi(worldInstance) {
   });
 }
 
-function updateMuteButton(worldInstance) {
-  let btn = document.getElementById('btn-mute');
-  if (!btn) return;
-  btn.textContent = worldInstance.sound.isMuted ? '🔇' : '🔊';
-}
+// function updateMuteButton(worldInstance) {
+//   let btn = document.getElementById('btn-mute');
+//   if (!btn) return;
+//   btn.textContent = worldInstance.sound.isMuted ? '🔇' : '🔊';
+// }

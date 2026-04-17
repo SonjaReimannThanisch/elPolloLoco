@@ -32,9 +32,7 @@ class jellyfisch extends movableObject {
         'img/2.Enemy/2 Jelly fish/Dead/Yellow/y2.png',
         'img/2.Enemy/2 Jelly fish/Dead/Yellow/y3.png',
         'img/2.Enemy/2 Jelly fish/Dead/Yellow/y4.png',
-    ]
-
-
+    ];
 
     IMAGES_SUPER_GREEN = [
         'img/2.Enemy/2 Jelly fish/Súper dangerous/Green 1.png',
@@ -75,7 +73,7 @@ class jellyfisch extends movableObject {
         super();
         this.type = color;
         this.damage = (color === `green` || color === `pink`) ? 20:5;
-        this.damageType = 'electro';
+        
 
         let moveSets = {
             lila: this.IMAGES_MOVE_LILA,
@@ -99,6 +97,7 @@ class jellyfisch extends movableObject {
         this.y = 100 + Math.random() * 200;
         this.speed = 0.3 + Math.random() * 0.5;
         this.animate();
+        this.damageType = 'electro';
     }
 
     hit() {

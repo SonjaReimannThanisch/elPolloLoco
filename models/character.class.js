@@ -84,13 +84,13 @@ class character extends movableObject {
         'img/1.Sharkie/5.Hurt/1.Poisoned/2.png',
         'img/1.Sharkie/5.Hurt/1.Poisoned/3.png',
         'img/1.Sharkie/5.Hurt/1.Poisoned/4.png',
-    ]
+    ];
 
     IMAGES_ELECTROHURT = [
         'img/1.Sharkie/5.Hurt/2.Electric shock/1.png',
         'img/1.Sharkie/5.Hurt/2.Electric shock/2.png',
         'img/1.Sharkie/5.Hurt/2.Electric shock/3.png',
-    ]
+    ];
 
     IMAGES_ELECTRODEAD = [
         'img/1.Sharkie/6.dead/2.Electro_shock/1.png',
@@ -103,8 +103,8 @@ class character extends movableObject {
         'img/1.Sharkie/6.dead/2.Electro_shock/8.png',
         'img/1.Sharkie/6.dead/2.Electro_shock/9.png',
         'img/1.Sharkie/6.dead/2.Electro_shock/10.png',
-        
-    ]
+     
+    ];
 
     IMAGES_BUBBLEATTACK = [
         'img/1.Sharkie/4.Attack/Bubble trap/op1 (with bubble formation)/1.png',
@@ -115,7 +115,7 @@ class character extends movableObject {
         'img/1.Sharkie/4.Attack/Bubble trap/op1 (with bubble formation)/6.png',
         'img/1.Sharkie/4.Attack/Bubble trap/op1 (with bubble formation)/7.png',
         'img/1.Sharkie/4.Attack/Bubble trap/op1 (with bubble formation)/8.png',
-    ]
+    ];
 
     IMAGES_FINSLAP = [
         'img/1.Sharkie/4.Attack/Fin slap/1.png',
@@ -216,7 +216,7 @@ class character extends movableObject {
             } else {
                 let idleTime = Date.now() - this.lastActionTime;
 
-                if (idleTime > 10000 && idleTime < 20000) {
+                if (idleTime > 10000) {
                     this.playAnimation(this.IMAGES_LONG_IDLE);
                 } else {
                     this.playAnimation(this.IMAGES_IDLE);
@@ -224,6 +224,10 @@ class character extends movableObject {
             }
         }, 80);
 
+    }
+
+    setDamageType(type) {
+        this.lastDamageType = type;
     }
 
     startBubbleAttackAnimation() {

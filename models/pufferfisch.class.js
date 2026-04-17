@@ -5,7 +5,7 @@ class pufferfisch extends movableObject {
     isDead = false;
     markedForDeletion = false;
     energy = 100;
-    hasHit = false;;
+    hasHit = false;
 
     IMAGES_MOVE_PINK = [
         'img/2.Enemy/1.Puffer fish (3 color options)/1.Swim/3.swim1.png',
@@ -111,7 +111,7 @@ class pufferfisch extends movableObject {
             color === 'rose' ? this.IMAGES_MOVE_ROSE :
             color === 'green' ?  this.IMAGES_MOVE_GREEN :
             this.IMAGES_MOVE_PINK;
-        this.damagetype = 'poison';
+        
 
         this.loadImage(this.images[0]);
         this.loadImages(this.images);
@@ -123,6 +123,7 @@ class pufferfisch extends movableObject {
         this.y = 140 + Math.random() * 200;
         this.speed = 0.6 + Math.random() * 0.7;
         this.animate();
+        this.damageType = 'poison';
     }
 
     hit() {

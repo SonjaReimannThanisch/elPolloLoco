@@ -169,7 +169,7 @@ class world {
     }   
 
     showGameOver() {
-        this.sound.stopMusic();
+        // this.sound.stopMusic();
         document.getElementById('gameover')?.classList.remove('hidden');
     }
     
@@ -390,8 +390,8 @@ class world {
     }
 
     goHome() {
-        this.sound.stopMusic();
-        this.sound.playMenu();
+        // this.sound.stopMusic();
+        // this.sound.playMenu();
         this.hideGameOver();
         this.resetWorldState();
         document.getElementById('startscreen')?.classList.remove('hidden');

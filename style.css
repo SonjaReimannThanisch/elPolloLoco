@@ -509,7 +509,7 @@ canvas {
 
 @media (orientation: portrait) {
   body::before {
-    content: "Turn your device to play";
+    /* content: "Turn your device to play"; */
     position: fixed;
     inset: 0;
     /* background: black;

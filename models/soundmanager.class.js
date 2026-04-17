@@ -11,7 +11,7 @@ class SoundManager {
             gameover: new Audio('assets/gameOver.mp3')
         }
         this.menuMusic = new Audio('assets/waterBackground.mp3')
-        this.music = new Audio('assets/MainBackground.mp3'),
+        this.music = new Audio('assets/musicword-bubbles-309433.mp3'),
         this.music.loop = true;
         this.menuMusic.loop = true;
         this.music.volume = 0.2;

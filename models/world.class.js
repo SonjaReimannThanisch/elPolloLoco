@@ -67,7 +67,8 @@ class world {
         }
     }
 
-    applyDamage(amount = 5) {
+    applyDamage(amount = 5, type = 'poison') {
+        this.mainCharacter.setDamageType(type);
         this.mainCharacter.energy -= amount;
         if ( this.mainCharacter.energy < 0) {
             this.mainCharacter.energy = 0;
@@ -91,7 +92,7 @@ class world {
     checkEnemyCollision(enemy) {
         if (enemy.isDead) return;
         if (this.mainCharacter.isColliding(enemy) && !this.mainCharacter.isHurt()) {
-            this.applyDamage(enemy.damage || 5);
+            this.applyDamage(enemy.damage || 5, enemy.damageType || 'poison');
         }
     }
 
@@ -163,7 +164,7 @@ class world {
             return;}
         this.resetPlayerToLastPosition();
         if (this.isPressingIntoBarrier() && !this.mainCharacter.isHurt()) {
-            this.applyDamage();
+            this.applyDamage(5, 'poison');
         }
     }   
 

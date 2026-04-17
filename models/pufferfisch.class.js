@@ -111,6 +111,7 @@ class pufferfisch extends movableObject {
             color === 'rose' ? this.IMAGES_MOVE_ROSE :
             color === 'green' ?  this.IMAGES_MOVE_GREEN :
             this.IMAGES_MOVE_PINK;
+        this.damagetype = 'poison';
 
         this.loadImage(this.images[0]);
         this.loadImages(this.images);

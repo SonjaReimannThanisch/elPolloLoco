@@ -75,6 +75,7 @@ class jellyfisch extends movableObject {
         super();
         this.type = color;
         this.damage = (color === `green` || color === `pink`) ? 20:5;
+        this.damageType = 'electro';
 
         let moveSets = {
             lila: this.IMAGES_MOVE_LILA,

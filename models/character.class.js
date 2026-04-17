@@ -17,6 +17,7 @@ class character extends movableObject {
     finSlapAttackStartedAt = 0;
     finSlapAttackDuration = 500;
     lastActionTime = Date.now();
+    lastDamageType = 'poison';
 
     IMAGES_IDLE = [
         'img/1.Sharkie/1.IDLE/1.png',
@@ -194,9 +195,17 @@ class character extends movableObject {
                     this.isBubbleAttacking = false;
                 }
             } else if (this.isDead()) {
-                this.playAnimation(this.IMAGES_POISENED);
+                if (this.lastDamageType === 'electro') {
+                    this.playAnimation(this.IMAGES_ELECTRODEAD);
+                } else {
+                    this.playAnimation(this.IMAGES_POISENED);
+                }
             } else if (this.isHurt()) {
-                this.playAnimation(this.IMAGES_POIHURT);
+                if (this.lastDamageType === 'electro') {
+                    this.playAnimation(this.IMAGES_ELECTROHURT);
+                } else {
+                    this.playAnimation(this.IMAGES_POIHURT);
+                }
             } else if (
                 this.world.keyboard.RIGHT ||
                 this.world.keyboard.LEFT ||

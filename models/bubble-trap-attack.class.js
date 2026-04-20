@@ -21,8 +21,14 @@ class BubbleTrapAttack extends Attack {
         this.type = type;
         this.character = character;
         this.otherDirection = this.character.otherDirection;
-        this.loadImages(this.IMAGES_BUBBLE);
-        this.img = this.imageCache[this.IMAGES_BUBBLE[0]];
+        if (type === 'poison') {
+            this.loadImages(this.IMAGES_BUBBLE_POISEND);
+            this.img = this.imageCache[this.IMAGES_BUBBLE_POISEND[0]];
+        } else {
+            this.loadImages(this.IMAGES_BUBBLE);
+            this.img = this.imageCache[this.IMAGES_BUBBLE[0]];
+        }
+
         this.setStartPosition();
         this.vx = this.otherDirection ? -(8 + Math.random() * 4) : (8 + Math.random() * 4);
     }
@@ -50,7 +56,9 @@ class BubbleTrapAttack extends Attack {
         if (!this.lastFrameAt) this.lastFrameAt = now;
 
         if (now - this.lastFrameAt > 50) {
-            this.playAnimation(this.IMAGES_BUBBLE);
+            let images = this.type === 'poison'
+            ? this.IMAGES_BUBBLE_POISEND : this.IMAGES_BUBBLE;
+            this.playAnimation(images);
             this.lastFrameAt = now;
         }
 

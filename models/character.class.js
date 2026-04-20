@@ -10,6 +10,7 @@ class character extends movableObject {
     attackCooldown = 400;
     coins = 0;
     bottle = 0;
+    isChargingBubble = false;
     isBubbleAttacking = false;
     bubbleAttackStartedAt = 0;
     bubbleAttackDuration = 500;
@@ -128,7 +129,7 @@ class character extends movableObject {
         'img/1.Sharkie/4.Attack/Fin slap/8.png',
     ];
 
-    IMAGES_WHALE_ATTACK = [
+    IMAGES_WHALE_ATTACK_BUBBLE = [
         'img/1.Sharkie/4.Attack/Bubble trap/For Whale/1.png',
         'img/1.Sharkie/4.Attack/Bubble trap/For Whale/2.png',
         'img/1.Sharkie/4.Attack/Bubble trap/For Whale/3.png',
@@ -138,6 +139,19 @@ class character extends movableObject {
         'img/1.Sharkie/4.Attack/Bubble trap/For Whale/7.png',
         'img/1.Sharkie/4.Attack/Bubble trap/For Whale/8.png',
     ];
+
+    IMAGES_WHALE_ATTACK = [
+        'img/1.Sharkie/4.Attack/Bubble trap/For Whale/Whitout bubbles/1.png',
+        'img/1.Sharkie/4.Attack/Bubble trap/For Whale/Whitout bubbles/2.png',
+        'img/1.Sharkie/4.Attack/Bubble trap/For Whale/Whitout bubbles/3.png',
+        'img/1.Sharkie/4.Attack/Bubble trap/For Whale/Whitout bubbles/4.png',
+        'img/1.Sharkie/4.Attack/Bubble trap/For Whale/Whitout bubbles/5.png',
+        'img/1.Sharkie/4.Attack/Bubble trap/For Whale/Whitout bubbles/6.png',
+        'img/1.Sharkie/4.Attack/Bubble trap/For Whale/Whitout bubbles/7.png',
+        'img/1.Sharkie/4.Attack/Bubble trap/For Whale/Whitout bubbles/8.png',
+    ];
+
+
 
     world;
 
@@ -201,9 +215,18 @@ class character extends movableObject {
                 if (now - this.finSlapAttackStartedAt > this.finSlapAttackDuration) {
                     this.isFinSlapAttacking = false;
                 }
+            
+            } else if (this.isChargingBubble) {
+                this.playAnimation(this.IMAGES_WHALE_ATTACK);
+                if (Date.now() - this.bubbleAttackStartedAt > 300) {
+                    this.isChargingBubble = false;
+                    this.isBubbleAttacking = true;
+                    this.bubbleAttackStartedAt = Date.now();
+                    this.currentImage = 0;
+                }
             } else if (this.isBubbleAttacking) {
                 if (this.bubbleAttackType === 'poison') {
-                    this.playAnimation(this.IMAGES_WHALE_ATTACK);
+                    this.playAnimation(this.IMAGES_WHALE_ATTACK_BUBBLE);
                 } else {
                     this.playAnimation(this.IMAGES_BUBBLEATTACK);
                 }
@@ -248,7 +271,8 @@ class character extends movableObject {
 
     startBubbleAttackAnimation(type = 'normal') {
         this.lastActionTime = Date.now();
-        this.isBubbleAttacking = true;
+        this.isChargingBubble = true;
+        this.isBubbleAttacking = false;
         this.bubbleAttackType = type || 'normal';
         this.bubbleAttackStartedAt = Date.now();
         this.currentImage = 0;

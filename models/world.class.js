@@ -115,6 +115,8 @@ class world {
                 if (attack.isColliding(enemy)) {
                     if (attack instanceof FinSlapAttack) {
                         enemy.hit('finSlap');
+                    } else if (attack instanceof BubbleTrapAttack) {
+                        enemy.hit(attack.type);
                     } else {
                         enemy.hit('normal');
                     }

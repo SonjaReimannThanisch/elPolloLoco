@@ -56,6 +56,10 @@ class Endboss extends movableObject {
         'img/2.Enemy/3 Final Enemy/Dead/dead10.png'
     ];
 
+    IMAGE_RECOVERY = [
+        'img/2.Enemy/3 Final Enemy/Dead/recovered.png',
+    ];
+
     IMAGES_HURT = [
         'img/2.Enemy/3 Final Enemy/Hurt/1.png',
         'img/2.Enemy/3 Final Enemy/Hurt/2.png',
@@ -75,8 +79,8 @@ class Endboss extends movableObject {
         this.loadImages(this.IMAGES_INTRO);
         this.loadImages(this.IMAGES_IDLE);
         this.loadImages(this.IMAGES_ATTACK);
-        this.loadImages(this.IMAGES_DEAD);
         this.loadImages(this.IMAGES_HURT);
+        this.loadImages(this.IMAGES_DEAD);
         this.x = this.finalX;
         this.y = -520;
         this.startAnimationLoop();
@@ -86,6 +90,7 @@ class Endboss extends movableObject {
         if (this.isAwakened) return;
         this.isAwakened = true;
         this.isIntroducing = true;
+        this.isHurt = false;
     }
 
     update() {
@@ -107,6 +112,8 @@ class Endboss extends movableObject {
                 this.playAnimation(this.IMAGES_HURT);
             } else if (this.isActive) {
                 this.playAnimation(this.IMAGES_IDLE);
+            } else {
+                this.playAnimation(this.IMAGES_DEAD);
             }
         }, 200);
     }
@@ -117,21 +124,25 @@ class Endboss extends movableObject {
 
     hit(type = 'normal') {
         if (!this.isActive) return;
-
         if (type === 'poison') {
             this.energy -= 20;
         } else {
             this.energy -= 5;
         }
-
         this.isHurt = true;
-
         setTimeout(() => {
             this.isHurt = false;
         }, 300);
-
         if (this.energy <= 0) {
             this.die();
+        }
+    }
+
+    die() {
+        if (this.energy <= 0) {
+            this.isActive = false;
+            this.isHurt = false;
+            this.playAnimation(this.IMAGES_DEAD);
         }
     }
 }

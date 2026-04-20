@@ -364,7 +364,7 @@ class world {
         if (boss && boss.isActive) {
             type = 'poison';
         }
-        this.mainCharacter.startBubbleAttackAnimation();
+        this.mainCharacter.startBubbleAttackAnimation(type);
         setTimeout(() => {
             let attack = new BubbleTrapAttack(this.mainCharacter, type);
             this.attacks.push(attack);

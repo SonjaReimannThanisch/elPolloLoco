@@ -202,8 +202,11 @@ class character extends movableObject {
                     this.isFinSlapAttacking = false;
                 }
             } else if (this.isBubbleAttacking) {
-                this.playAnimation(this.IMAGES_BUBBLEATTACK);
-
+                if (this.bubbleAttackType === 'poison') {
+                    this.playAnimation(this.IMAGES_WHALE_ATTACK);
+                } else {
+                    this.playAnimation(this.IMAGES_BUBBLEATTACK);
+                }
                 if (now - this.bubbleAttackStartedAt > this.bubbleAttackDuration) {
                     this.isBubbleAttacking = false;
                 }
@@ -243,9 +246,10 @@ class character extends movableObject {
         this.lastDamageType = type;
     }
 
-    startBubbleAttackAnimation() {
+    startBubbleAttackAnimation(type = 'normal') {
         this.lastActionTime = Date.now();
         this.isBubbleAttacking = true;
+        this.bubbleAttackType = type || 'normal';
         this.bubbleAttackStartedAt = Date.now();
         this.currentImage = 0;
     }

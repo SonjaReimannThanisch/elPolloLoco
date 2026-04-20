@@ -111,21 +111,6 @@ class Endboss extends movableObject {
         }, 200);
     }
 
-        startAnimationLoop(){
-        setInterval(() => {
-            if (this.isActive) {
-                this.playAnimation(this.IMAGES_IDLE);
-            }
-        }, 400);
-
-        setInterval(() => {
-            if ( this.isIntroducing) {
-                this.playAnimation(this.IMAGES_INTRO);
-            }
-        }, 140);
-
-    }
-
     isCollidable() {
         return this.isActive;
     }

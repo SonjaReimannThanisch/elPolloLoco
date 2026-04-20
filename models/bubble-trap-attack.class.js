@@ -10,10 +10,15 @@ class BubbleTrapAttack extends Attack {
 
     IMAGES_BUBBLE= [
         'img/1.Sharkie/4.Attack/Bubble trap/Bubble.png',
-    ]
+    ];
 
-    constructor(character) {
+    IMAGES_BUBBLE_POISEND = [
+        'img/1.Sharkie/4.Attack/Bubble trap/Poisoned Bubble (for whale).png',
+    ];
+
+    constructor(character, type = 'normal') {
         super();
+        this.type = type;
         this.character = character;
         this.otherDirection = this.character.otherDirection;
         this.loadImages(this.IMAGES_BUBBLE);

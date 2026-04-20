@@ -23,7 +23,7 @@ class Endboss extends movableObject {
         'img/2.Enemy/3 Final Enemy/1.Introduce/10.png',
     ];
 
-    IMAGES_MOVE = [
+    IMAGES_IDLE = [
         'img/2.Enemy/3 Final Enemy/2.floating/1.png',
         'img/2.Enemy/3 Final Enemy/2.floating/2.png',
         'img/2.Enemy/3 Final Enemy/2.floating/3.png',
@@ -73,12 +73,11 @@ class Endboss extends movableObject {
     constructor(x, y) {
         super().loadImage(this.IMAGES_INTRO[0]);
         this.loadImages(this.IMAGES_INTRO);
-        this.loadImages(this.IMAGES_MOVE);
+        this.loadImages(this.IMAGES_IDLE);
         this.loadImages(this.IMAGES_ATTACK);
         this.loadImages(this.IMAGES_DEAD);
         this.loadImages(this.IMAGES_HURT);
         this.x = this.finalX;
-        // this.y = this.finalY;
         this.y = -520;
         this.startAnimationLoop();
     }
@@ -104,16 +103,18 @@ class Endboss extends movableObject {
         setInterval(() => {
             if ( this.isIntroducing) {
                 this.playAnimation(this.IMAGES_INTRO);
+            } else if (this.isActive && this.isHurt) {
+                this.playAnimation(this.IMAGES_HURT);
             } else if (this.isActive) {
-                this.playAnimation(this.IMAGES_MOVE);
+                this.playAnimation(this.IMAGES_IDLE);
             }
-        }, 250);
+        }, 200);
     }
 
         startAnimationLoop(){
         setInterval(() => {
             if (this.isActive) {
-                this.playAnimation(this.IMAGES_MOVE);
+                this.playAnimation(this.IMAGES_IDLE);
             }
         }, 400);
 
@@ -127,5 +128,25 @@ class Endboss extends movableObject {
 
     isCollidable() {
         return this.isActive;
+    }
+
+    hit(type = 'normal') {
+        if (!this.isActive) return;
+
+        if (type === 'poison') {
+            this.energy -= 20;
+        } else {
+            this.energy -= 5;
+        }
+
+        this.isHurt = true;
+
+        setTimeout(() => {
+            this.isHurt = false;
+        }, 300);
+
+        if (this.energy <= 0) {
+            this.die();
+        }
     }
 }

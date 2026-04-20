@@ -104,11 +104,11 @@ class world {
             for (let j = 0; j < this.level.enemies.length; j++) {
             let enemy = this.level.enemies[j];
 
-                if ( attack instanceof BubbleTrapAttack && !(enemy instanceof jellyfisch)) {
+                if (attack instanceof BubbleTrapAttack && !(enemy instanceof jellyfisch) && !(enemy instanceof Endboss)) {
                     continue;
                 }
 
-                if ( attack instanceof FinSlapAttack && !(enemy instanceof pufferfisch)) {
+                if (attack instanceof FinSlapAttack && !(enemy instanceof pufferfisch)) {
                     continue;
                 }
 
@@ -359,11 +359,17 @@ class world {
 
     tryBubble(now) {
         if (now - this.lastBubbleAt < this.bubbleCooldowns) return;
+        let type = 'normal';
+        let boss = this.getEndboss();
+        if (boss && boss.isActive) {
+            type = 'poison';
+        }
         this.mainCharacter.startBubbleAttackAnimation();
         setTimeout(() => {
-            let attack = new BubbleTrapAttack(this.mainCharacter);
+            let attack = new BubbleTrapAttack(this.mainCharacter, type);
             this.attacks.push(attack);
         }, 150);
+
         this.lastBubbleAt = now;
     }
 

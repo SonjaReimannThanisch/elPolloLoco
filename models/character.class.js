@@ -224,7 +224,6 @@ class character extends movableObject {
                     this.isChargingBubble = false;
                     this.isBubbleAttacking = true;
                     this.bubbleAttackStartedAt = Date.now();
-                    // this.currentImage = 0;
                 }
             } else if (this.isBubbleAttacking) {
                 if (this.bubbleAttackType === 'poison') {

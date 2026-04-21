@@ -10,6 +10,12 @@ class Endboss extends movableObject {
     isIntroducing = false;
     isActive = false;
     _isHurt = false;
+    isAttacking = false;
+    attackCooldown = 3000;
+    attackDuration= 1200;
+    attackSpeed = 0;
+    lastAttackAt = 8;
+    attackDirection = 1;
 
     IMAGES_INTRO = [
         'img/2.Enemy/3 Final Enemy/1.Introduce/1.png',
@@ -102,9 +108,45 @@ class Endboss extends movableObject {
                 this.y = this.finalY;
                 this.isIntroducing = false;
                 this.isActive = true;
+                this.lastAttackAt = Date.now();
+            }
+            return;
+        }
+        if (!this.isActive) return;
+        let now = Date.now();
+
+        if (!this.isAttacking && !this._isHurt) {
+            if (now - this.lastAttackAt >= this.attackCooldown) {
+                this.startAttack();
+            }
+        }
+
+        if (this.isAttacking) {
+            this.x += this.attackDirection * this.attackSpeed;
+            if (now - this.attackStartedAt >= this.attachDuration) {
+                this.stopAttack();
             }
         }
     }
+
+    startAttack() {
+        if (!this.world) return;
+        let player = this.world.mainCharacter;
+        let bossCenterX = this.x + this.width / 2;
+        let playerCenterX = player.x + player.width / 2;
+        this.attackDirection = playerCenterX < bossCenterX ? -1 : 1;
+        this.otherDirection = this.attackDirection === 1;
+        this.attackSpeed = 2;
+        this.isAttacking= true;
+        this.attackStartedAt = Date.now();
+    }
+
+    stopAttack() {
+        this.isAttacking= false;
+        this.lastAttackAt = Date.now();
+    }
+
+
 
     startAnimationLoop(){
         setInterval(() => {
@@ -112,9 +154,11 @@ class Endboss extends movableObject {
                 this.playAnimation(this.IMAGES_INTRO);
             } else if (this.isActive && this._isHurt) {
                 this.playAnimation(this.IMAGES_HURT);
+            } else if (this.isActive && this.isAttacking) {
+                this.playAnimation(this.IMAGES_ATTACK);
             } else if (this.isActive) {
-                this.playAnimation(this.IMAGES_IDLE);
-            } else {
+                this.playAnimation(this.IMAGES_IDLE)
+            }else if (!this.isActive && this.energy <= 0) {
                 this.playAnimation(this.IMAGES_DEAD);
             }
         }, 200);
@@ -132,6 +176,7 @@ class Endboss extends movableObject {
             this.energy -= 5;
         }
         this._isHurt = true;
+        if (this.isAttacking) this.stopAttack();
         setTimeout(() => {
             this._isHurt = false;
         }, 300);
@@ -143,7 +188,9 @@ class Endboss extends movableObject {
     die() {
         if (this.energy <= 0) {
             this.isActive = false;
-            this.isHurt = false;
+            this._isHurt = false;
+            this.isAttacking = false;
+            // this.markedfordeletion = true;
             this.playAnimation(this.IMAGES_DEAD);
         }
     }

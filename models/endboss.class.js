@@ -9,6 +9,7 @@ class Endboss extends movableObject {
     isAwakened = false;
     isIntroducing = false;
     isActive = false;
+    _isHurt = false;
 
     IMAGES_INTRO = [
         'img/2.Enemy/3 Final Enemy/1.Introduce/1.png',
@@ -83,7 +84,7 @@ class Endboss extends movableObject {
         this.loadImages(this.IMAGES_DEAD);
         this.x = this.finalX;
         this.y = -520;
-        this.startAnimationLoop();
+        
     }
 
     startIntro() {
@@ -91,6 +92,7 @@ class Endboss extends movableObject {
         this.isAwakened = true;
         this.isIntroducing = true;
         this.isHurt = false;
+        this.startAnimationLoop();
     }
 
     update() {
@@ -108,7 +110,7 @@ class Endboss extends movableObject {
         setInterval(() => {
             if ( this.isIntroducing) {
                 this.playAnimation(this.IMAGES_INTRO);
-            } else if (this.isActive && this.isHurt) {
+            } else if (this.isActive && this._isHurt) {
                 this.playAnimation(this.IMAGES_HURT);
             } else if (this.isActive) {
                 this.playAnimation(this.IMAGES_IDLE);
@@ -129,9 +131,9 @@ class Endboss extends movableObject {
         } else {
             this.energy -= 5;
         }
-        this.isHurt = true;
+        this._isHurt = true;
         setTimeout(() => {
-            this.isHurt = false;
+            this._isHurt = false;
         }, 300);
         if (this.energy <= 0) {
             this.die();

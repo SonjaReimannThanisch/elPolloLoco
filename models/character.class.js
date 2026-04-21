@@ -173,6 +173,8 @@ class character extends movableObject {
         this.loadImages(this.IMAGES_ELECTRODEAD);
         this.loadImages(this.IMAGES_BUBBLEATTACK);
         this.loadImages(this.IMAGES_FINSLAP);
+        this.loadImages(this.IMAGES_WHALE_ATTACK);
+        this.loadImages(this.IMAGES_WHALE_ATTACK_BUBBLE);
     }
 
     animate() {
@@ -222,7 +224,7 @@ class character extends movableObject {
                     this.isChargingBubble = false;
                     this.isBubbleAttacking = true;
                     this.bubbleAttackStartedAt = Date.now();
-                    this.currentImage = 0;
+                    // this.currentImage = 0;
                 }
             } else if (this.isBubbleAttacking) {
                 if (this.bubbleAttackType === 'poison') {

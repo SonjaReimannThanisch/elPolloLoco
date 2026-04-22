@@ -13,9 +13,10 @@ class Endboss extends movableObject {
     isAttacking = false;
     attackCooldown = 3000;
     attackDuration= 1200;
-    attackSpeed = 0;
+    attackSpeed = 6;
     lastAttackAt = 8;
     attackDirection = 1;
+    isDead = false;
 
     IMAGES_INTRO = [
         'img/2.Enemy/3 Final Enemy/1.Introduce/1.png',
@@ -112,7 +113,7 @@ class Endboss extends movableObject {
             }
             return;
         }
-        if (!this.isActive) return;
+        if (!this.isActive || this.isDead) return;
         let now = Date.now();
 
         if (!this.isAttacking && !this._isHurt) {
@@ -123,7 +124,7 @@ class Endboss extends movableObject {
 
         if (this.isAttacking) {
             this.x += this.attackDirection * this.attackSpeed;
-            if (now - this.attackStartedAt >= this.attachDuration) {
+            if (now - this.attackStartedAt >= this.attackDuration ) {
                 this.stopAttack();
             }
         }
@@ -169,14 +170,16 @@ class Endboss extends movableObject {
     }
 
     hit(type = 'normal') {
-        if (!this.isActive) return;
+        if (!this.isActive || this.isDead) return;
         if (type === 'poison') {
             this.energy -= 20;
         } else {
             this.energy -= 5;
         }
         this._isHurt = true;
-        if (this.isAttacking) this.stopAttack();
+        if (this.isAttacking) {
+            this.stopAttack();
+        }
         setTimeout(() => {
             this._isHurt = false;
         }, 300);
@@ -186,11 +189,11 @@ class Endboss extends movableObject {
     }
 
     die() {
-        if (this.energy <= 0) {
+        if (this.isDead) return; {
+            this.isDead = true;
             this.isActive = false;
             this._isHurt = false;
             this.isAttacking = false;
-            // this.markedfordeletion = true;
             this.playAnimation(this.IMAGES_DEAD);
         }
     }

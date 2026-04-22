@@ -20,6 +20,9 @@ class world {
     lastX = 0;
     lastY = 0;
     isGameOver = false;
+
+    hasWon = false;
+
     TILE_WIDTH = 720;
     enemyCollisionInterval = null;
     hasStarted = false;
@@ -44,6 +47,7 @@ class world {
         this.setWorld();
         this.setWorldForLevelObjects();
         this.bindUi();
+        this.winScreen = new WinScreen(this.canvas.width, this.canvas.height);
         this.draw();
     }
 
@@ -278,13 +282,21 @@ class world {
         this.checkMenuInput();
         this.level.enemies = this.level.enemies.filter(e => !e.markedForDeletion);
         this.checkEndbossTrigger();
-        let boss = this.getEndboss();
-        if (boss) boss.update();
+        this.handleBossState();
+        // let boss = this.getEndboss();
+        // if (boss) boss.update();
         this.checkAttackCollisions();
         this.cleanupAttacks();
         this.handleAttackInput(now);
         this.updateAttacks(now);
+        // this.checkWinTestInput();
     }
+
+    // checkWinTestInput() {
+    //     if ( !this.keyboard.Y) return;
+    //     this.hasWon = true;
+    //     this.keyboard.Y = false;
+    // }
 
     drawWorldLayer() {
         this.ctx.translate(this.camera_x, 0);
@@ -304,6 +316,35 @@ class world {
         this.addToMap(this.statusLife);
         this.addToMap(this.statusCoins);
         this.addToMap(this.statusPoison);
+        this.drawHudWonLayer();
+    }
+
+    // drawHudWonLayer() {
+    //     if (this.hasWon) {
+    //         if (this.winScreen.alpha < 2) {
+    //             this.winScreen.alpha += 0.02;
+    //         }
+    //         this.addToMap(this.winScreen);
+    //     }
+    // }
+
+    drawHudWonLayer() {
+        if (!this.hasWon) return;
+
+        // 🔥 1. Hintergrund abdunkeln (wird auch langsam stärker)
+        this.ctx.save();
+        let overlayAlpha = Math.min(this.winScreen.alpha, 0.9);
+        this.ctx.globalAlpha = overlayAlpha;
+        this.ctx.fillStyle = "rgba(10, 3, 37, 0.75)";
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        this.ctx.restore();
+
+        // ✨ 2. WinScreen reinfaden
+        if (this.winScreen.alpha < 1) {
+            this.winScreen.alpha += 0.02;
+        }
+
+        this.addToMap(this.winScreen);
     }
 
     endFrame() {
@@ -338,7 +379,19 @@ class world {
         this.setWorldForLevelObjects();
         this.statusLife.setPercentage(this.mainCharacter.energy);
         this.statusCoins.setPercentage(0);
-        this.statusPoison.setPercentage(0);     
+        this.statusPoison.setPercentage(0);
+        this.hasWon = false;
+        this.winScreen = new WinScreen(this.canvas.width, this.canvas.height);   
+    }
+
+    handleBossState() {
+        if (!this.bossFightStarted) return;
+        let boss = this.getEndboss();
+        if (!boss) return;
+        boss.update();
+            if (boss.isDead && !this.hasWon) {
+                this.hasWon = true;
+        }
     }
 
     handleAttackInput() {

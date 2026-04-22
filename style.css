@@ -58,8 +58,6 @@ canvas {
   background-color: rgba(84, 76, 225, 0.15);
 }
 
-
-
 .overlay.hidden { display: none; }
 
 .overlay{
@@ -300,8 +298,6 @@ canvas {
   box-shadow: 0 10px 40px rgba(0,0,0,0.4);
   background-color: rgba(84, 76, 225, 0.15);
 }
-
-
 
 .overlay.hidden { display: none; }
 

@@ -67,12 +67,20 @@ class world {
     triggerGameOverIfDead() {
         if (this.mainCharacter.energy <= 0 && !this.isGameOver) {
             this.isGameOver = true;
-            this.showGameOver();
+            if (this.mainCharacter.deathCause === 'boss') {
+                this.mainCharacter.isCinematicDead = true;
+                setTimeout(() => {
+                    this.showGameOver();
+                }, 1500);
+            } else {
+                this.showGameOver();
+            }
         }
     }
 
-    applyDamage(amount = 5, type = 'poison') {
+    applyDamage(amount = 5, type = 'poison', cause = '') {
         this.mainCharacter.setDamageType(type);
+        this.mainCharacter.deathCause = cause;
         this.mainCharacter.energy -= amount;
         if ( this.mainCharacter.energy < 0) {
             this.mainCharacter.energy = 0;
@@ -96,7 +104,8 @@ class world {
     checkEnemyCollision(enemy) {
         if (enemy.isDead) return;
         if (this.mainCharacter.isColliding(enemy) && !this.mainCharacter.isHurt()) {
-            this.applyDamage(enemy.damage || 5, enemy.damageType || 'poison');
+            let cause = enemy instanceof Endboss ? 'boss' : ''
+            this.applyDamage(enemy.damage || 5, enemy.damageType || 'poison', cause);
         }
     }
 
@@ -392,6 +401,8 @@ class world {
             if (boss.isDead && !this.hasWon) {
                 this.hasWon = true;
         }
+
+    t
     }
 
     handleAttackInput() {

@@ -179,7 +179,6 @@ class Endboss extends movableObject {
         this._isHurt = true;
         if (this.isAttacking) {
             this.stopAttack();
-        }
         setTimeout(() => {
             this._isHurt = false;
         }, 300);

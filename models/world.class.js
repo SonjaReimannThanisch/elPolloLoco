@@ -401,8 +401,6 @@ class world {
             if (boss.isDead && !this.hasWon) {
                 this.hasWon = true;
         }
-
-    t
     }
 
     handleAttackInput() {

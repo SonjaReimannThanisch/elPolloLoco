@@ -34,6 +34,7 @@ class world {
     constructor(canvas, keyboard) {
         this.canvas = canvas;
         this.ctx = canvas.getContext('2d');
+        this.combat = new CombatWorld(this);
         this.keyboard = keyboard;
         this.level = createLevel1();
         // this.sound = new SoundManager();
@@ -121,53 +122,6 @@ class world {
         }
     }
 
-    checkAttackCollisions() {
-        for (let i = 0; i < this.attacks.length; i++) {
-            let attack = this.attacks[i];
-            if (attack.hasHit) continue;
-
-            for (let j = 0; j < this.level.enemies.length; j++) {
-            let enemy = this.level.enemies[j];
-
-                if (attack instanceof BubbleTrapAttack && !(enemy instanceof jellyfisch) && !(enemy instanceof Endboss)) {
-                    continue;
-                }
-
-                if (attack instanceof FinSlapAttack && !(enemy instanceof pufferfisch)) {
-                    continue;
-                }
-
-                if (attack.isColliding(enemy)) {
-                    if (attack instanceof FinSlapAttack) {
-                        enemy.hit('finSlap');
-                    } else if (attack instanceof BubbleTrapAttack) {
-                        enemy.hit(attack.type);
-                    } else {
-                        enemy.hit('normal');
-                    }
-                    attack.hitTarget();
-                    break;
-                }
-            }
-        }
-    }
-
-    updateAttacks(now) {
-        for (let i=0; i < this.attacks.length; i++) {
-            let attack = this.attacks[i];
-            if (typeof attack.tick === `function`) {
-                attack.tick(now);
-            }
-            if (attack.vx) {
-                attack.x += attack.vx;
-            }
-        }
-    }
-
-    cleanupAttacks() {
-        this.attacks = this.attacks.filter(a => !a.isExpired() && !a.markedForDeletion);
-    }
-
     isCollidingWithAnyBarrier() {
         return this.level.barriers.some(b => this.mainCharacter.isColliding(b));
     }
@@ -223,7 +177,8 @@ class world {
     }
 
     lockCameraOnPlayer() {
-        document.getElementById('gameover')?.classList.remove('hidden');
+        this.camera_x = -this.mainCharacter.x;
+        // document.getElementById('gameover')?.classList.remove('hidden');
     }
     
     hideGameOver() {
@@ -350,10 +305,8 @@ class world {
     }
 
     updateCombat(now) {
-        this.checkAttackCollisions();
-        this.cleanupAttacks();
+        this.combat.update(now);
         this.handleAttackInput(now);
-        this.updateAttacks(now);
     }
 
     drawWorldLayer() {
@@ -363,7 +316,6 @@ class world {
         this.addObjectsToMap(this.level.lights);
         this.addObjectsToMap(this.level.coins);
         this.addObjectsToMap(this.level.poison);
-       
         this.addObjectsToMap(this.level.enemies);
         this.addToMap(this.mainCharacter);
         this.addObjectsToMap(this.attacks);
@@ -376,15 +328,6 @@ class world {
         this.addToMap(this.statusPoison);
         this.drawHudWonLayer();
     }
-
-    // drawHudWonLayer() {
-    //     if (this.hasWon) {
-    //         if (this.winScreen.alpha < 2) {
-    //             this.winScreen.alpha += 0.02;
-    //         }
-    //         this.addToMap(this.winScreen);
-    //     }
-    // }
 
     drawHudWonLayer() {
         if (!this.hasWon) return;

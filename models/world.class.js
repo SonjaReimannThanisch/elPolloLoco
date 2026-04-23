@@ -34,9 +34,16 @@ class world {
     constructor(canvas, keyboard) {
         this.canvas = canvas;
         this.ctx = canvas.getContext('2d');
+        this.keyboard = keyboard;
         this.level = createLevel1();
         // this.sound = new SoundManager();
-        this.keyboard = keyboard;
+        this.initHud();
+        this.initUi();
+        this.initWorldState();
+        this.draw();
+    }
+
+    initHud() {
         this.keyboardSprite = new Keyboard(canvas.width, canvas.height);
         this.statusLife = new statusBar('life');
         this.statusCoins = new statusBar('coins');
@@ -44,11 +51,16 @@ class world {
         this.statusLife.y = 45;
         this.statusCoins.y = 80;
         this.statusPoison.y = 10;
-        this.setWorld();
-        this.setWorldForLevelObjects();
+    }
+
+    initUi() {
         this.bindUi();
         this.winScreen = new WinScreen(this.canvas.width, this.canvas.height);
-        this.draw();
+    }
+
+    initWorldState() {
+        this.setWorld();
+        this.setWorldForLevelObjects();
     }
 
     startGame() {
@@ -175,27 +187,43 @@ class world {
     }
 
     checkBarrierCollision() {
+        if (!this.isBlockedByBarrierOrBoss()) {
+            this.rememberPlayerPosition();
+            return;
+        }
+        this.resetPlayerToLastPosition();
+        this.applyBarrierDamage();
+    }
+
+    isBlockedByBarrierOrBoss() {
         let hitBarrier = this.isCollidingWithAnyBarrier();
         let boss = this.getEndboss();
         let hitBoss = boss && boss.isCollidable() && this.mainCharacter.isColliding(boss);
-        if (!hitBarrier && !hitBoss) {
-            this.rememberPlayerPosition();
-            return;}
-        this.resetPlayerToLastPosition();
+        return hitBarrier || hitBoss;
+    }
+
+    applyBarrierDamage() {
         if (this.isPressingIntoBarrier() && !this.mainCharacter.isHurt()) {
             this.applyDamage(5, 'poison');
         }
-    }   
+    }
 
     showGameOver() {
         // this.sound.stopMusic();
-        this.camera_x = -this.mainCharacter.x;
+        this.freezeBossForGameOver();
+        this.lockCameraOnPlayer();
         document.getElementById('gameover')?.classList.remove('hidden');
+    }
+
+    freezeBossForGameOver() {
         let boss = this.getEndboss();
         if (boss) {
-            // boss.isActive = false;
             boss.isAttacking = false;
         }
+    }
+
+    lockCameraOnPlayer() {
+        document.getElementById('gameover')?.classList.remove('hidden');
     }
     
     hideGameOver() {
@@ -289,29 +317,44 @@ class world {
 
     updateWorldState() {
         let now = Date.now();
+        this.updateEnvironment();
+        this.updateCollectibles();
+        this.updateMenuState();
+        this.updateEnemies();
+        this.updateBossFight();
+        this.updateCombat();
+    }
+
+    updateEnvironment() {
         this.updateBackground();
         this.updateLights();
         this.checkBarrierCollision();
+    }
+
+    updateCollectibles() {
         this.checkCoinCollision();
         this.checkPoisonCollision();
+    }
+
+    updateMenuState() {
         this.checkMenuInput();
+    }
+
+    updateEnemies() {
         this.level.enemies = this.level.enemies.filter(e => !e.markedForDeletion);
+    }
+
+    updateBossFight() {
         this.checkEndbossTrigger();
         this.handleBossState();
-        // let boss = this.getEndboss();
-        // if (boss) boss.update();
+    }
+
+    updateCombat(now) {
         this.checkAttackCollisions();
         this.cleanupAttacks();
         this.handleAttackInput(now);
         this.updateAttacks(now);
-        // this.checkWinTestInput();
     }
-
-    // checkWinTestInput() {
-    //     if ( !this.keyboard.Y) return;
-    //     this.hasWon = true;
-    //     this.keyboard.Y = false;
-    // }
 
     drawWorldLayer() {
         this.ctx.translate(this.camera_x, 0);
@@ -370,28 +413,52 @@ class world {
     }
 
     resetWorldState() {
+        this.resetIntervals();
+        this.resetFlags();
+        this.resetCollections();
+        this.resetLevelState();
+        this.resetHudState();
+        this.resetWinState();  
+    }
+    
+    resetIntervals() {
         clearInterval(this.enemyCollisionInterval);
-        this.hasPlayerMoved = false;
         this.enemyCollisionInterval = null;
-        this.camera_x = 0;
-        this.attacks = [];
-        this.bubbles = [];
+    }
+
+    resetFlags() {
+        this.hasPlayerMoved = false;
         this.bossFightStarted = false;
         this.isGameOver = false;
         this.hasStarted = false;
+        this.hasWon = false;
+    }
+
+    resetCollections() {
+        this.attacks = [];
+        this.bubbles = [];
         this.lastFinSlapAt = 0;
         this.lastBubbleAt = 0;
         this.lastX = 0;
         this.lastY = 0;
+        this.camera_x = 0;
+    }
+
+    resetLevelState() {
         this.level = createLevel1();
         this.mainCharacter = new character();
         this.setWorld();
         this.setWorldForLevelObjects();
+    }
+
+    resetHudState() {
         this.statusLife.setPercentage(this.mainCharacter.energy);
         this.statusCoins.setPercentage(0);
         this.statusPoison.setPercentage(0);
-        this.hasWon = false;
-        this.winScreen = new WinScreen(this.canvas.width, this.canvas.height);   
+    }
+
+    resetWinState() {
+        this.winScreen = new WinScreen(this.canvas.width, this.canvas.height);
     }
 
     handleBossState() {

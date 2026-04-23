@@ -20,63 +20,6 @@ class Endboss extends movableObject {
     damage = 35;
     damageType = 'poison';
 
-    IMAGES_INTRO = [
-        'img/2.Enemy/3 Final Enemy/1.Introduce/1.png',
-        'img/2.Enemy/3 Final Enemy/1.Introduce/2.png',
-        'img/2.Enemy/3 Final Enemy/1.Introduce/3.png',
-        'img/2.Enemy/3 Final Enemy/1.Introduce/4.png',
-        'img/2.Enemy/3 Final Enemy/1.Introduce/5.png',
-        'img/2.Enemy/3 Final Enemy/1.Introduce/6.png',
-        'img/2.Enemy/3 Final Enemy/1.Introduce/7.png',
-        'img/2.Enemy/3 Final Enemy/1.Introduce/8.png',
-        'img/2.Enemy/3 Final Enemy/1.Introduce/9.png',
-        'img/2.Enemy/3 Final Enemy/1.Introduce/10.png',
-    ];
-
-    IMAGES_IDLE = [
-        'img/2.Enemy/3 Final Enemy/2.floating/1.png',
-        'img/2.Enemy/3 Final Enemy/2.floating/2.png',
-        'img/2.Enemy/3 Final Enemy/2.floating/3.png',
-        'img/2.Enemy/3 Final Enemy/2.floating/4.png',
-        'img/2.Enemy/3 Final Enemy/2.floating/5.png',
-        'img/2.Enemy/3 Final Enemy/2.floating/6.png',
-        'img/2.Enemy/3 Final Enemy/2.floating/7.png',
-        'img/2.Enemy/3 Final Enemy/2.floating/8.png',
-        'img/2.Enemy/3 Final Enemy/2.floating/9.png',
-        'img/2.Enemy/3 Final Enemy/2.floating/10.png',
-        'img/2.Enemy/3 Final Enemy/2.floating/11.png',
-        'img/2.Enemy/3 Final Enemy/2.floating/12.png',
-        'img/2.Enemy/3 Final Enemy/2.floating/13.png'
-    ];
-
-    IMAGES_ATTACK = [
-        'img/2.Enemy/3 Final Enemy/Attack/1.png',
-        'img/2.Enemy/3 Final Enemy/Attack/2.png',
-        'img/2.Enemy/3 Final Enemy/Attack/3.png',
-        'img/2.Enemy/3 Final Enemy/Attack/4.png',
-        'img/2.Enemy/3 Final Enemy/Attack/5.png',
-        'img/2.Enemy/3 Final Enemy/Attack/6.png'
-    ];
-
-    IMAGES_DEAD = [
-        'img/2.Enemy/3 Final Enemy/Dead/dead6.png',
-        'img/2.Enemy/3 Final Enemy/Dead/dead7.png',
-        'img/2.Enemy/3 Final Enemy/Dead/dead8.png',
-        'img/2.Enemy/3 Final Enemy/Dead/dead9.png',
-        'img/2.Enemy/3 Final Enemy/Dead/dead10.png'
-    ];
-
-    IMAGE_RECOVERY = [
-        'img/2.Enemy/3 Final Enemy/Dead/recovered.png',
-    ];
-
-    IMAGES_HURT = [
-        'img/2.Enemy/3 Final Enemy/Hurt/1.png',
-        'img/2.Enemy/3 Final Enemy/Hurt/2.png',
-        'img/2.Enemy/3 Final Enemy/Hurt/3.png',
-        'img/2.Enemy/3 Final Enemy/Hurt/4.png'
-    ];
-
     offset = {
         top: 220,
         left: 35,
@@ -85,15 +28,19 @@ class Endboss extends movableObject {
     }
 
     constructor(x, y) {
-        super().loadImage(this.IMAGES_INTRO[0]);
-        this.loadImages(this.IMAGES_INTRO);
-        this.loadImages(this.IMAGES_IDLE);
-        this.loadImages(this.IMAGES_ATTACK);
-        this.loadImages(this.IMAGES_HURT);
-        this.loadImages(this.IMAGES_DEAD);
+        this.images = window.ENDBOSS_IMAGES;
+        super().loadImage(this.images.INTRO[0]);
         this.x = this.finalX;
         this.y = -520;
-        
+        this.loadAlleImages();
+    }
+
+    loadAlleImages() {
+        this.loadImages(this.images.INTRO);
+        this.loadImages(this.images.IDLE);
+        this.loadImages(this.images.ATTACK);
+        this.loadImages(this.images.HURT);
+        this.loadImages(this.images.DEAD);
     }
 
     startIntro() {
@@ -166,15 +113,15 @@ class Endboss extends movableObject {
     startAnimationLoop(){
         setInterval(() => {
             if ( this.isIntroducing) {
-                this.playAnimation(this.IMAGES_INTRO);
+                this.playAnimation(this.images.INTRO);
             } else if (this.isActive && this._isHurt) {
-                this.playAnimation(this.IMAGES_HURT);
+                this.playAnimation(this.images.HURT);
             } else if (this.isActive && this.isAttacking) {
-                this.playAnimation(this.IMAGES_ATTACK);
+                this.playAnimation(this.images.ATTACK);
             } else if (this.isActive) {
-                this.playAnimation(this.IMAGES_IDLE)
+                this.playAnimation(this.images.IDLE)
             }else if (!this.isActive && this.energy <= 0) {
-                this.playAnimation(this.IMAGES_DEAD);
+                this.playAnimation(this.images.DEAD);
             }
         }, 200);
     }
@@ -208,6 +155,6 @@ class Endboss extends movableObject {
         this.isActive = false;
         this._isHurt = false;
         this.isAttacking = false;
-        this.playAnimation(this.IMAGES_DEAD);
+        this.playAnimation(this.images.DEAD);
     }
 }

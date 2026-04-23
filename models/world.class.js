@@ -190,6 +190,11 @@ class world {
     showGameOver() {
         // this.sound.stopMusic();
         document.getElementById('gameover')?.classList.remove('hidden');
+        let boss = this.getEndboss();
+        if (boss) {
+            boss.isActive = false;
+            boss.isAttacking = false;
+        }
     }
     
     hideGameOver() {
@@ -339,20 +344,15 @@ class world {
 
     drawHudWonLayer() {
         if (!this.hasWon) return;
-
-        // 🔥 1. Hintergrund abdunkeln (wird auch langsam stärker)
         this.ctx.save();
         let overlayAlpha = Math.min(this.winScreen.alpha, 0.9);
         this.ctx.globalAlpha = overlayAlpha;
         this.ctx.fillStyle = "rgba(10, 3, 37, 0.75)";
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
         this.ctx.restore();
-
-        // ✨ 2. WinScreen reinfaden
         if (this.winScreen.alpha < 1) {
             this.winScreen.alpha += 0.02;
         }
-
         this.addToMap(this.winScreen);
     }
 

@@ -343,6 +343,11 @@ class character extends movableObject {
     }
 
     handleIdle() {
+        if (this.world && this.world.bossFightStarted) {
+            this.playAnimation(this.IMAGES_IDLE);
+            return;
+        }
+
         let idleTime = Date.now() - this.lastActionTime;
         if (idleTime > 10000) {
             this.playAnimation(this.IMAGES_LONG_IDLE);

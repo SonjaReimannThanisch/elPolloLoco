@@ -17,6 +17,8 @@ class Endboss extends movableObject {
     lastAttackAt = 8;
     attackDirection = 1;
     isDead = false;
+    damage = 25;
+    damageType = 'poison';
 
     IMAGES_INTRO = [
         'img/2.Enemy/3 Final Enemy/1.Introduce/1.png',
@@ -105,16 +107,18 @@ class Endboss extends movableObject {
     update() {
         if (this.isIntroducing) {
             this.y += this.introSpeedY;
+    
             if (this.y >= this.finalY) {
                 this.y = this.finalY;
                 this.isIntroducing = false;
                 this.isActive = true;
-                this.lastAttackAt = Date.now();
+                this.lastAttackAt = Date.now() - this.attackCooldown;
             }
             return;
         }
         if (!this.isActive || this.isDead) return;
         let now = Date.now();
+        this.x = Math.max(3600, Math.min(this.x, 4550));
 
         if (!this.isAttacking && !this._isHurt) {
             if (now - this.lastAttackAt >= this.attackCooldown) {
@@ -123,8 +127,16 @@ class Endboss extends movableObject {
         }
 
         if (this.isAttacking) {
-            this.x += this.attackDirection * this.attackSpeed;
-            if (now - this.attackStartedAt >= this.attackDuration ) {
+            let player = this.world.mainCharacter;
+            let bossCenterX = this.x + this.width / 2;
+            let playerCenterX = player.x + player.width / 2;
+            let distanceToPlayer = Math.abs(playerCenterX - bossCenterX);
+
+            if (distanceToPlayer > 80) {
+                this.x += this.attackDirection * this.attackSpeed;
+            }
+
+            if (now - this.attackStartedAt >= this.attackDuration || distanceToPlayer <= 80) {
                 this.stopAttack();
             }
         }
@@ -179,6 +191,7 @@ class Endboss extends movableObject {
         this._isHurt = true;
         if (this.isAttacking) {
             this.stopAttack();
+        }
         setTimeout(() => {
             this._isHurt = false;
         }, 300);
@@ -188,12 +201,11 @@ class Endboss extends movableObject {
     }
 
     die() {
-        if (this.isDead) return; {
-            this.isDead = true;
-            this.isActive = false;
-            this._isHurt = false;
-            this.isAttacking = false;
-            this.playAnimation(this.IMAGES_DEAD);
-        }
+        if (this.isDead) return;
+        this.isDead = true;
+        this.isActive = false;
+        this._isHurt = false;
+        this.isAttacking = false;
+        this.playAnimation(this.IMAGES_DEAD);
     }
 }

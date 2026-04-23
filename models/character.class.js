@@ -181,6 +181,10 @@ class character extends movableObject {
 
     constructor() {
         super().loadImage('img/1.Sharkie/1.IDLE/1.png');
+        this.loadAllImages();
+    }
+
+    loadAllImages() {
         this.loadImages(this.IMAGES_IDLE);
         this.loadImages(this.IMAGES_LONG_IDLE);
         this.loadImages(this.IMAGES_SWIN);
@@ -210,11 +214,7 @@ class character extends movableObject {
     startMovementLoop() {
         if (this.movementInterval) return;
         this.movementInterval = setInterval(() => {
-            this.moveRight();
-            this.moveLeft();
-            this.moveUp();
-            this.moveDown();
-            this.world.camera_x = -this.x;
+            this.handleMovementinput();
         }, 1000 / 60);
     }
 
@@ -223,6 +223,18 @@ class character extends movableObject {
         this.animationInterval = setInterval(() => {
             this.handleAnimations();
         }, 80);
+    }
+
+    handleMovementinput() {
+        this.moveRight();
+        this.moveLeft();
+        this.moveUp();
+        this.moveDown();
+        this.updateCamera();
+    }
+
+    updateCamera() {
+        this.world.camera_x = -this.x;
     }
 
     moveRight() {
@@ -261,13 +273,33 @@ class character extends movableObject {
 
     handleAnimations() {
         let now = Date.now();
+
         if (this.handleFinSlap(now)) return;
         if (this.handleBubble(now)) return;
         if (this.handleCinematicDeath()) return;
         if (this.handleDeath()) return;
         if (this.handleHurt()) return;
         if (this.handleMovement()) return;
+
         this.handleIdle();
+    }
+
+    isMoving() {
+        return this.world.keyboard.RIGHT ||
+            this.world.keyboard.LEFT ||
+            this.world.keyboard.UP ||
+            this.world.keyboard.DOWN;
+    }
+
+    stopAnimationLoops() {
+        if (this.movementInterval) {
+            clearInterval(this.movementInterval);
+            this.movementInterval = null;
+        }
+        if (this.animationInterval) {
+            clearInterval(this.animationInterval);
+            this.animationInterval = null;
+        }
     }
 
     handleFinSlap(now) {

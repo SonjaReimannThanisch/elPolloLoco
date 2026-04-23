@@ -10,23 +10,18 @@ class world {
     statusCoins;
     statusPoison;
     hasPlayerMoved = false;
-
     attacks = [];
     lastFinSlapAt = 0;
     lastBubbleAt = 0;
     finSlapCooldowns  = 400;
     bubbleCooldowns = 900;
-
     lastX = 0;
     lastY = 0;
     isGameOver = false;
-
     hasWon = false;
-
     TILE_WIDTH = 720;
     enemyCollisionInterval = null;
     hasStarted = false;
-
     bossTriggerX = 3600;
     bossFightStarted = false;
     bubbles = [];
@@ -35,6 +30,8 @@ class world {
         this.canvas = canvas;
         this.ctx = canvas.getContext('2d');
         this.combat = new CombatWorld(this);
+        this.ui = new WorldUiManager(this);
+        this.collision = new WorldCollisionManager(this);
         this.keyboard = keyboard;
         this.level = createLevel1();
         // this.sound = new SoundManager();
@@ -45,7 +42,7 @@ class world {
     }
 
     initHud() {
-        this.keyboardSprite = new Keyboard(canvas.width, canvas.height);
+        this.keyboardSprite = new Keyboard(this.canvas.width, this.canvas.height);
         this.statusLife = new statusBar('life');
         this.statusCoins = new statusBar('coins');
         this.statusPoison = new statusBar('poison');
@@ -55,7 +52,7 @@ class world {
     }
 
     initUi() {
-        this.bindUi();
+        this.ui.bindUi();
         this.winScreen = new WinScreen(this.canvas.width, this.canvas.height);
     }
 
@@ -70,7 +67,7 @@ class world {
         // this.sound.menuMusic.pause();
         // this.sound.playMusic();
         this.mainCharacter.animate();
-        this.checkCollisions();
+        this.collision.checkCollisions();
     }
 
     setWorld() {
@@ -83,10 +80,10 @@ class world {
             if (this.mainCharacter.deathCause === 'boss') {
                 this.mainCharacter.isCinematicDead = true;
                 setTimeout(() => {
-                    this.showGameOver();
+                    this.ui.showGameOver();
                 }, 1500);
             } else {
-                this.showGameOver();
+                this.ui.showGameOver();
             }
         }
     }
@@ -105,95 +102,8 @@ class world {
         this.triggerGameOverIfDead();
     }
 
-    checkCollisions() {
-        if (this.enemyCollisionInterval) return;
-        this.enemyCollisionInterval = setInterval(this.runEnemyCollisionCheck.bind(this), 1000);
-    }
-
-    runEnemyCollisionCheck() {
-        this.level.enemies.forEach(this.checkEnemyCollision.bind(this));
-    }
-
-    checkEnemyCollision(enemy) {
-        if (enemy.isDead) return;
-        if (this.mainCharacter.isColliding(enemy) && !this.mainCharacter.isHurt()) {
-            let cause = enemy instanceof Endboss ? 'boss' : ''
-            this.applyDamage(enemy.damage || 5, enemy.damageType || 'poison', cause);
-        }
-    }
-
-    isCollidingWithAnyBarrier() {
-        return this.level.barriers.some(b => this.mainCharacter.isColliding(b));
-    }
-
-    resetPlayerToLastPosition() {
-        this.mainCharacter.x = this.lastX;
-        this.mainCharacter.y = this.lastY;
-    }
-
-    rememberPlayerPosition() {
-        this.lastX = this.mainCharacter.x;
-        this.lastY = this.mainCharacter.y;
-    }
-
     getEndboss() {
         return this.level.enemies.find(e => e instanceof Endboss)
-    }
-
-    checkBarrierCollision() {
-        if (!this.isBlockedByBarrierOrBoss()) {
-            this.rememberPlayerPosition();
-            return;
-        }
-        this.resetPlayerToLastPosition();
-        this.applyBarrierDamage();
-    }
-
-    isBlockedByBarrierOrBoss() {
-        let hitBarrier = this.isCollidingWithAnyBarrier();
-        let boss = this.getEndboss();
-        let hitBoss = boss && boss.isCollidable() && this.mainCharacter.isColliding(boss);
-        return hitBarrier || hitBoss;
-    }
-
-    applyBarrierDamage() {
-        if (this.isPressingIntoBarrier() && !this.mainCharacter.isHurt()) {
-            this.applyDamage(5, 'poison');
-        }
-    }
-
-    showGameOver() {
-        // this.sound.stopMusic();
-        this.freezeBossForGameOver();
-        this.lockCameraOnPlayer();
-        document.getElementById('gameover')?.classList.remove('hidden');
-    }
-
-    freezeBossForGameOver() {
-        let boss = this.getEndboss();
-        if (boss) {
-            boss.isAttacking = false;
-        }
-    }
-
-    lockCameraOnPlayer() {
-        this.camera_x = -this.mainCharacter.x;
-        // document.getElementById('gameover')?.classList.remove('hidden');
-    }
-    
-    hideGameOver() {
-        document.getElementById('gameover')?.classList.add('hidden');
-    }
-
-    bindUi() {
-        let restartBtn = document.getElementById('btn-restart');
-        if (restartBtn) {
-            restartBtn.onclick = () => this.restartGame();
-        }
-        let homeBtn  = document.getElementById('btn-home');
-        if (homeBtn ) {
-            homeBtn .onclick = () => this.goHome();
-        }
     }
 
     isPressingIntoBarrier() {
@@ -277,13 +187,13 @@ class world {
         this.updateMenuState();
         this.updateEnemies();
         this.updateBossFight();
-        this.updateCombat();
+        this.updateCombat(now);
     }
 
     updateEnvironment() {
         this.updateBackground();
         this.updateLights();
-        this.checkBarrierCollision();
+        this.collision.checkBarrierCollision();
     }
 
     updateCollectibles() {
@@ -326,21 +236,7 @@ class world {
         this.addToMap(this.statusLife);
         this.addToMap(this.statusCoins);
         this.addToMap(this.statusPoison);
-        this.drawHudWonLayer();
-    }
-
-    drawHudWonLayer() {
-        if (!this.hasWon) return;
-        this.ctx.save();
-        let overlayAlpha = Math.min(this.winScreen.alpha, 0.9);
-        this.ctx.globalAlpha = overlayAlpha;
-        this.ctx.fillStyle = "rgba(10, 3, 37, 0.75)";
-        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-        this.ctx.restore();
-        if (this.winScreen.alpha < 1) {
-            this.winScreen.alpha += 0.02;
-        }
-        this.addToMap(this.winScreen);
+        this.ui.drawHudWonLayer();
     }
 
     endFrame() {
@@ -348,11 +244,11 @@ class world {
     }
 
     restartGame() {
-        this.hideGameOver();
+        this.ui.hideGameOver();
         this.resetWorldState();
         this.hasStarted = true;
         this.mainCharacter.animate();
-        this.checkCollisions();
+        this.collision.checkCollisions();
     }
 
     resetWorldState() {
@@ -409,14 +305,13 @@ class world {
         let boss = this.getEndboss();
         if (!boss) return;
         boss.update();
-            if (boss.isDead && !this.hasWon) {
+        if (boss.isDead && !this.hasWon) {
                 this.hasWon = true;
         }
     }
 
-    handleAttackInput() {
+    handleAttackInput(now) {
         if (!this.hasStarted || this.isGameOver) return;
-        let now =Date.now();
         if (this.keyboard.SPACE) this.tryFinSlap(now);
         if (this.keyboard.A) this.tryBubble(now);
     }
@@ -444,7 +339,6 @@ class world {
             let attack = new BubbleTrapAttack(this.mainCharacter, type);
             this.attacks.push(attack);
         }, 150);
-
         this.lastBubbleAt = now;
     }
 
@@ -477,7 +371,7 @@ class world {
     goHome() {
         // this.sound.stopMusic();
         // this.sound.playMenu();
-        this.hideGameOver();
+        this.ui.hideGameOver();
         this.resetWorldState();
         document.getElementById('startscreen')?.classList.remove('hidden');
     }

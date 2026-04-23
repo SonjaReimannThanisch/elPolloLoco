@@ -11,13 +11,13 @@ class Endboss extends movableObject {
     isActive = false;
     _isHurt = false;
     isAttacking = false;
-    attackCooldown = 3000;
+    attackCooldown = 1800;
     attackDuration= 1200;
-    attackSpeed = 6;
+    attackSpeed = 3;
     lastAttackAt = 8;
     attackDirection = 1;
     isDead = false;
-    damage = 25;
+    damage = 35;
     damageType = 'poison';
 
     IMAGES_INTRO = [
@@ -132,7 +132,7 @@ class Endboss extends movableObject {
             let playerCenterX = player.x + player.width / 2;
             let distanceToPlayer = Math.abs(playerCenterX - bossCenterX);
 
-            if (distanceToPlayer > 80) {
+            if (distanceToPlayer > 150) {
                 this.x += this.attackDirection * this.attackSpeed;
             }
 
@@ -145,6 +145,8 @@ class Endboss extends movableObject {
     startAttack() {
         if (!this.world) return;
         let player = this.world.mainCharacter;
+        let dy = player.y - this.y;
+        this.y += dy * 0.02;
         let bossCenterX = this.x + this.width / 2;
         let playerCenterX = player.x + player.width / 2;
         this.attackDirection = playerCenterX < bossCenterX ? -1 : 1;

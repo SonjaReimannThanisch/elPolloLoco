@@ -189,10 +189,11 @@ class world {
 
     showGameOver() {
         // this.sound.stopMusic();
+        this.camera_x = -this.mainCharacter.x;
         document.getElementById('gameover')?.classList.remove('hidden');
         let boss = this.getEndboss();
         if (boss) {
-            boss.isActive = false;
+            // boss.isActive = false;
             boss.isAttacking = false;
         }
     }

@@ -343,7 +343,7 @@ class character extends movableObject {
     }
 
     handleIdle() {
-        if (this.world && this.world.bossFightStarted) {
+        if (this.world && this.world.bossFightStarted && !this.isDead()) {
             this.playAnimation(this.IMAGES_IDLE);
             return;
         }

@@ -8,7 +8,7 @@ class movableObject extends drawableObject {
     drawFrame(ctx) {
         if(this instanceof character || this instanceof pufferfisch || this instanceof jellyfisch || this instanceof Endboss || this instanceof barriers || this instanceof Attack) {
             ctx.beginPath();
-            ctx.lBenderineWidth = '2';
+            ctx.lineWidth = 2;
             ctx.strokeStyle = 'blue';
             let offset = this.offset || { top: 0, left: 0, right: 0, bottom: 0 };
             ctx.rect(

@@ -136,13 +136,6 @@ class character extends movableObject {
         this.handleIdle();
     }
 
-    isMoving() {
-        return this.world.keyboard.RIGHT ||
-            this.world.keyboard.LEFT ||
-            this.world.keyboard.UP ||
-            this.world.keyboard.DOWN;
-    }
-
     stopAnimationLoops() {
         if (this.movementInterval) {
             clearInterval(this.movementInterval);

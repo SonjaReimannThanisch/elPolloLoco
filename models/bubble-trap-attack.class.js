@@ -8,39 +8,38 @@ class BubbleTrapAttack extends Attack {
     impactSpeed = 0;
     impactEndAt = 0;
 
-    IMAGES_BUBBLE= [
-        'img/1.Sharkie/4.Attack/Bubble trap/Bubble.png',
-    ];
-
-    IMAGES_BUBBLE_POISEND = [
-        'img/1.Sharkie/4.Attack/Bubble trap/Poisoned Bubble (for whale).png',
-    ];
-
     constructor(character, type = 'normal') {
         super();
+        this.images = BUBBLE_IMAGES;
         this.type = type;
         this.character = character;
         this.otherDirection = this.character.otherDirection;
-        if (type === 'poison') {
-            this.loadImages(this.IMAGES_BUBBLE_POISEND);
-            this.img = this.imageCache[this.IMAGES_BUBBLE_POISEND[0]];
-        } else {
-            this.loadImages(this.IMAGES_BUBBLE);
-            this.img = this.imageCache[this.IMAGES_BUBBLE[0]];
-        }
 
+        this.loadAllImages();
+        this.setStartImage();
+        this.getBubbleImages();
         this.setStartPosition();
-        this.vx = this.otherDirection ? -(8 + Math.random() * 4) : (8 + Math.random() * 4);
+        this.startVelocity();
     }
 
-    updatePosition() {
-        this.otherDirection = this.character.otherDirection 
-        let cx = this.character.x + this.character.width / 2;
-        let cy = this.character.y + this.character.height / 2;
-        this.x = cx - this.width / 2;
-        this.y = cy - this.height / 2;
-        let push = this.otherDirection ? -120 : 120;
-        this.x += push;
+    loadAllImages() {
+        this.loadImages(this.images.NORMAL);
+        this.loadImages(this.images.POISON);
+    }
+
+    setStartImage() {
+        let images = this.getBubbleImages();
+        this.img = this.imageCache[images[0]];
+    }
+
+    getBubbleImages() {
+        if (this.type === 'poison') return this.images.POISON;
+        return this.images.NORMAL;
+    }
+
+    startVelocity() {
+        let speed = 8 + Math.random() * 4;
+        this.vx = this.otherDirection ? -speed : speed;
     }
 
     setStartPosition() {
@@ -53,25 +52,25 @@ class BubbleTrapAttack extends Attack {
     }
 
     tick(now) {
+        this.animateBubble(now);
+        this.updateImpact(now);
+    }
+
+    animateBubble(now) {
         if (!this.lastFrameAt) this.lastFrameAt = now;
+        if (now-this.lastFrameAt <= 50) return;
+        this.playAnimation(this.getBubbleImages());
+        this.lastFrameAt = now;
+    }
 
-        if (now - this.lastFrameAt > 50) {
-            let images = this.type === 'poison'
-            ? this.IMAGES_BUBBLE_POISEND : this.IMAGES_BUBBLE;
-            this.playAnimation(images);
-            this.lastFrameAt = now;
+    updateImpact(now) {
+        if (!this.isImpacting) return;
+        this.x += this.impactSpeed;
+        if (now >= this.impactEndAt) {
+            this.impactSpeed = 0;
         }
-
-        if (this.isImpacting) {
-            this.x += this.impactSpeed;
-
-            if (now >= this.impactEndAt) {
-                this.impactSpeed = 0;
-            }
-
-            this.width += 0.2;
-            this.height += 0.2;
-        }
+        this.width += 0.2;
+        this.height += 0.2;
     }
 
     hitTarget() {

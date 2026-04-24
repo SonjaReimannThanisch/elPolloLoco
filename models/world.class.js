@@ -329,17 +329,23 @@ class world {
 
     tryBubble(now) {
         if (now - this.lastBubbleAt < this.bubbleCooldowns) return;
+
         let type = 'normal';
         let boss = this.getEndboss();
+
         if (boss && boss.isActive) {
             type = 'poison';
         }
+
         this.mainCharacter.startBubbleAttackAnimation(type);
+
         setTimeout(() => {
-            let attack = new BubbleTrapAttack(this.mainCharacter, type);
-            this.attacks.push(attack);
-        }, 150);
+            if (this.isGameOver) return;
+            this.attacks.push(new BubbleTrapAttack(this.mainCharacter, type));
+        }, 500);
+
         this.lastBubbleAt = now;
+        this.keyboard.A = false;
     }
 
     addObjectsToMap(objects) {

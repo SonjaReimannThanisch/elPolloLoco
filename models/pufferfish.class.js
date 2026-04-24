@@ -33,18 +33,18 @@ class pufferfisch extends movableObject {
     }
 
     loadAllImages() {
-        this.loadImages(this.images.IMAGEPINK);
-        this.loadImages(this.images.IMAGEROSE);
-        this.loadImages(this.images.IMAGEGREEN);
+        this.loadImages(this.images.IMAGE_PINK);
+        this.loadImages(this.images.IMAGE_ROSE);
+        this.loadImages(this.images.IMAGE_GREEN);
         this.loadImages(this.images.DIE_PINK);
         this.loadImages(this.images.DIE_ROSE);
         this.loadImages(this.images.DIE_GREEN);
     }
 
     getSwimImages() {
-        if (this.type === 'rose') return this.images.IMAGEROSE;
-        if (this.type === 'green') return  this.images.IMAGEGREEN;
-        return this.images.IMAGEPINK;
+        if (this.type === 'rose') return this.images.IMAGE_ROSE;
+        if (this.type === 'green') return  this.images.IMAGE_GREEN;
+        return this.images.IMAGE_PINK;
     }
 
     getDieImages() {

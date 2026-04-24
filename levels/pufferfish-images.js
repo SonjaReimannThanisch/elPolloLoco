@@ -1,5 +1,5 @@
 const PUFFERFISH_IMAGES = {
-    IMAGEPINK : [
+    IMAGE_PINK : [
         'img/2.Enemy/1.Puffer fish (3 color options)/1.Swim/3.swim1.png',
         'img/2.Enemy/1.Puffer fish (3 color options)/1.Swim/3.swim2.png',
         'img/2.Enemy/1.Puffer fish (3 color options)/1.Swim/3.swim3.png',
@@ -7,7 +7,7 @@ const PUFFERFISH_IMAGES = {
         'img/2.Enemy/1.Puffer fish (3 color options)/1.Swim/3.swim5.png'
     ],
 
-    IMAGEROSE : [
+    IMAGE_ROSE : [
         'img/2.Enemy/1.Puffer fish (3 color options)/1.Swim/2.swim1.png',
         'img/2.Enemy/1.Puffer fish (3 color options)/1.Swim/2.swim2.png',
         'img/2.Enemy/1.Puffer fish (3 color options)/1.Swim/2.swim3.png',
@@ -15,7 +15,7 @@ const PUFFERFISH_IMAGES = {
         'img/2.Enemy/1.Puffer fish (3 color options)/1.Swim/2.swim5.png'
     ],
 
-    IMAGEGREEN : [
+    IMAGE_GREEN : [
         'img/2.Enemy/1.Puffer fish (3 color options)/1.Swim/1.swim1.png',
         'img/2.Enemy/1.Puffer fish (3 color options)/1.Swim/1.swim2.png',
         'img/2.Enemy/1.Puffer fish (3 color options)/1.Swim/1.swim3.png',

@@ -17,7 +17,7 @@ class BubbleTrapAttack extends Attack {
 
         this.loadAllImages();
         this.setStartImage();
-        this.getBubbleImages();
+        // this.getBubbleImages();
         this.setStartPosition();
         this.startVelocity();
     }
@@ -28,7 +28,7 @@ class BubbleTrapAttack extends Attack {
     }
 
     setStartImage() {
-        let images = this.getBubbleImages();
+        // let images = this.getBubbleImages();
         this.img = this.imageCache[images[0]];
     }
 

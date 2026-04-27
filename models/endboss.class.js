@@ -56,6 +56,7 @@ class Endboss extends movableObject {
         if (!this.canUpdate()) return;
         let now = Date.now();
         this.keepInFightArea();
+        console.log("Boss update läuft");
         this.tryStartAttack(now);
         this.updateAttack(now);
     }
@@ -85,8 +86,9 @@ class Endboss extends movableObject {
     }
 
     tryStartAttack(now) {
-        if (this.isAttacking || !this._isHurt) return;
+        if (this.isAttacking && !this._isHurt) return;
         if (now - this.lastAttackAt < this.attackCooldown) return;
+        console.log("Attack check");
         this.startAttack();
         
     }

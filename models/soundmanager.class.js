@@ -2,24 +2,52 @@ class SoundManager {
     currentTrack = 'menu';
 
     constructor() {
-        this.isMuted = false;
+        this.isMuted = localStorage.getItem('muted') === 'true';
         this.sounds = {
-            bubbleAttack: new Audio('assets/bubbleAttack.mp3'),
-            finSlapAttack: new Audio('assets/slap attack.mp3'),
-            hit: new Audio('assets/hit.mp3'),
-            electroHit: new Audio('assets/electroHit.mp3'),
-            gameover: new Audio('assets/gameOver.mp3')
+            swim: new Audio('assets/soundeffects/character/swim2.mp3'),
+            bubbleAttack: new Audio('assets/soundeffects/attacks/bubble-rise.mp3'),
+            finSlapAttack: new Audio('assets/soundeffects/attacks/bubble-rise.mp3'),
+            hit: new Audio('assets/soundeffects/character/hit-normal.mp33'),
+            electroHit: new Audio('assets/soundeffects/character/hit-electro.mp3'),
+            gameover: new Audio('assets/soundeffects/ui/game-over.mp3'),
+            winning: new Audio('assets/soundeffects/ui/win.mp3'),
+            barrier: new Audio('assets/soundeffects/ui/barrier-thud.mp3'),
+            itemsSelect: new Audio('assets/soundeffects/ui/item-select.mp3'),
+            collectCoin: new Audio('assets/soundeffects/collect/collect-coin.mp3'),
+            collectBottle: new Audio('assets/soundeffects/collect/collect-bottle.mp3'),
+            characterDeath: new Audio('assets/soundeffects/character/character-death.mp3'),
+            endbossAttack: new Audio('assets/soundeffects/environment/endboss-attack.mp3'),
+            endbossDeath: new Audio('assets/soundeffects/environment/endboss-death.mp3'),
+            endbossHurt: new Audio('assets/soundeffects/environment/endboss-hurt.mp3'),
         }
         this.menuMusic = new Audio('assets/waterBackground.mp3');
         this.music = new Audio('assets/musicword-bubbles-309433.mp3');
+        this.setupMusic();
+        this.setupVolume();
+
+    }
+
+    setupMusic() {
         this.music.loop = true;
         this.menuMusic.loop = true;
-        this.music.volume = 0.2;
-        this.menuMusic.volume = 0.2;
         this.menuMusic.playbackRate = 1.4;
     }
 
+    setupVolume() {
+        this.music.volume = 0.2;
+        this.menuMusic.volume = 0.2;
+        Object.values(this.sounds).forEach(sound => {
+            sound.volume = 0.4;
+        });
+    }
 
+    playSound(name) {
+        if (this.isMuted) return;
+        let sound = this.sounds[name];
+        if (!sound) return;
+        sound.currentTime = 0;
+        sound.play();
+    }
 
     playMenu() {
         if (this.isMuted) return;
@@ -27,12 +55,6 @@ class SoundManager {
         this.music.pause();
         this.menuMusic.currentTime = 0;
         this.menuMusic.play();
-        this.menuMusic.addEventListener('timeupdate', () => {
-            if (this.menuMusic.currentTime > this.menuMusic.duration - 0.3) {
-                this.menuMusic.currentTime = 0;
-                this.menuMusic.play();
-            }
-        });
     }
 
     playMusic() {
@@ -45,10 +67,15 @@ class SoundManager {
 
     toggleMusic() {
         this.isMuted = !this.isMuted;
+        localStorage.setItem('muted', this.isMuted);
         if (this.isMuted) {
             this.stopAllMusic();
             return;
         }
+        this.resumeCurrentTrack();
+    }
+
+    resumeCurrentTrack() {
         if (this.currentTrack === 'menu') {
             this.menuMusic.play();
         } else {

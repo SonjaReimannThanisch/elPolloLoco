@@ -32,6 +32,7 @@ class world {
         this.combat = new CombatWorld(this);
         this.ui = new WorldUiManager(this);
         this.collision = new WorldCollisionManager(this);
+        this.collectibles = new WorldCollectibleManager(this);
         this.keyboard = keyboard;
         this.level = createLevel1();
         // this.sound = new SoundManager();
@@ -49,6 +50,11 @@ class world {
         this.statusLife.y = 45;
         this.statusCoins.y = 80;
         this.statusPoison.y = 10;
+    }
+
+    updateCollectibles() {
+        this.collectibles.checkCoinCollision();
+        this.collectibles.checkPoisonCollision();
     }
 
     initUi() {
@@ -103,31 +109,11 @@ class world {
     }
 
     getEndboss() {
-        return this.level.enemies.find(e => e instanceof Endboss)
+        return this.level.enemies.find(e => e instanceof Endboss);
     }
 
     isPressingIntoBarrier() {
         return this.keyboard.LEFT || this.keyboard.RIGHT || this.keyboard.UP || this.keyboard.DOWN;
-    }
-
-    checkCoinCollision() {
-        this.level.coins.forEach((coin, i) => {
-            if (this.mainCharacter.isColliding(coin)) {
-                this.level.coins.splice(i, 1);
-                this.mainCharacter.coins = Math.min(100, (this.mainCharacter.coins || 0) + 10);
-                this.statusCoins.setPercentage(this.mainCharacter.coins);
-            }
-        });
-    }
-
-    checkPoisonCollision() {
-        this.level.poison.forEach((poison, i) => {
-            if (this.mainCharacter.isColliding(poison)) {
-            this.level.poison.splice(i, 1);
-            this.mainCharacter.bottle = Math.min(100, (this.mainCharacter.bottle || 0) + 10);
-            this.statusPoison.setPercentage(this.mainCharacter.bottle);
-            }
-        });
     }
 
     updateBackground() {
@@ -196,16 +182,15 @@ class world {
         this.collision.checkBarrierCollision();
     }
 
-    updateCollectibles() {
-        this.checkCoinCollision();
-        this.checkPoisonCollision();
-    }
-
     updateMenuState() {
         this.checkMenuInput();
     }
 
     updateEnemies() {
+        this.removeDeadEnemies();
+    }
+
+    removeDeadEnemies() {
         this.level.enemies = this.level.enemies.filter(e => !e.markedForDeletion);
     }
 

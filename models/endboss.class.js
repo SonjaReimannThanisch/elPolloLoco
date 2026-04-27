@@ -53,7 +53,7 @@ class Endboss extends movableObject {
 
     update() {
         if (this.handleIntro())return;
-        if (this.canUpdate()) return;
+        if (!this.canUpdate()) return;
         let now = Date.now();
         this.keepInFightArea();
         this.tryStartAttack(now);
@@ -61,7 +61,7 @@ class Endboss extends movableObject {
     }
 
     handleIntro() {
-        if (this.isIntroducing) return false;
+        if (!this.isIntroducing) return false;
         this.y += this.introSpeedY;
         if (this.y >= this.finalY) {
             this.endbossIntro();
@@ -85,7 +85,7 @@ class Endboss extends movableObject {
     }
 
     tryStartAttack(now) {
-        if (!this.isAttacking && !this._isHurt) return;
+        if (this.isAttacking && !this._isHurt) return;
         if (now - this.lastAttackAt < this.attackCooldown) return;
         this.startAttack();
         

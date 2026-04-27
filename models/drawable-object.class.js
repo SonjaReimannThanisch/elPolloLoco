@@ -7,10 +7,17 @@ class drawableObject {
     currentImage = 0
     imageCache = {};
 
-    loadImage(path) {
-        this.img = new Image();
-        this.img.src = path;
-    }
+loadImage(path) {
+    this.img = new Image();
+
+    // this.img.onload = () => {
+    // };
+
+    // this.img.onerror = () => {
+    // };
+
+    this.img.src = path;
+}
 
     draw(ctx) {
         if (!this.img) return;

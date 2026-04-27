@@ -16,8 +16,6 @@ class WinScreen extends drawableObject {
     constructor(canvasWidth, canvasHeight) {
         super();
         this.loadImage(this.IMAGES_WIN[0]);
-        // this.loadImages(this.IMAGES_YOUWIN);
-        // this.img = this.imageCache[this.IMAGES_YOUWIN[0]];
         this.width =720;
         this.height = 480;
         this.x = (canvasWidth - this.width) / 2;

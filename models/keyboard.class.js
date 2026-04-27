@@ -1,4 +1,4 @@
-class Keyboard extends movableObject {
+class Keyboard {
     LEFT = false;
     RIGHT = false;
     UP = false;
@@ -8,15 +8,13 @@ class Keyboard extends movableObject {
     ESC = false;
     T = false;
     Y = false;
-    
+
     height = 100;
     width = 165;
     y = 80;
 
-        constructor(canvasWidth, canvasHeight) {
-        super();
+    constructor(canvasWidth, canvasHeight) {
         this.x = canvasWidth - this.width - 20;
         this.y = canvasHeight - this.height - 15;
-
     }
 }

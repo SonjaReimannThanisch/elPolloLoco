@@ -9,13 +9,6 @@ class drawableObject {
 
 loadImage(path) {
     this.img = new Image();
-
-    // this.img.onload = () => {
-    // };
-
-    // this.img.onerror = () => {
-    // };
-
     this.img.src = path;
 }
 

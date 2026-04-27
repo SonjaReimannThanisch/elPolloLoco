@@ -1,3 +1,4 @@
+window.DEBUG = false;
 let canvas;
 let gameWorld;
 let keyboard = new Keyboard();

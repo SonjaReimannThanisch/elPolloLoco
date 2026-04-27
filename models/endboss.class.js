@@ -85,7 +85,7 @@ class Endboss extends movableObject {
     }
 
     tryStartAttack(now) {
-        if (this.isAttacking && !this._isHurt) return;
+        if (this.isAttacking || !this._isHurt) return;
         if (now - this.lastAttackAt < this.attackCooldown) return;
         this.startAttack();
         

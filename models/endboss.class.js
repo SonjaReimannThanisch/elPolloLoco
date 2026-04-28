@@ -45,6 +45,7 @@ class Endboss extends movableObject {
 
     startIntro() {
         if (this.isAwakened) return;
+        this.world.sound.playSound('endbossIntro');
         this.isAwakened = true;
         this.isIntroducing = true;
         this.isHurt = false;
@@ -56,7 +57,6 @@ class Endboss extends movableObject {
         if (!this.canUpdate()) return;
         let now = Date.now();
         this.keepInFightArea();
-        console.log("Boss update läuft");
         this.tryStartAttack(now);
         this.updateAttack(now);
     }
@@ -88,7 +88,6 @@ class Endboss extends movableObject {
     tryStartAttack(now) {
         if (this.isAttacking && !this._isHurt) return;
         if (now - this.lastAttackAt < this.attackCooldown) return;
-        console.log("Attack check");
         this.startAttack();
         
     }
@@ -124,6 +123,7 @@ class Endboss extends movableObject {
         this.attackSpeed = 2;
         this.isAttacking= true;
         this.attackStartedAt = Date.now();
+        this.world.sound.playSound('endbossAttack');
     }
 
     stopAttack() {
@@ -157,6 +157,7 @@ class Endboss extends movableObject {
         if (!this.isActive || this.isDead) return;
         this.takeDamage(type);
         this.startHurtState();
+        this.world.sound.playSound('endbossHurt');
         if (this.isAttacking) {
             this.stopAttack();
         }
@@ -183,5 +184,6 @@ class Endboss extends movableObject {
         this._isHurt = false;
         this.isAttacking = false;
         this.playAnimation(this.images.DEAD);
+        this.world.sound.playSound('endbossDeath');
     }
 }

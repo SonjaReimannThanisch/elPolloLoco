@@ -213,10 +213,27 @@ class character extends movableObject {
             this.world.keyboard.UP ||
             this.world.keyboard.DOWN
         ) {
+            this.stopSleepsound();
             this.playAnimation(this.images.SWIM);
+            this.playSwimSound();
             return true;
         }
         return false;
+    }
+
+    stopSleepsound() {
+        if (!this.isSleepingSoundPlaying) return;
+        this.world.sound.stopSound('sleep');
+        this.isSleepingSoundPlaying = false;
+    }
+
+    playSwimSound() {
+        if (this.isSwimmingSoundPlaying) return;
+        this.world.sound.playSound('swim');
+        this.isSwimmingSoundPlaying = true;
+        setTimeout(() => {
+            this.isSwimmingSoundPlaying = false;
+        }, 100);
     }
 
     handleIdle() {
@@ -228,9 +245,16 @@ class character extends movableObject {
         let idleTime = Date.now() - this.lastActionTime;
         if (idleTime > 10000) {
             this.playAnimation(this.images.LONG_IDLE);
+            this.playSleepSound();
         } else {
             this.playAnimation(this.images.IDLE);
         }
+    }
+
+    playSleepSound() {
+        if (this.isSleepingSoundPlaying) return;
+        this.world.sound.playSound('sleep');
+        this.isSleepingSoundPlaying = true;
     }
 
     setDamageType(type) {

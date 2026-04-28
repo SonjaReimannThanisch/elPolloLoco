@@ -35,7 +35,7 @@ class world {
         this.collectibles = new WorldCollectibleManager(this);
         this.keyboard = keyboard;
         this.level = createLevel1();
-        // this.sound = new SoundManager();
+        this.sound = new SoundManager();
         this.initHud();
         this.initUi();
         this.initWorldState();
@@ -68,10 +68,10 @@ class world {
     }
 
     startGame() {
-        if(this.hasStarted) return;
+        if (this.hasStarted) return;
         this.hasStarted = true;
-        // this.sound.menuMusic.pause();
-        // this.sound.playMusic();
+        this.sound.stopAllMusic();
+        this.sound.playMusic();
         this.mainCharacter.animate();
         this.collision.checkCollisions();
     }
@@ -83,6 +83,7 @@ class world {
     triggerGameOverIfDead() {
         if (this.mainCharacter.energy <= 0 && !this.isGameOver) {
             this.isGameOver = true;
+            this.sound.playSound('gameover');
             if (this.mainCharacter.deathCause === 'boss') {
                 this.mainCharacter.isCinematicDead = true;
                 setTimeout(() => {
@@ -90,12 +91,20 @@ class world {
                 }, 1500);
             } else {
                 this.ui.showGameOver();
+                this.sound.playSound('characterDeath');
             }
         }
     }
 
     applyDamage(amount = 5, type = 'poison', cause = '') {
         this.mainCharacter.setDamageType(type);
+        if (type === 'electro') {
+            this.sound.playSound('electroHit');
+        } else if (type === 'barrier') {
+            this.sound.playSound('barrier');
+        } else {
+            this.sound.playSound('hit');
+        }
         this.mainCharacter.deathCause = cause;
         this.mainCharacter.energy -= amount;
         if ( this.mainCharacter.energy < 0) {
@@ -291,7 +300,8 @@ class world {
         if (!boss) return;
         boss.update();
         if (boss.isDead && !this.hasWon) {
-                this.hasWon = true;
+            this.hasWon = true;
+            this.sound.playSound('winning');
         }
     }
 
@@ -306,6 +316,7 @@ class world {
         let activeFinSlap = this.attacks.some(a => a instanceof FinSlapAttack);
         if (activeFinSlap) return;
         this.mainCharacter.startFinSlapAttackAnimation();
+        this.sound.playSound('finSlapAttack');
         let attack = new FinSlapAttack(this.mainCharacter);
         this.attacks.push(attack);
         this.lastFinSlapAt = now;
@@ -314,16 +325,13 @@ class world {
 
     tryBubble(now) {
         if (now - this.lastBubbleAt < this.bubbleCooldowns) return;
-
         let type = 'normal';
         let boss = this.getEndboss();
-
         if (boss && boss.isActive) {
             type = 'poison';
         }
-
         this.mainCharacter.startBubbleAttackAnimation(type);
-
+        this.sound.playSound('bubbleAttack');
         setTimeout(() => {
             if (this.isGameOver) return;
             this.attacks.push(new BubbleTrapAttack(this.mainCharacter, type));
@@ -360,8 +368,8 @@ class world {
     }
 
     goHome() {
-        // this.sound.stopMusic();
-        // this.sound.playMenu();
+        this.sound.stopAllMusic();
+        this.sound.playMenu();
         this.ui.hideGameOver();
         this.resetWorldState();
         document.getElementById('startscreen')?.classList.remove('hidden');

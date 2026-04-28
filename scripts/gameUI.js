@@ -47,10 +47,12 @@ function startFromStartscreen(worldInstance) {
 
 function bindStartUi(worldInstance) {
   document.getElementById('btn-start')?.addEventListener('click', () => {
+    worldInstance.sound.playSound('itemsSelect');
     startFromStartscreen(worldInstance);
   });
 
   document.getElementById('btn-fullscreen')?.addEventListener('click', async () => {
+    worldInstance.sound.playSound('itemsSelect');
     let screen = document.getElementById('fullscreen');
     if (!screen) return;
     if (!document.fullscreenElement) enterFullscreen(screen);
@@ -58,16 +60,18 @@ function bindStartUi(worldInstance) {
   });
 
   document.getElementById('btn-mute-start')?.addEventListener('click', () => {
+    worldInstance.sound.playSound('itemsSelect');
     worldInstance.sound.toggleMusic();
     updateStartMuteButton(worldInstance);
   });
 }
 
-// function updateStartMuteButton(worldInstance) {
-//   let btn = document.getElementById('btn-mute-start');
-//   if (!btn) return;
-//   btn.textContent = worldInstance.sound.isMuted ? '🔇' : '🔊';
-// }
+function updateStartMuteButton(worldInstance) {
+  worldInstance.sound.playSound('itemsSelect');
+  let btn = document.getElementById('btn-mute-start');
+  if (!btn) return;
+  btn.textContent = worldInstance.sound.isMuted ? '🔇' : '🔊';
+}
 
 function enterFullscreen(element) {
   if(element.requestFullscreen) {
@@ -94,8 +98,9 @@ function bindGameHudUi(worldInstance) {
   });
 }
 
-// function updateMuteButton(worldInstance) {
-//   let btn = document.getElementById('btn-mute');
-//   if (!btn) return;
-//   btn.textContent = worldInstance.sound.isMuted ? '🔇' : '🔊';
-// }
+function updateMuteButton(worldInstance) {
+  worldInstance.sound.playSound('itemsSelect');
+  let btn = document.getElementById('btn-mute');
+  if (!btn) return;
+  btn.textContent = worldInstance.sound.isMuted ? '🔇' : '🔊';
+}

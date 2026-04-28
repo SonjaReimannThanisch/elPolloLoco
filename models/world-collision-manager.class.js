@@ -37,15 +37,34 @@ class WorldCollisionManager {
         );
     }
 
+    // checkBarrierCollision() {
+    //     if (!this.isBlockedByBarrierOrBoss()) {
+    //         this.rememberPlayerPosition();
+    //         return;
+    //     }
+    //     if (!this.barrierSoundPlayed) {
+    //         this.world.sound.playSound('barrier');
+    //         this.barrierSoundPlayed = true;
+    //     }
+    //     this.resetPlayerToLastPosition();
+    //     this.applyBarrierDamage();
+    // }
+
     checkBarrierCollision() {
         if (!this.isBlockedByBarrierOrBoss()) {
             this.rememberPlayerPosition();
+            this.barrierSoundPlayed = false;
             return;
+        }
+
+        if (!this.barrierSoundPlayed) {
+            this.world.sound.playSound('barrier');
+            this.barrierSoundPlayed = true;
         }
 
         this.resetPlayerToLastPosition();
         this.applyBarrierDamage();
-    }
+    }   
 
     isBlockedByBarrierOrBoss() {
         let hitBarrier = this.isCollidingWithAnyBarrier();
@@ -63,7 +82,7 @@ class WorldCollisionManager {
             this.world.isPressingIntoBarrier() &&
             !this.world.mainCharacter.isHurt()
         ) {
-            this.world.applyDamage(5, 'poison');
+            this.world.applyDamage(5, 'barrier');
         }
     }
 

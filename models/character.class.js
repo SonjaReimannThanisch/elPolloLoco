@@ -227,26 +227,35 @@ class character extends movableObject {
         this.isSleepingSoundPlaying = false;
     }
 
+    isSleeping() {
+        return Date.now() - this.lastActionTime > 10000;
+    }
+
     playSwimSound() {
         if (this.isSwimmingSoundPlaying) return;
         this.world.sound.playSound('swim');
         this.isSwimmingSoundPlaying = true;
         setTimeout(() => {
             this.isSwimmingSoundPlaying = false;
-        }, 100);
+        }, 300);
     }
 
+
     handleIdle() {
+        if (!this.world || !this.world.hasStarted || this.world.isGameOver) {
+            this.stopSleepsound();
+            return;
+        }
         if (this.world && this.world.bossFightStarted && !this.isDead()) {
             this.playAnimation(this.images.IDLE);
             return;
         }
-
         let idleTime = Date.now() - this.lastActionTime;
-        if (idleTime > 10000) {
+        if (idleTime > 10000 && this.world.hasPlayerMoved) {
             this.playAnimation(this.images.LONG_IDLE);
             this.playSleepSound();
         } else {
+            this.stopSleepsound();
             this.playAnimation(this.images.IDLE);
         }
     }

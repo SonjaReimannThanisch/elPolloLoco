@@ -77,6 +77,7 @@ class SoundManager {
         localStorage.setItem('muted', this.isMuted);
         if (this.isMuted) {
             this.stopAllMusic();
+            this.stopAllSounds();
             return;
         }
         this.resumeCurrentTrack();
@@ -95,6 +96,12 @@ class SoundManager {
         if (!sound) return;
         sound.pause();
         sound.currentTime = 0;
+    }
+    
+    stopAllSounds() {
+        Object.keys(this.sounds).forEach(name => {
+            this.stopSound(name);
+        });
     }
 
     stopAllMusic() {

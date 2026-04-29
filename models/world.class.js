@@ -81,8 +81,13 @@ class world {
     }
 
     triggerGameOverIfDead() {
+        this.sound.stopAllMusic();
+        this.sound.stopAllSounds();
         if (this.mainCharacter.energy <= 0 && !this.isGameOver) {
             this.isGameOver = true;
+            this.sound.stopAllSounds();
+            this.sound.stopAllMusic();
+            this.attacks = [];
             this.sound.playSound('gameover');
             if (this.mainCharacter.deathCause === 'boss') {
                 this.mainCharacter.isCinematicDead = true;
@@ -301,6 +306,8 @@ class world {
         boss.update();
         if (boss.isDead && !this.hasWon) {
             this.hasWon = true;
+            this.sound.stopAllMusic();
+            this.sound.stopAllSounds();
             this.sound.playSound('winning');
         }
     }
@@ -330,8 +337,8 @@ class world {
         if (boss && boss.isActive) {
             type = 'poison';
         }
-        this.mainCharacter.startBubbleAttackAnimation(type);
         this.sound.playSound('bubbleAttack');
+        this.mainCharacter.startBubbleAttackAnimation(type);
         setTimeout(() => {
             if (this.isGameOver) return;
             this.attacks.push(new BubbleTrapAttack(this.mainCharacter, type));

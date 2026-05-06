@@ -2,76 +2,9 @@ class jellyfisch extends movableObject {
 
     height = 80;
     width = 80;
-
-    IMAGES_MOVE_LILA = [
-        'img/2.Enemy/2 Jelly fish/Regular damage/Lila2.png',
-        'img/2.Enemy/2 Jelly fish/Regular damage/Lila3.png',
-        'img/2.Enemy/2 Jelly fish/Regular damage/Lila1.png',
-        'img/2.Enemy/2 Jelly fish/Regular damage/Lila4.png',
-    ];
-
-    IMAGES_MOVE_YELLOW = [
-        'img/2.Enemy/2 Jelly fish/Regular damage/Yellow_1.png',
-        'img/2.Enemy/2 Jelly fish/Regular damage/Yellow_2.png',
-        'img/2.Enemy/2 Jelly fish/Regular damage/Yellow_3.png',
-        'img/2.Enemy/2 Jelly fish/Regular damage/Yellow_4.png',
-    ];
-
-    IMAGES_DEAD_GREEN = [
-        'img/2.Enemy/2 Jelly fish/Dead/green/g1.png',
-        'img/2.Enemy/2 Jelly fish/Dead/green/g2.png',
-        'img/2.Enemy/2 Jelly fish/Dead/green/g3.png',
-        'img/2.Enemy/2 Jelly fish/Dead/green/g4.png',
-    ];
-
-    IMAGES_DEAD_LILA = [
-        'img/2.Enemy/2 Jelly fish/Dead/Lila/L1.png',
-        'img/2.Enemy/2 Jelly fish/Dead/Lila/L2.png',
-        'img/2.Enemy/2 Jelly fish/Dead/Lila/L3.png',
-        'img/2.Enemy/2 Jelly fish/Dead/Lila/L4.png',
-    ];
-
-    IMAGES_DEAD_PINK = [
-        'img/2.Enemy/2 Jelly fish/Dead/Pink/P1.png',
-        'img/2.Enemy/2 Jelly fish/Dead/Pink/P2.png',
-        'img/2.Enemy/2 Jelly fish/Dead/Pink/P3.png',
-        'img/2.Enemy/2 Jelly fish/Dead/Pink/P4.png',
-    ];
-
-    IMAGES_DEAD_YELLOW = [
-        'img/2.Enemy/2 Jelly fish/Dead/Yellow/y1.png',
-        'img/2.Enemy/2 Jelly fish/Dead/Yellow/y2.png',
-        'img/2.Enemy/2 Jelly fish/Dead/Yellow/y3.png',
-        'img/2.Enemy/2 Jelly fish/Dead/Yellow/y4.png',
-    ]
-
-    IMAGES_REGULAR_DEATHL = [
-        'img/2.Enemy/2 Jelly fish/Regular damage/Lila1.png',
-        'img/2.Enemy/2 Jelly fish/Regular damage/Lila2.png',
-        'img/2.Enemy/2 Jelly fish/Regular damage/Lila3.png',
-        'img/2.Enemy/2 Jelly fish/Regular damage/Lila4.png',
-    ];
-
-    IMAGES_REGULAR_DEATHY = [
-        'img/2.Enemy/2 Jelly fish/Regular damage/Yellow_1.png',
-        'img/2.Enemy/2 Jelly fish/Regular damage/Yellow_2.png',
-        'img/2.Enemy/2 Jelly fish/Regular damage/Yellow_3.png',
-        'img/2.Enemy/2 Jelly fish/Regular damage/Yellow_4.png',
-    ];
-
-    IMAGES_SUPER_DEATHG = [
-        'img/2.Enemy/2 Jelly fish/Súper dangerous/Green 1.png',
-        'img/2.Enemy/2 Jelly fish/Súper dangerous/Green 2.png',
-        'img/2.Enemy/2 Jelly fish/Súper dangerous/Green 3.png',
-        'img/2.Enemy/2 Jelly fish/Súper dangerous/Green 4.png',
-    ];
-
-    IMAGES_SUPER_DEATHP = [
-        'img/2.Enemy/2 Jelly fish/Súper dangerous/Pink 1.png',
-        'img/2.Enemy/2 Jelly fish/Súper dangerous/Pink 2.png',
-        'img/2.Enemy/2 Jelly fish/Súper dangerous/Pink 3.png',
-        'img/2.Enemy/2 Jelly fish/Súper dangerous/Pink 4.png',
-    ];
+    isDead = false;
+    markedForDeletion = false;
+    energy = 100;
 
     offset = {
         top: 5,
@@ -81,20 +14,89 @@ class jellyfisch extends movableObject {
     }
 
     constructor(color = 'lila') {
-        super()
-        this.images = (color === 'yellow') ? this.IMAGES_MOVE_YELLOW : this.IMAGES_MOVE_LILA;
-        this.loadImage(this.images[0]);
-        this.loadImages(this.images);
+        super();
+        this.images = window.JELLYFISH_IMAGES;
+        this.type = color;
+        this.damage = this.isSuperDangerous() ? 20:5;
+        this.swimImages = this.getSwimImages();
+        this.loadImage(this.swimImages[0]);
+        this.loadAllImages();
         this.x = 890 + Math.random() * 500;
         this.y = 100 + Math.random() * 200;
-        this.speed = 0.15 + Math.random() * 0.5;
+        this.speed = 0.3 + Math.random() * 0.5;
         this.animate();
+        this.damageType = 'electro';
+    }
+
+    loadAllImages() {
+        this.loadImages(this.images.MOVE_LILA);
+        this.loadImages(this.images.MOVE_YELLOW);
+        this.loadImages(this.images.MOVE_GREEN);
+        this.loadImages(this.images.MOVE_PINK);
+
+        this.loadImages(this.images.DEAD_LILA);
+        this.loadImages(this.images.DEAD_GREEN);
+        this.loadImages(this.images.DEAD_PINK);
+        this.loadImages(this.images.DEAD_YELLOW);
+
+    }
+
+    getSwimImages() {
+        if (this.type === 'yellow') return this.images.MOVE_YELLOW;
+        if (this.type === 'green') return this.images.MOVE_GREEN;
+        if (this.type === 'pink') return this.images.MOVE_PINK;
+        return this.images.MOVE_LILA;
+    }
+    getDieImages() {
+        if (this.type === 'yellow') return this.images.DEAD_YELLOW;
+        if (this.type === 'green') return this.images.DEAD_GREEN;
+        if (this.type === 'pink') return this.images.DEAD_PINK;
+        return this.images.DEAD_LILA;
+    }
+
+    isSuperDangerous() {
+        return this.type === 'green' || this.type === 'pink';
+    }
+
+    hit() {
+        if (this.isDead) return;
+        this.energy -= 100;
+        if (this.energy <= 0) {
+            this.die();
+        }
+    }
+
+    die() {
+        this.isDead = true;
+        this.speed = 0;
+        this.currentImage = 0;
+        setTimeout(() => {
+            this.markedForDeletion = true;
+        }, 500);
     }
 
     animate(){
-        this.moveLeft();
+        this.startMovement();
+        this.startAnimation();
+    }
+
+    startMovement() {
         setInterval(() => {
-            this.playAnimation(this.images);
+            if (!this.world?.hasStarted || !this.world?.hasPlayerMoved) return;
+            if (!this.isDead) {
+                this.x -= this.speed;
+            }
+        }, 1000 / 60);
+    }
+
+    startAnimation() {
+        setInterval(() => {
+            if (this.isDead) {
+                this.playAnimation(this.getDieImages());
+            } else {
+                this.playAnimation(this.swimImages);
+            }
         }, 200);
     }
+
 }

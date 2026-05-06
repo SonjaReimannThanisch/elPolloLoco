@@ -3,51 +3,77 @@ class world {
     level;
     canvas;
     ctx;
+    sound;
     keyboard;
     camera_x = 0;
     statusLife;
     statusCoins;
     statusPoison;
-
+    hasPlayerMoved = false;
     attacks = [];
     lastFinSlapAt = 0;
     lastBubbleAt = 0;
-    finSlapCoolsdowns = 400;
+    finSlapCooldowns  = 400;
     bubbleCooldowns = 900;
-
     lastX = 0;
     lastY = 0;
     isGameOver = false;
+    hasWon = false;
     TILE_WIDTH = 720;
     enemyCollisionInterval = null;
     hasStarted = false;
+    bossTriggerX = 3600;
+    bossFightStarted = false;
     bubbles = [];
-
-
 
     constructor(canvas, keyboard) {
         this.canvas = canvas;
         this.ctx = canvas.getContext('2d');
-        this.level = createLevel1();
+        this.combat = new CombatWorld(this);
+        this.ui = new WorldUiManager(this);
+        this.collision = new WorldCollisionManager(this);
+        this.collectibles = new WorldCollectibleManager(this);
         this.keyboard = keyboard;
-        this.keyboardSprite = new Keyboard(canvas.width, canvas.height);
+        this.level = createLevel1();
+        this.sound = new SoundManager();
+        this.initHud();
+        this.initUi();
+        this.initWorldState();
+        this.draw();
+    }
+
+    initHud() {
+        this.keyboardSprite = new Keyboard(this.canvas.width, this.canvas.height);
         this.statusLife = new statusBar('life');
         this.statusCoins = new statusBar('coins');
         this.statusPoison = new statusBar('poison');
         this.statusLife.y = 45;
         this.statusCoins.y = 80;
         this.statusPoison.y = 10;
+    }
+
+    updateCollectibles() {
+        this.collectibles.checkCoinCollision();
+        this.collectibles.checkPoisonCollision();
+    }
+
+    initUi() {
+        this.ui.bindUi();
+        this.winScreen = new WinScreen(this.canvas.width, this.canvas.height);
+    }
+
+    initWorldState() {
         this.setWorld();
-        this.bindUi();
-        this.draw();
+        this.setWorldForLevelObjects();
     }
 
     startGame() {
-        if(this.hasStarted) return;
+        if (this.hasStarted) return;
         this.hasStarted = true;
+        this.sound.stopAllMusic();
+        this.sound.playMusic();
         this.mainCharacter.animate();
-        // this.draw();
-        this.checkCollisions();
+        this.collision.checkCollisions();
     }
 
     setWorld() {
@@ -55,112 +81,49 @@ class world {
     }
 
     triggerGameOverIfDead() {
+        this.sound.stopAllMusic();
+        this.sound.stopAllSounds();
         if (this.mainCharacter.energy <= 0 && !this.isGameOver) {
             this.isGameOver = true;
-
-            this.showGameOver();
+            this.sound.stopAllSounds();
+            this.sound.stopAllMusic();
+            this.attacks = [];
+            this.sound.playSound('gameover');
+            if (this.mainCharacter.deathCause === 'boss') {
+                this.mainCharacter.isCinematicDead = true;
+                setTimeout(() => {
+                    this.ui.showGameOver();
+                }, 1500);
+            } else {
+                this.ui.showGameOver();
+                this.sound.playSound('characterDeath');
+            }
         }
     }
 
-    gameOverCollisionIntervall() {
-        if (this.enemyCollisionInterval) {
-        clearInterval(this.enemyCollisionInterval);
-        this.enemyCollisionInterval = null;
-    }
-    }
-
-    applyDamage() {
-        this.mainCharacter.hit();
+    applyDamage(amount = 5, type = 'poison', cause = '') {
+        this.mainCharacter.setDamageType(type);
+        if (type === 'electro') {
+            this.sound.playSound('electroHit');
+        } else if (type === 'barrier') {
+            this.sound.playSound('barrier');
+        } else {
+            this.sound.playSound('hit');
+        }
+        this.mainCharacter.deathCause = cause;
+        this.mainCharacter.energy -= amount;
+        if ( this.mainCharacter.energy < 0) {
+            this.mainCharacter.energy = 0;
+        } else {
+            this.mainCharacter.lastHit = new Date().getTime();
+        }
+        
         this.statusLife.setPercentage(this.mainCharacter.energy);
         this.triggerGameOverIfDead();
     }
 
-    checkCollisions() {
-        if (this.enemyCollisionInterval) return;
-        this.enemyCollisionInterval = setInterval(this.runEnemyCollisionCheck.bind(this), 1000);
-    }
-
-    runEnemyCollisionCheck() {
-        this.level.enemies.forEach(this.checkEnemyCollision.bind(this));
-    }
-
-    checkEnemyCollision(enemy) {
-        if (this.mainCharacter.isColliding(enemy)) {
-            this.applyDamage();
-        }
-    }
-
-    // checkAttackCollisions() {
-    //     this.attacks.forEach((attack) => {
-    //         this.level.enemies.forEach((enemy) => {
-    //             if (!attack.hasHit && attack.isColliding(enemy)) {
-    //                 enemy.hit();
-    //                 attack.hasHit = true;
-    //             }
-    //         });
-    //     });
-    // }
-    
-
-    checkAttackCollisions() {
-        for (let i = 0; i < this.attacks.length; i++) {
-            const attack = this.attacks[i];
-            if (attack.hasHit) continue;
-
-            for (let j = 0; j < this.level.enemies.length; j++) {
-            const enemy = this.level.enemies[j];
-
-            if (attack.isColliding(enemy)) {
-                enemy.hit();
-                attack.hasHit = true;
-                break;
-            }
-            }
-        }
-    }
-
-    // updateAttacks() {
-    //     const now = Date.now();
-
-    //     for (let i = 0; i < this.attacks.length; i++) {
-    //         const a = this.attacks[i];
-
-    //         // Attack folgt dem Character + spielt Frames, falls vorhanden
-    //         if (typeof a.tick === 'function') a.tick(now);
-
-    //         // Projectile Bewegung (Bubble), falls vx gesetzt ist
-    //         if (a.vx) a.x += a.vx;
-    // }
-    // }
-
-    updateAttacks(now) {
-        for (let i=0; i < this.attacks.length; i++) {
-            let attack = this.attacks[i];
-            if (typeof attack.tick === `function`) {
-                attack.tick(now);
-            }
-            if ( attack.vx) {
-                attack.x += attack.vx;
-            }
-        }
-    }
-
-    isCollidingWithAnyBarrier() {
-        return this.level.barriers.some(b => this.mainCharacter.isColliding(b));
-    }
-
-    resetPlayerToLastPosition() {
-        this.mainCharacter.x = this.lastX;
-        this.mainCharacter.y = this.lastY;
-    }
-
-    rememberPlayerPosition() {
-        this.lastX = this.mainCharacter.x;
-        this.lastY = this.mainCharacter.y;
-    }
-
     getEndboss() {
-        return this.level.enemies.find(e => e instanceof Endboss)
+        return this.level.enemies.find(e => e instanceof Endboss);
     }
 
     checkBarrierCollision() {
@@ -200,28 +163,6 @@ class world {
         return this.keyboard.LEFT || this.keyboard.RIGHT || this.keyboard.UP || this.keyboard.DOWN;
     }
 
-    checkCoinCollision() {
-        this.level.coins.forEach((coin, i) => {
-            if (this.mainCharacter.isColliding(coin)) {
-                this.level.coins.splice(i, 1);
-                this.mainCharacter.coins = Math.min(100, (this.mainCharacter.coins || 0) + 10);
-                this.statusCoins.setPercentage(this.mainCharacter.coins);
-            }
-        });
-    }
-
-    checkPoisonCollision() {
-        this.level.poison.forEach((poison, i) => {
-            if (this.mainCharacter.isColliding(poison)) {
-            this.level.poison.splice(i, 1);
-            this.mainCharacter.bottle = Math.min(100, (this.mainCharacter.bottle || 0) + 10);
-            console.log('bottle value', this.mainCharacter.bottle);
-            this.statusPoison.setPercentage(this.mainCharacter.bottle);
-            console.log('poison list', this.level.poison.length);
-            }
-        });
-    }
-
     updateBackground() {
         let w = this.TILE_WIDTH;
         let groups = [
@@ -255,6 +196,10 @@ class world {
         return this.hasStarted && !this.isGameOver;
     }
 
+    setWorldForLevelObjects() {
+        this.level.enemies.forEach(enemy => enemy.world = this);
+    }
+
     draw() {
         this.beginFrame();
         if (this.isRunningGame()) this.updateWorldState();
@@ -270,16 +215,40 @@ class world {
 
     updateWorldState() {
         let now = Date.now();
+        this.updateEnvironment();
+        this.updateCollectibles();
+        this.updateMenuState();
+        this.updateEnemies();
+        this.updateBossFight();
+        this.updateCombat(now);
+    }
+
+    updateEnvironment() {
         this.updateBackground();
         this.updateLights();
-        this.checkBarrierCollision();
-        this.checkCoinCollision();
-        this.checkPoisonCollision();
+        this.collision.checkBarrierCollision();
+    }
+
+    updateMenuState() {
         this.checkMenuInput();
+    }
+
+    updateEnemies() {
+        this.removeDeadEnemies();
+    }
+
+    removeDeadEnemies() {
+        this.level.enemies = this.level.enemies.filter(e => !e.markedForDeletion);
+    }
+
+    updateBossFight() {
+        this.checkEndbossTrigger();
+        this.handleBossState();
+    }
+
+    updateCombat(now) {
+        this.combat.update(now);
         this.handleAttackInput(now);
-        this.updateAttacks(now);
-        this.checkAttackCollisions();
-        this.cleanupAttacks();
     }
 
     drawWorldLayer() {
@@ -289,7 +258,6 @@ class world {
         this.addObjectsToMap(this.level.lights);
         this.addObjectsToMap(this.level.coins);
         this.addObjectsToMap(this.level.poison);
-       
         this.addObjectsToMap(this.level.enemies);
         this.addToMap(this.mainCharacter);
         this.addObjectsToMap(this.attacks);
@@ -300,6 +268,7 @@ class world {
         this.addToMap(this.statusLife);
         this.addToMap(this.statusCoins);
         this.addToMap(this.statusPoison);
+        this.ui.drawHudWonLayer();
     }
 
     endFrame() {
@@ -307,41 +276,87 @@ class world {
     }
 
     restartGame() {
+        this.ui.hideGameOver();
+        this.resetWorldState();
+        this.hasStarted = true;
+        this.mainCharacter.animate();
+        this.collision.checkCollisions();
+    }
+
+    resetWorldState() {
+        this.resetIntervals();
+        this.resetFlags();
+        this.resetCollections();
+        this.resetLevelState();
+        this.resetHudState();
+        this.resetWinState();  
+    }
+    
+    resetIntervals() {
         clearInterval(this.enemyCollisionInterval);
         this.enemyCollisionInterval = null;
-        this.hideGameOver();
+    }
+
+    resetFlags() {
+        this.hasPlayerMoved = false;
+        this.bossFightStarted = false;
         this.isGameOver = false;
-        this.camera_x = 0;
+        this.hasStarted = false;
+        this.hasWon = false;
+    }
+
+    resetCollections() {
         this.attacks = [];
+        this.bubbles = [];
+        this.lastFinSlapAt = 0;
+        this.lastBubbleAt = 0;
+        this.lastX = 0;
+        this.lastY = 0;
+        this.camera_x = 0;
+    }
+
+    resetLevelState() {
+        this.level = createLevel1();
         this.mainCharacter = new character();
         this.setWorld();
-        this.mainCharacter.animate();
-        this.level = createLevel1();
+        this.setWorldForLevelObjects();
+    }
+
+    resetHudState() {
         this.statusLife.setPercentage(this.mainCharacter.energy);
         this.statusCoins.setPercentage(0);
         this.statusPoison.setPercentage(0);
-        this.checkCollisions();
-        this.draw();
     }
 
+    resetWinState() {
+        this.winScreen = new WinScreen(this.canvas.width, this.canvas.height);
+    }
 
+    handleBossState() {
+        if (!this.bossFightStarted) return;
+        let boss = this.getEndboss();
+        if (!boss) return;
+        boss.update();
+        if (boss.isDead && !this.hasWon) {
+            this.hasWon = true;
+            this.sound.stopAllMusic();
+            this.sound.stopAllSounds();
+            this.sound.playSound('winning');
+        }
+    }
 
-    handleAttackInput() {
+    handleAttackInput(now) {
         if (!this.hasStarted || this.isGameOver) return;
-
-        let now =Date.now();
         if (this.keyboard.SPACE) this.tryFinSlap(now);
         if (this.keyboard.A) this.tryBubble(now);
     }
 
-    // updateAttack() {
-    //     if (!this.hasStarted || this.isGameOver) return;
-    //     if (this.keyboard.SPACE) this.tryFinSlap(now);
-    //     if (this.keyboard.A) this.tryBubble(now);
-    // }
-
     tryFinSlap(now) {
-        if (now - this.lastFinSlapAt < this.finSlapCoolsdowns) return;
+        if (now - this.lastFinSlapAt < this.finSlapCooldowns ) return;
+        let activeFinSlap = this.attacks.some(a => a instanceof FinSlapAttack);
+        if (activeFinSlap) return;
+        this.mainCharacter.startFinSlapAttackAnimation();
+        this.sound.playSound('finSlapAttack');
         let attack = new FinSlapAttack(this.mainCharacter);
         this.attacks.push(attack);
         this.lastFinSlapAt = now;
@@ -350,14 +365,20 @@ class world {
 
     tryBubble(now) {
         if (now - this.lastBubbleAt < this.bubbleCooldowns) return;
-        let attack = new BubbleTrapAttack(this.mainCharacter);
-        this.attacks.push(attack);
+        let type = 'normal';
+        let boss = this.getEndboss();
+        if (boss && boss.isActive) {
+            type = 'poison';
+        }
+        this.sound.playSound('bubbleAttack');
+        this.mainCharacter.startBubbleAttackAnimation(type);
+        setTimeout(() => {
+            if (this.isGameOver) return;
+            this.attacks.push(new BubbleTrapAttack(this.mainCharacter, type));
+        }, 500);
+
         this.lastBubbleAt = now;
         this.keyboard.A = false;
-    }
-
-    cleanupAttacks() {
-        this.attacks = this.attacks.filter(a => !a.isExpired());
     }
 
     addObjectsToMap(objects) {
@@ -386,32 +407,12 @@ class world {
         this.ctx.restore();
     }
 
-    stopGame() {
-        if ( this.enemyCollisionInterval) {
-            clearInterval(this.enemyCollisionInterval);
-            this.enemyCollisionInterval = null;
-        }
-        this.isGameOver = true;
-        this.hasStarted = false;
-    }
-
     goHome() {
-        if (this.enemyCollisionInterval) {
-            clearInterval(this.enemyCollisionInterval);
-            this.enemyCollisionInterval = null;
-        }
-        this.isGameOver = false;
-        this.hasStarted = false;
-        this.hideGameOver();
+        this.sound.stopAllMusic();
+        this.sound.playMenu();
+        this.ui.hideGameOver();
+        this.resetWorldState();
         document.getElementById('startscreen')?.classList.remove('hidden');
-        this.camera_x = 0;
-        this.attacks = [];
-        this.level = createLevel1();
-        this.mainCharacter = new character();
-        this.setWorld();
-        this.statusLife.setPercentage(this.mainCharacter.energy);
-        this.statusCoins.setPercentage(0);
-        this.statusPoison.setPercentage(0);
     }
 
     checkMenuInput() {
@@ -421,4 +422,13 @@ class world {
         this.keyboard.ESC = false;
     }
 
+    checkEndbossTrigger() {
+        if ( this.bossFightStarted) return;
+        let boss = this.getEndboss();
+        if (!boss) return;
+        if (this.mainCharacter.x >=this.bossTriggerX) {
+            this.bossFightStarted = true;
+            boss.startIntro();
+        }
+    }
 }

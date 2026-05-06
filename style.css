@@ -41,11 +41,11 @@ header h1 {
   font-family: 'Luckiest Guy', cursive;
   font-size: 42px;
   letter-spacing: 4px;
-  color: #0a0325;
+  color: #200e68;
   margin: 0;
   text-shadow:
     0 2px 4px rgba(0,0,0,0.55),
-    0 0 10px rgba(0, 200, 255, 0.3);
+    0 0 10px rgba(15, 184, 231, 0.3);
 }
 
 canvas {
@@ -57,8 +57,6 @@ canvas {
   box-shadow: 0 10px 40px rgba(0,0,0,0.4);
   background-color: rgba(84, 76, 225, 0.15);
 }
-
-
 
 .overlay.hidden { display: none; }
 
@@ -301,8 +299,6 @@ canvas {
   background-color: rgba(84, 76, 225, 0.15);
 }
 
-
-
 .overlay.hidden { display: none; }
 
 .overlay{
@@ -454,6 +450,19 @@ canvas {
   50%     { transform: scale(1.05); filter: brightness(1.1); }
 }
 
+.hud-btn {
+  position: absolute;
+  background-color: #e7a2f5;
+  top: 20px;
+  right: 20px;
+  z-index: 20;
+  border: none;
+  border-radius: 12px;
+  padding: 10px 12px;
+  cursor: pointer;
+  font-size: 20px;
+}
+
 .start-footer{
   width: 100%;
   display: flex;
@@ -475,6 +484,10 @@ canvas {
   background: url("img/3.Background/behind-canvas/blick-auf-welliges-meer-oder-meerwasser.jpg") center/cover no-repeat;
 }
 
+#fullscreen {
+  position: relative;
+}
+
 #fullscreen:fullscreen {
   width: 100vw;
   height: 100vh;
@@ -488,4 +501,18 @@ canvas {
   max-width: none;
   aspect-ratio: auto;
   display: block;
+}
+
+@media (orientation: portrait) {
+  body::before {
+    /* content: "Turn your device to play"; */
+    position: fixed;
+    inset: 0;
+    /* background: black;
+    color: white; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+  }
 }

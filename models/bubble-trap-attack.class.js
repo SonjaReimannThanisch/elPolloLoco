@@ -1,57 +1,86 @@
 class BubbleTrapAttack extends Attack {
-    width = 140;
-    height = 140;
-    lifetime = 500;
+    width = 60;
+    height = 60;
+    lifetime = 1000;
+    hasHit = false;
+    isImpacting = false;
+    markedForDeletion = false;
+    impactSpeed = 0;
+    impactEndAt = 0;
 
-
-    IMAGES_BubbleAttack = [
-        'img/1.Sharkie/4.Attack/Bubble trap/op1 (with bubble formation)/1.png',
-        'img/1.Sharkie/4.Attack/Bubble trap/op1 (with bubble formation)/2.png',
-        'img/1.Sharkie/4.Attack/Bubble trap/op1 (with bubble formation)/3.png',
-        'img/1.Sharkie/4.Attack/Bubble trap/op1 (with bubble formation)/4.png',
-        'img/1.Sharkie/4.Attack/Bubble trap/op1 (with bubble formation)/5.png',
-        'img/1.Sharkie/4.Attack/Bubble trap/op1 (with bubble formation)/6.png',
-        'img/1.Sharkie/4.Attack/Bubble trap/op1 (with bubble formation)/7.png',
-        'img/1.Sharkie/4.Attack/Bubble trap/op1 (with bubble formation)/8.png',
-    ]
-
-    constructor(character) {
+    constructor(character, type = 'normal') {
         super();
-        this.loadImages(this.IMAGES_BubbleAttack);
+        this.images = BUBBLE_IMAGES;
+        this.type = type;
         this.character = character;
-        this.img = this.imageCache[this.IMAGES_BubbleAttack[0]];
-        this.updatePosition();
-        this.animate();
+        this.otherDirection = this.character.otherDirection;
+
+        this.loadAllImages();
+        this.setStartImage();
+        this.getBubbleImages();
+        this.setStartPosition();
+        this.startVelocity();
     }
 
-    updatePosition() {
-        this.otherDirection = this.character.otherDirection 
-        let cx = this.character.x + this.character.width / 2;
-        let cy = this.character.y + this.character.height / 2;
-        this.x = cx - this.width / 2;
-        this.y = cy - this.height / 2;
-        let push = this.otherDirection ? -40 :40;
-        this.x += push;
+    loadAllImages() {
+        this.loadImages(this.images.NORMAL);
+        this.loadImages(this.images.POISON);
     }
 
-    tick(now) {
-        this.updatePosition();
-        if (!this.lastFrameAt) this.lastFrameAt = now;
-        if (now - this.lastFrameAt > 50) {
-            this.playAnimation(this.IMAGES_BubbleAttack);
-            this.lastFrameAt = now;
+    setStartImage() {
+        let images = this.getBubbleImages();
+        this.img = this.imageCache[images[0]];
+    }
+
+    getBubbleImages() {
+        if (this.type === 'poison') return this.images.POISON;
+        return this.images.NORMAL;
+    }
+
+    startVelocity() {
+        let speed = 8 + Math.random() * 4;
+        this.vx = this.otherDirection ? -speed : speed;
+    }
+
+    setStartPosition() {
+        this.otherDirection = this.character.otherDirection;
+        this.x = this.character.x + this.character.width - 10;
+        this.y = this.character.y + this.character.height / 2;
+        if (this.otherDirection) {
+            this.x = this.character.x - this.width + 10;
         }
     }
 
-    // animate() {
-    //     const interval = setInterval(() => {
-    //         this.updatePosition();
-    //         this.playAnimation(this.IMAGES_BubbleAttack);
+    tick(now) {
+        this.animateBubble(now);
+        this.updateImpact(now);
+    }
 
-    //         if (this.isExpired()) {
-    //             clearInterval(interval);
-    //         }
-    //     }, 1000 / 20);
-    // }
+    animateBubble(now) {
+        if (!this.lastFrameAt) this.lastFrameAt = now;
+        if (now-this.lastFrameAt <= 50) return;
+        this.playAnimation(this.getBubbleImages());
+        this.lastFrameAt = now;
+    }
 
+    updateImpact(now) {
+        if (!this.isImpacting) return;
+        this.x += this.impactSpeed;
+        if (now >= this.impactEndAt) {
+            this.impactSpeed = 0;
+        }
+        this.width += 0.2;
+        this.height += 0.2;
+    }
+
+    hitTarget() {
+        this.hasHit = true;
+        this.isImpacting = true;
+        this.impactSpeed = this.otherDirection ? -2 : 2;
+        this.impactEndAt = Date.now() + 120;
+        setTimeout(() => {
+            this.vx = 0;
+            this.markedForDeletion = true;
+        }, 180);
+    }
 }

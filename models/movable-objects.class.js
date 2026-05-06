@@ -6,9 +6,10 @@ class movableObject extends drawableObject {
 
     
     drawFrame(ctx) {
+        if (!window.DEBUG) return;
         if(this instanceof character || this instanceof pufferfisch || this instanceof jellyfisch || this instanceof Endboss || this instanceof barriers || this instanceof Attack) {
             ctx.beginPath();
-            ctx.lBenderineWidth = '2';
+            ctx.lineWidth = 2;
             ctx.strokeStyle = 'blue';
             let offset = this.offset || { top: 0, left: 0, right: 0, bottom: 0 };
             ctx.rect(
@@ -52,9 +53,7 @@ class movableObject extends drawableObject {
 
     isHurt() {
         let timePassed = new Date().getTime() - this.lastHit;
-        timePassed = timePassed / 1000;
-        // console.log(timePassed);
-        
+        timePassed = timePassed / 1000;        
         return timePassed < 0.6;
     }
 
@@ -62,10 +61,4 @@ class movableObject extends drawableObject {
         return this.energy === 0;
     }
 
-
-    moveLeft() {
-        setInterval(() => {
-            this.x -= this.speed;
-        }, 1000 / 60);
-    }
 }
